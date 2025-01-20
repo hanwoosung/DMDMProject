@@ -1,16 +1,25 @@
-import Header from "./components/layout/Header";
 import "./index.css";
-import Footer from "./components/layout/Footer";
-import Aside from "./components/layout/Aside";
+import {Route, Routes} from "react-router-dom";
+import Layout from "./components/layout/Layout";
+import AsideLayout from "./components/layout/AsideLayout";
 
 function App() {
     return (
-        <div className="App">
-            <Header/>
-            <div className="content">
-            </div>
-            <Footer/>
-        </div>
+        <main>
+            <Routes>
+                <Route path="/" element={
+                    <Layout>
+                        <div>메인페이지 입니다......</div>
+                    </Layout>
+                }/>
+
+                <Route path="/mypage" element={
+                    <AsideLayout>
+                        <div>마이페이지 입니다.......</div>
+                    </AsideLayout>
+                }/>
+            </Routes>
+        </main>
     );
 }
 
