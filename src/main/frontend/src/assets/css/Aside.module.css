@@ -1,0 +1,55 @@
+aside{
+    display: flex;
+    flex-direction: row;
+    margin-left: 250px;
+}
+
+.sideTitle{
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 50px;
+}
+
+.asideItem{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.horizontalLine{
+    width: 250px;
+    border: 1px #DADADA solid;
+}
+
+.verticalLine{
+    margin: 0 30px;
+    width: 1px;
+    height: 100%;
+    background: #DADADA;
+}
+
+.flexColumn{
+    display: flex;
+    flex-direction: column;
+}
+
+.flexRow{
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+}
+
+.flexRow:hover{
+    background: #FFB733;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.iconSize{
+    width: 24px;
+    height: 24px;
+    margin-left: 20px;
+    margin-right: 10px;
+}

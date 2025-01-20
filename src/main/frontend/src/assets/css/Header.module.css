@@ -1,0 +1,96 @@
+header{
+    position: relative;
+}
+
+.flexContainer {
+    margin: 0 auto;
+    width: 1440px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.headBtn:hover{
+    color: #FFB733;
+    cursor: pointer;
+}
+
+.titleHeadBtn{
+    font-weight: bold;
+
+    composes: headBtn;
+}
+
+.flexRow{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.headerDetail{
+    display: none;
+    flex-direction: row;
+    justify-content: space-around;
+    background: #FFFAF0;
+    position: absolute;
+    left: 360px;
+    top: 75px;
+    width: 1000px;
+    align-items: start;
+    padding: 18px;
+    border: 1px solid #DADADA;
+    border-radius: 10px;
+}
+
+.profileDetail{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #DADADA;
+    border-radius: 10px;
+    padding: 15px;
+    position: absolute;
+    right: 240px;
+    top: 75px;
+    gap: 15px;
+}
+
+.detailTitleBtn{
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.headerFlexColumn{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.iconSize{
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.profileIcon{
+    width: 16px;
+    height: 16px;
+}
+
+.verticalLine{
+    height: 200px;
+    width: 1px;
+    background: #DADADA;
+}
+
+.profileDetailLine{
+    border: 1px solid #DADADA;
+    width: 150px;
+}
+
+.profileDetailSpan{
+    margin-left: 10px;
+
+    composes: headBtn;
+}
