@@ -31,24 +31,22 @@ const TestPage = () => {
         setIsAlert(true); // 모달 표시
     };
 
+    const alert2 = () => {
+        alert("gdgd");
+    }
+
     return (
 
         <>
-            <BigBtn onClick={() => {
-                alert("gd");
-            }} />
+            <BigBtn onClick={alert2} />
 
-            <SmallBtn onClick={() => {
-                alert("ggdd");
-            }} />
+            <SmallBtn onClick={alert2} />
 
-            <Input onClick={() => {
-                alert("gdgd");
-            }} />
+            <Input onClick={alert2} />
 
-            <Select />
+            <Select onChange={alert2} />
 
-            <Search />
+            <Search onClick={alert2} />
 
             <Filter list={[{label: "전체", value: ""}, {label: "전체2", value: "2"}]}
                     onClick={(value) => {
@@ -57,9 +55,7 @@ const TestPage = () => {
             />
 
             <BigBtn title={"컨펌열기"}
-                    onClick={() => {
-                        showConfirm();
-                    }} />
+                    onClick={showConfirm} />
 
             <Confirm
                 isVisible={isConfirmVisible}
@@ -69,9 +65,7 @@ const TestPage = () => {
             />
 
             <BigBtn title={"Alert열기"}
-                    onClick={() => {
-                        showAlert();
-                    }} />
+                    onClick={showAlert} />
 
             <Alert
                 isVisible={isAlert}

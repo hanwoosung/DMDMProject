@@ -10,15 +10,18 @@ const Search = ({
                         {value: "content", label: "내용"},
                         {value: "writer", label: "작성자"},
                         {value: "all", label: "전체"},
-                    ]
+                    ],
+                    btnTitle = "검색",
+                    onClick,
                 },
-                btnTitle = "검색") => {
+) => {
     return (
         <div className={SearchStyles.searchWrap}>
             <Select options={options}
                     width={100} />
             <Input />
-            <SmallBtn title={btnTitle} />
+            <SmallBtn title={btnTitle}
+                      onClick={onClick} />
         </div>
     );
 
