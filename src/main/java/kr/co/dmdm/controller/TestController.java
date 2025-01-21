@@ -1,10 +1,12 @@
 package kr.co.dmdm.controller;
 
+import kr.co.dmdm.global.exception.CustomException;
+import kr.co.dmdm.global.exception.ExceptionEnum;
 import kr.co.dmdm.utils.PagingUtil;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @RestController
-@RequiredArgsConstructor
+@RequestMapping("/api/test")
 @Slf4j
 public class TestController {
 
@@ -45,5 +47,20 @@ public class TestController {
             public List<String> data = pagedData;
             public PagingUtil paging = pagingUtil;
         };
+    }
+
+    @GetMapping("/error")
+    public String errorTest() {
+        throw new CustomException(ExceptionEnum.RUNTIME_EXCEPTION);
+    }
+
+    @GetMapping("/error2")
+    public String errorTest2() {
+        throw new CustomException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다22222222.");
+    }
+
+    @GetMapping("/error3")
+    public String errorTest3() {
+        throw new RuntimeException("런타임 에러");
     }
 }
