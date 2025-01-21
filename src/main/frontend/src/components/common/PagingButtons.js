@@ -1,12 +1,22 @@
 import React from 'react';
 import styles from "../../assets/css/common/Paging.module.css";
 
-const PagingButtons = ({ currentPage, pageSize, onPageChange, pagingData }) => {
+const PagingButtons = ({ currentPage, pageSize, pageBthSize,onPageChange, pagingData }) => {
     const { totalPage, startPage, endPage, prevBtn, nextBtn, firstPageBtn, lastPageBtn } = pagingData;
 
     const handlePageClick = (page) => {
         if (page < 1 || page > totalPage) return;
         onPageChange(page);
+    };
+
+    const handleNextGroup = () => {
+        const nextStartPage = startPage + pageBthSize;
+        onPageChange(nextStartPage > totalPage ? totalPage : nextStartPage);
+    };
+
+    const handlePrevGroup = () => {
+        const prevStartPage = startPage - pageBthSize;
+        onPageChange(prevStartPage < 1 ? 1 : prevStartPage);
     };
 
     const pageButtons = [];
@@ -36,9 +46,9 @@ const PagingButtons = ({ currentPage, pageSize, onPageChange, pagingData }) => {
 
             {/* Prev 페이지 버튼 */}
             <button
-                onClick={() => handlePageClick(currentPage - 1)}
-                disabled={currentPage === 1}
-                className={currentPage === 1 ? styles.disabled : ''}
+                onClick={handlePrevGroup}
+                disabled={!prevBtn}
+                className={!prevBtn ? styles.disabled : ''}
             >
                 Prev
             </button>
@@ -48,9 +58,9 @@ const PagingButtons = ({ currentPage, pageSize, onPageChange, pagingData }) => {
 
             {/* Next 페이지 버튼 */}
             <button
-                onClick={() => handlePageClick(currentPage + 1)}
-                disabled={currentPage === totalPage}
-                className={currentPage === totalPage ? styles.disabled : ''}
+                onClick={handleNextGroup}
+                disabled={!nextBtn}
+                className={!nextBtn ? styles.disabled : ''}
             >
                 Next
             </button>

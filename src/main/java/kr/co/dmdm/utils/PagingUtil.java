@@ -39,9 +39,8 @@ public class PagingUtil {
             this.currentPage = Math.max(1, Math.min(currentPage, totalPage));
             this.startPage = ((currentPage - 1) / pageBtnCount) * pageBtnCount + 1;
             this.endPage = Math.min(startPage + pageBtnCount - 1, totalPage);
-
             this.prevBtn = startPage > 1;
-            this.nextBtn = endPage < totalPage;
+            this.nextBtn = endPage < totalPage && currentPage < totalPage;
             this.firstPageBtn = currentPage > 1;
             this.lastPageBtn = currentPage < totalPage;
         }

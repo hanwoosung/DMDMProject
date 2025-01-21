@@ -66,11 +66,16 @@ const PagingTestPage = () => {
     const [pagingData, setPagingData] = useState(null);
 
     const pageSize = 10;
-    const pageBtnCount = 5;
+    const pageBtnCount = 10;
 
     useEffect(() => {
-        const totalCount = 30000;
+        const totalCount = 120;
         const totalPage = Math.ceil(totalCount / pageSize);
+
+        const startPage = Math.floor((currentPage - 1) / pageBtnCount) * pageBtnCount + 1;
+        const endPage = Math.min(startPage + pageBtnCount - 1, totalPage);
+
+        const nextBtn = endPage < totalPage && currentPage < totalPage;
 
         const dummyPagingData = {
             totalPage: totalPage,
@@ -78,7 +83,7 @@ const PagingTestPage = () => {
             startPage: Math.floor((currentPage - 1) / pageBtnCount) * pageBtnCount + 1,
             endPage: Math.min(Math.floor((currentPage - 1) / pageBtnCount) * pageBtnCount + pageBtnCount, totalPage),
             prevBtn: currentPage > 1,
-            nextBtn: currentPage < totalPage,
+            nextBtn : nextBtn,
             firstPageBtn: currentPage > 1,
             lastPageBtn: currentPage < totalPage,
         };
@@ -100,6 +105,7 @@ const PagingTestPage = () => {
             <PagingButtons
                 currentPage={currentPage}
                 pageSize={pageSize}
+                pageBthSize={pageBtnCount}
                 onPageChange={handlePageChange}
                 pagingData={pagingData}
             />
