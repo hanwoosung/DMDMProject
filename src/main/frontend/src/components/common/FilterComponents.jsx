@@ -5,10 +5,11 @@ const Filter = ({
                     list = [
                         {label: "전체", value: ""}
                     ],
+                    defaultValue,
                     onClick
                 }) => {
 
-    const [selectedValue, setSelectedValue] = useState("");
+    const [selectedValue, setSelectedValue] = useState(defaultValue);
 
     const handleClick = (value) => {
         setSelectedValue(value);
