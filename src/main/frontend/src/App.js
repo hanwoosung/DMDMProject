@@ -11,11 +11,9 @@ import Filter from "./components/common/FilterComponents";
 import Confirm from "./components/common/ConfirmComponents";
 import {useState} from "react";
 import TestPage from "./pages/TestPage";
+import PagingTestPage from "./pages/PagingTestPage";
 
 function App() {
-
-
-
     return (
         <main>
             <Routes>
@@ -24,6 +22,13 @@ function App() {
                         <div>메인페이지 입니다......</div>
                     </Layout>
                 } />
+
+                <Route path="/paging-test" element={
+                    <Layout>
+                        <PagingTestPage />
+                    </Layout>
+                }/>
+
 
                 <Route path="/mypage" element={
                     <AsideLayout>
