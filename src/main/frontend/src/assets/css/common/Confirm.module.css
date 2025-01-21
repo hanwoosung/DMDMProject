@@ -1,0 +1,62 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.message {
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-around;
+}
+
+.confirm, .cancel {
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+/* 클릭 시 효과 (active 상태) */
+.confirm:active {
+    background-color: #ffc357; /* 클릭 시 색상 변경 */
+    transform: scale(1); /* 눌린 효과를 주기 위한 크기 축소 */
+}
+
+/* 포커스 시 스타일 */
+.confirm:focus {
+    outline: none; /* 기본 포커스 아웃라인 제거 */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* 포커스 시 그림자 추가 */
+}
+
+.confirm {
+    background-color: #FFB733;
+    color: white;
+}
+
+.cancel {
+    background-color: #ccc;
+    color: black;
+}

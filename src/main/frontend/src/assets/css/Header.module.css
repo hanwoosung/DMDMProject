@@ -41,6 +41,7 @@ header{
     padding: 18px;
     border: 1px solid #DADADA;
     border-radius: 10px;
+    z-index: 99;
 }
 
 .profileDetail{
