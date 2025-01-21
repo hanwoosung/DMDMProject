@@ -1,0 +1,14 @@
+.commonSelect{
+    width: 200px;
+    height: 35px;
+    padding-left: 10px;
+    border: 1px solid #AAAAAA;
+    border-radius: 10px;
+    color: black;
+}
+
+.commonSelect:focus {
+    border: 1px solid #FFB733 !important;
+    outline: none; /* 기본 포커스 테두리 제거 */
+    box-shadow: 0 0 5px rgba(129, 129, 129, 0.5);
+}

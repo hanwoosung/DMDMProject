@@ -9,7 +9,9 @@ const AsideLayout = ({children}) => {
             <Header/>
             <main className={styles.content}>
                 <Aside/>
-                {children}
+                <div className={styles.detail}>
+                    {children}
+                </div>
             </main>
             <Footer/>
         </div>
