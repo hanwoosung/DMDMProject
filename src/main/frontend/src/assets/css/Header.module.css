@@ -1,7 +1,3 @@
-header{
-    position: relative;
-}
-
 .flexContainer {
     margin: 0 auto;
     width: 1440px;
@@ -9,6 +5,13 @@ header{
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+}
+
+.logoBtn{
+    width: 90px;
+    height: 90px;
+    margin-right: 50px;
+    cursor: pointer;
 }
 
 .headBtn:hover{
@@ -28,37 +31,68 @@ header{
     align-items: center;
 }
 
+.flexColumn{
+    display: flex;
+    flex-direction: column;
+}
+
+.menuDetailFlexRow{
+    composes: flexRow;
+    height: 100%;
+    gap: 70px;
+}
+
+.profileFlexColumn{
+    composes: flexColumn;
+    height: 90px;
+    position: relative;
+}
+
+.profileFlexRow{
+    composes: flexRow;
+    gap: 50px;
+}
+
 .headerDetail{
     display: none;
     flex-direction: row;
     justify-content: space-around;
     background: #FFFAF0;
     position: absolute;
-    left: 360px;
+    left: -75px;
     top: 75px;
     width: 1000px;
     align-items: start;
     padding: 18px;
     border: 1px solid #DADADA;
     border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
 }
 
 .profileDetail{
     display: flex;
     flex-direction: column;
     border: 1px solid #DADADA;
+    background-color: white;
     border-radius: 10px;
     padding: 15px;
     position: absolute;
-    right: 240px;
-    top: 75px;
+    top: 50px;
+    right: 0;
     gap: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .detailTitleBtn{
     font-size: 1.3rem;
     font-weight: bold;
     margin-bottom: 10px;
+}
+
+.menuFlexColumn{
+    composes: flexColumn;
+    position: relative;
 }
 
 .headerFlexColumn{
@@ -68,6 +102,7 @@ header{
 }
 
 .iconSize{
+    min-width: 24px;
     width: 24px;
     height: 24px;
     cursor: pointer;
@@ -93,4 +128,82 @@ header{
     margin-left: 10px;
 
     composes: headBtn;
+}
+
+.profileLine{
+    border: 0;
+    border-top: 1px solid #FFB733;
+}
+.profileItemLine{
+    border: 0;
+    border-top: 1px solid #DADADA;
+    margin: 10px 0;
+}
+
+.notifyTitle{
+    composes: flexRow;
+    padding: 10px 15px;
+}
+
+.headPopupList{
+    display: none;
+    flex-direction: column;
+    border: #FFB733 solid 1px;
+    background-color: white;
+    border-radius: 10px;
+    position: absolute;
+    width: 350px;
+    top: 50px;
+    right: 0;
+    box-shadow: 0 4px 10px rgba(197, 123, 0, 0.2);
+}
+
+.notifyContent{
+    composes: flexColumn;
+    font-size: 13px;
+    padding: 15px;
+}
+
+.notifyItem{
+    composes: flexRow;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.notifyBtn{
+    composes: flexRow;
+    gap: 10px;
+    justify-content: end;
+    font-size: 15px;
+    margin-bottom: 15px;
+}
+
+.moreViewBtn{
+    height: 24px;
+    width: 24px;
+    align-self: center;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.moreOptionBtn{
+    position: relative;
+}
+
+.optionList{
+    display: none;
+    flex-direction: column;
+    border: 1px solid #DADADA;
+    background-color: white;
+    border-radius: 10px;
+    padding: 5px 10px;
+    position: absolute;
+    top: -5px;
+    left: 25px;
+}
+
+.optionItem{
+    composes: headBtn;
+
+    text-wrap: nowrap;
 }

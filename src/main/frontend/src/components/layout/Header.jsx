@@ -1,5 +1,7 @@
-import {ReactComponent as Logo} from "../../assets/image/img_logo.svg";
+import logo from "../../assets/image/img_logo.jpg";
+import profile from "../../assets/image/ex_profile.png";
 import {ReactComponent as Message} from "../../assets/image/icon_message.svg";
+import {ReactComponent as OpenMessage} from "../../assets/image/icon_open_message.svg";
 import {ReactComponent as Notification} from "../../assets/image/icon_notification.svg";
 import {ReactComponent as DarkMode} from "../../assets/image/icon_dark_mode.svg";
 import {ReactComponent as Profile} from "../../assets/image/icon_profile.svg";
@@ -7,113 +9,254 @@ import {ReactComponent as Logout} from "../../assets/image/icon_logout.svg";
 import {ReactComponent as Info} from "../../assets/image/icon_info.svg";
 import {ReactComponent as Emoticon} from "../../assets/image/icon_emoticon.svg";
 import {ReactComponent as Edit} from "../../assets/image/icon_edit.svg";
+import {ReactComponent as More} from "../../assets/image/icon_more.svg";
+import {ReactComponent as Colosseum} from "../../assets/image/icon_colosseum.svg";
+import {ReactComponent as MoreView} from "../../assets/image/icon_more_view.svg";
 import styles from "../../assets/css/Header.module.css";
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 const Header = () => {
 
     const [isHovered, setIsHovered] = useState(false);
-    const [profileClick, setProfileClick] = useState(false);
+    const [activeOption, setActiveOption] = useState(null);
+    const [popupView, setPopupView] = useState(null);
+    const popupRef = useRef(null);
+    const navigate = useNavigate();
 
-    //todo 내정보 외부 클릭시 꺼지도록하기.
+    const togglePopupView = (clicked) => {
+        setPopupView(clicked === popupView ? null : clicked);
+    }
+    const handleToggleOption = (id) => {
+        setActiveOption((prev) => (prev === id ? null : id));
+    };
+
+    // todo 빈공간 클릭시 삭제 버튼 숨기기
+    useEffect(() => {
+        popupView === null && setActiveOption(null);
+    }, [popupView])
+
+    useEffect(() => {
+        const handleOutsideClick = (event) => {
+            if (popupRef.current && !popupRef.current.contains(event.target)) {
+                setPopupView(null);
+            }
+        };
+        document.addEventListener("mousedown", handleOutsideClick);
+
+        return () => {
+            document.removeEventListener("mousedown", handleOutsideClick);
+        };
+    }, []);
 
     return (
         <header>
             <div className={styles.flexContainer}>
-                <div className={styles.flexRow} style={{gap: 70}}
-                     onMouseEnter={() => setIsHovered(true)}
-                     onMouseLeave={() => setIsHovered(false)}>
-                    <Logo width={90} height={90} alt="logo" src={Logo}/>
-                    <div className={styles.titleHeadBtn}>커뮤니티</div>
-                    <div className={styles.titleHeadBtn}>인기글</div>
-                    <div className={styles.titleHeadBtn}>투기장</div>
-                    <div className={styles.titleHeadBtn}>취업</div>
-                    <div className={styles.titleHeadBtn}>공지사항</div>
-                    <div className={styles.titleHeadBtn}>이벤트</div>
-                    <div className={styles.titleHeadBtn}>고객센터</div>
-                </div>
-                <div className={styles.flexRow} style={{gap: 50}}>
-                    {/*<Colosseum className={styles.iconSize}/>*/}
-                    <Message className={styles.iconSize}/>
-                    <Notification className={styles.iconSize}/>
-                    <DarkMode className={styles.iconSize}/>
-                    <Profile className={styles.iconSize} onClick={() => {setProfileClick((c) => !c)}}/>
-                </div>
-            </div>
-
-            <div className={styles.headerDetail} style={{display: isHovered ? "flex" : "none"}}
-                 onMouseEnter={() => setIsHovered(true)}
-                 onMouseLeave={() => setIsHovered(false)}>
-                <div className={styles.headerFlexColumn}>
-                    <div className={styles.detailTitleBtn}>커뮤니티</div>
-                    <div className={styles.headBtn}>커뮤니티</div>
-                    <div className={styles.headBtn}>Q & A</div>
-                    <div className={styles.headBtn}>지식</div>
-                    <div className={styles.headBtn}>스터디</div>
-                </div>
-
-                <div className={styles.verticalLine}/>
-
-                <div className={styles.headerFlexColumn}>
-                    <div className={styles.detailTitleBtn}>인기글</div>
-                    <div className={styles.headBtn}>주간 인기</div>
-                    <div className={styles.headBtn}>일간 인기</div>
-                </div>
-
-                <div className={styles.verticalLine}/>
-
-                <div className={styles.headerFlexColumn}>
-                    <div className={styles.detailTitleBtn}>투기장</div>
-                    <div className={styles.headBtn}>투기장</div>
-                </div>
-
-                <div className={styles.verticalLine}/>
-
-                <div className={styles.headerFlexColumn}>
-                    <div className={styles.detailTitleBtn}>취업</div>
-                    <div className={styles.headBtn}>취업얘기</div>
-                    <div className={styles.headBtn}>채용</div>
-                </div>
-
-                <div className={styles.verticalLine}/>
-
-                <div className={styles.headerFlexColumn}>
-                    <div className={styles.detailTitleBtn}>공지사항</div>
-                    <div className={styles.headBtn}>공지사항</div>
-                </div>
-
-                <div className={styles.verticalLine}/>
-
-                <div className={styles.headerFlexColumn}>
-                    <div className={styles.detailTitleBtn}>이벤트</div>
-                    <div className={styles.headBtn}>이벤트</div>
-                </div>
-
-                <div className={styles.verticalLine}/>
-
-                <div className={styles.headerFlexColumn}>
-                    <div className={styles.detailTitleBtn}>고객센터</div>
-                    <div className={styles.headBtn}>고객센터</div>
-                </div>
-            </div>
-            <div className={styles.profileDetail} style={{display: profileClick ? "flex" : "none"}}>
-                <div style={{fontWeight: "bold"}}>내 계정</div>
                 <div className={styles.flexRow}>
-                    <Info className={styles.profileIcon}/>
-                    <div className={styles.profileDetailSpan}>프로필</div>
+                    <img src={logo} className={styles.logoBtn} alt="logo"
+                         onClick={() => navigate("/")}
+                    />
+                    <div className={styles.profileFlexColumn}>
+                        <div className={styles.menuDetailFlexRow}
+                             onMouseEnter={() => setIsHovered(true)}
+                             onMouseLeave={() => setIsHovered(false)}>
+                            <div className={styles.titleHeadBtn}>커뮤니티</div>
+                            <div className={styles.titleHeadBtn}>인기글</div>
+                            <div className={styles.titleHeadBtn}>투기장</div>
+                            <div className={styles.titleHeadBtn}>취업</div>
+                            <div className={styles.titleHeadBtn}>공지사항</div>
+                            <div className={styles.titleHeadBtn}>이벤트</div>
+                            <div className={styles.titleHeadBtn}>고객센터</div>
+                        </div>
+
+                        <div className={styles.headerDetail} style={{display: isHovered ? "flex" : "none"}}
+                             onMouseEnter={() => setIsHovered(true)}
+                             onMouseLeave={() => setIsHovered(false)}>
+                            <div className={styles.headerFlexColumn}>
+                                <div className={styles.detailTitleBtn}>커뮤니티</div>
+                                <div className={styles.headBtn}>커뮤니티</div>
+                                <div className={styles.headBtn}>Q & A</div>
+                                <div className={styles.headBtn}>지식</div>
+                                <div className={styles.headBtn}>스터디</div>
+                            </div>
+
+                            <div className={styles.verticalLine}/>
+
+                            <div className={styles.headerFlexColumn}>
+                                <div className={styles.detailTitleBtn}>인기글</div>
+                                <div className={styles.headBtn}>주간 인기</div>
+                                <div className={styles.headBtn}>일간 인기</div>
+                            </div>
+
+                            <div className={styles.verticalLine}/>
+
+                            <div className={styles.headerFlexColumn}>
+                                <div className={styles.detailTitleBtn}>투기장</div>
+                                <div className={styles.headBtn}>투기장</div>
+                            </div>
+
+                            <div className={styles.verticalLine}/>
+
+                            <div className={styles.headerFlexColumn}>
+                                <div className={styles.detailTitleBtn}>취업</div>
+                                <div className={styles.headBtn}>취업얘기</div>
+                                <div className={styles.headBtn}>채용</div>
+                            </div>
+
+                            <div className={styles.verticalLine}/>
+
+                            <div className={styles.headerFlexColumn}>
+                                <div className={styles.detailTitleBtn}>공지사항</div>
+                                <div className={styles.headBtn}>공지사항</div>
+                            </div>
+
+                            <div className={styles.verticalLine}/>
+
+                            <div className={styles.headerFlexColumn}>
+                                <div className={styles.detailTitleBtn}>이벤트</div>
+                                <div className={styles.headBtn}>이벤트</div>
+                            </div>
+
+                            <div className={styles.verticalLine}/>
+
+                            <div className={styles.headerFlexColumn}>
+                                <div className={styles.detailTitleBtn}>고객센터</div>
+                                <div className={styles.headBtn}>고객센터</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className={styles.flexRow}>
-                    <Edit className={styles.profileIcon}/>
-                    <div className={styles.profileDetailSpan}>정보수정</div>
-                </div>
-                <div className={styles.flexRow}>
-                    <Emoticon className={styles.profileIcon}/>
-                    <div className={styles.profileDetailSpan}>이모티콘</div>
-                </div>
-                <hr className={styles.profileDetailLine}/>
-                <div className={styles.flexRow}>
-                    <Logout className={styles.profileIcon}/>
-                    <div className={styles.profileDetailSpan}>로그아웃</div>
+                <div className={styles.menuFlexColumn} ref={popupRef}>
+                    <div className={styles.profileFlexRow}>
+                        <Message className={styles.iconSize}
+                                 onClick={() => {
+                                     togglePopupView("message")
+                                 }}
+                        />
+                        <Notification className={styles.iconSize}
+                                      onClick={() => {
+                                          togglePopupView("notification")
+                                      }}
+                        />
+                        <DarkMode className={styles.iconSize}/>
+                        <Profile className={styles.iconSize}
+                                 onClick={() => {
+                                     togglePopupView("profile")
+                                 }}
+                        />
+                    </div>
+
+                    <div className={styles.headPopupList}
+                         style={{display: popupView === "message" ? "flex" : "none"}}
+                    >
+                        <div className={styles.notifyTitle}>
+                            <OpenMessage style={{width: 16, height: 16}}/>
+                            <div style={{marginLeft: 10}}>쪽지</div>
+                        </div>
+                        <hr className={styles.profileLine}/>
+                        <div className={styles.notifyContent}>
+                            <div className={styles.notifyBtn}>
+                                <div className={styles.headBtn}>모두 읽음</div>
+                                <div className={styles.headBtn}>모두 삭제</div>
+                            </div>
+                            {/*테스트 데이터 넣었습니다. 배열 빼고 넣으세요*/}
+                            {["구구", "멍멍", "두루미"].map((item, index) => (
+                                <div key={index} className={styles.flexColumn}>
+                                    <div className={styles.notifyItem} style={{gap: 10}}>
+                                        <img src={profile} alt="profile" style={{borderRadius: 100}}/>
+                                        <div className={styles.flexColumn} style={{gap: 3}}>
+                                            <div className={styles.flexRow} style={{justifyContent: "space-between"}}>
+                                                <div>{item}</div>
+                                                <div>YYYY-MM-DD</div>
+                                            </div>
+                                            <div style={{color: "gray"}}>님이 당신에게 쪽지를 보냈습니다.</div>
+                                        </div>
+                                        <div className={styles.moreOptionBtn}>
+                                            <More className={styles.iconSize} onClick={() => {
+                                                handleToggleOption(index)
+                                            }}/>
+                                            <div
+                                                className={styles.optionList}
+                                                style={{display: activeOption === index ? "flex" : "none"}}
+                                            >
+                                                <div className={styles.optionItem}>삭제</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr className={styles.profileItemLine}/>
+                                </div>
+                            ))}
+
+
+                        </div>
+                        <MoreView className={styles.moreViewBtn}/>
+                    </div>
+
+                    <div className={styles.headPopupList}
+                         style={{display: popupView === "notification" ? "flex" : "none"}}
+                    >
+                        <div className={styles.notifyTitle}>
+                            <Notification style={{width: 16, height: 16}}/>
+                            <div style={{marginLeft: 10}}>알림</div>
+                        </div>
+                        <hr className={styles.profileLine}/>
+                        <div className={styles.notifyContent}>
+                            <div className={styles.notifyBtn}>
+                                <div className={styles.headBtn}>모두 읽음</div>
+                                <div className={styles.headBtn}>모두 삭제</div>
+                            </div>
+                            <div className={styles.notifyItem} style={{gap: 10}}>
+                                <img src={profile} alt="profile" style={{borderRadius: 100}}/>
+                                <div className={styles.flexColumn} style={{gap: 3}}>
+                                    <div className={styles.flexRow} style={{justifyContent: "space-between"}}>
+                                        <div>두두두</div>
+                                        <div>YYYY-MM-DD</div>
+                                    </div>
+                                    <div style={{color: "gray"}}>님이 당신이 작성하신 “코딩 잘하는법...”에 댓글을 달았습니다...</div>
+                                </div>
+                                <More className={styles.iconSize}/>
+                            </div>
+                            <hr className={styles.profileItemLine}/>
+                            <div className={styles.notifyItem} style={{gap: 10}}>
+                                <img src={profile} alt="profile" style={{borderRadius: 100}}/>
+                                <div className={styles.flexColumn} style={{gap: 3}}>
+                                    <div className={styles.flexRow} style={{justifyContent: "space-between"}}>
+                                        <div className={styles.flexRow}>
+                                            <div>두두두</div>
+                                            <Colosseum width="18" height="18" style={{marginLeft: 5}}/>
+                                        </div>
+                                        <div>YYYY-MM-DD</div>
+                                    </div>
+                                    <div style={{color: "gray"}}>님이 당신에게 싸움을 걸어왔습니다. 참여여부 확인을 위하여 알림을 클릭해주세요,</div>
+                                </div>
+                                <More className={styles.iconSize}/>
+                            </div>
+                        </div>
+                        <MoreView className={styles.moreViewBtn}/>
+                    </div>
+
+                    <div className={styles.profileDetail}
+                         style={{display: popupView === "profile" ? "flex" : "none"}}
+                    >
+                        <div style={{fontWeight: "bold"}}>내 계정</div>
+                        <div className={styles.flexRow}>
+                            <Info className={styles.profileIcon}/>
+                            <div className={styles.profileDetailSpan}>프로필</div>
+                        </div>
+                        <div className={styles.flexRow}>
+                            <Edit className={styles.profileIcon}/>
+                            <div className={styles.profileDetailSpan}>정보수정</div>
+                        </div>
+                        <div className={styles.flexRow}>
+                            <Emoticon className={styles.profileIcon}/>
+                            <div className={styles.profileDetailSpan}>이모티콘</div>
+                        </div>
+                        <hr className={styles.profileDetailLine}/>
+                        <div className={styles.flexRow}>
+                            <Logout className={styles.profileIcon}/>
+                            <div className={styles.profileDetailSpan}>로그아웃</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
