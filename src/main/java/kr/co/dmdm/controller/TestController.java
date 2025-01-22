@@ -49,7 +49,7 @@ public class TestController {
 
     @GetMapping("/error")
     public String errorTest() {
-        throw new CustomException(ExceptionEnum.RUNTIME_EXCEPTION);
+        throw new CustomException(ExceptionEnum.NOT_FOUND);
     }
 
     @GetMapping("/error2")
@@ -62,8 +62,13 @@ public class TestController {
         throw new RuntimeException("런타임 에러");
     }
 
-    @GetMapping
-    public TestDto test(@RequestBody TestDto testDto) {
+    @GetMapping("/test1")
+    public String test1() {
+        return "테스트2";
+    }
+
+    @GetMapping("/test2")
+    public TestDto test2(@RequestBody TestDto testDto) {
         System.out.println(testDto);
         return testDto;
     }
