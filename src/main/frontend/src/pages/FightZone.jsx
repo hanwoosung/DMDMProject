@@ -3,26 +3,23 @@ import {Client} from '@stomp/stompjs';
 import {useParams} from "react-router-dom";
 
 const FightZone = () => {
-    const { roomNo } = useParams();
-    const [connected, setConnected] = useState(false);
+    const {roomNo} = useParams();
     const [messages, setMessages] = useState([]);
     const [username, setUsername] = useState('');
     const [content, setContent] = useState('');
     const stompClient = useRef(null);
-    const chatRoomId = useRef('');
 
     useEffect(() => {
         stompClient.current = new Client({
             brokerURL: 'ws://localhost:8090/ws-connect',
             onConnect: (frame) => {
-                setConnected(true);
                 console.log('Connected: ' + frame);
-                stompClient.current.subscribe(`/subscribe/chat.${chatRoomId.current}`, (message) => {
+                stompClient.current.subscribe(`/subscribe/chat.${roomNo}`, (message) => {
                     const body = JSON.parse(message.body);
-                    const username = body.username;
-                    const content = body.content;
-                    console.log("응답..........."+body.content);
-                    setMessages((prevMessages) => [...prevMessages, `${username}: ${content}`]);
+                    setMessages((prevMessages) => [
+                        ...prevMessages,
+                        `${body.username}: ${body.content}`
+                    ]);
                 });
             },
             onWebSocketError: (error) => {
@@ -34,20 +31,12 @@ const FightZone = () => {
             }
         });
 
+        stompClient.current.activate();
+
         return () => {
             stompClient.current.deactivate();
         };
     }, []);
-
-    const connect = () => {
-        stompClient.current.activate();
-    }
-
-    const disconnect = () => {
-        stompClient.current.deactivate();
-        setConnected(false);
-        console.log("Disconnected");
-    }
 
     const sendChat = () => {
         if (!stompClient.current || !stompClient.current.connected) {
@@ -55,10 +44,9 @@ const FightZone = () => {
             return;
         }
 
-        if (chatRoomId.current && username && content) {
-            console.log(`요청 => 주소:/publish/chat.${chatRoomId.current}, 바디: ${JSON.stringify({username, content})}`);
+        if (username && content) {
             stompClient.current.publish({
-                destination: `/publish/chat.${chatRoomId.current}`,
+                destination: `/publish/chat.${roomNo}`,
                 body: JSON.stringify({username, content}),
             });
             setContent('');
@@ -69,60 +57,24 @@ const FightZone = () => {
         <div className="container">
             <div className="row">
                 <div className="col-md-6">
-                    <div className="form-inline">
-                        <div className="form-group">
-                            <div>{roomNo}: 이거 나옴요</div>
-                            <label htmlFor="connect">WebSocket connection:</label>
-                            <button
-                                id="connect"
-                                className="btn btn-default"
-                                type="button"
-                                onClick={connect}
-                                disabled={connected}
-                            >
-                                Connect
-                            </button>
-                            <button
-                                id="disconnect"
-                                className="btn btn-default"
-                                type="button"
-                                onClick={disconnect}
-                                disabled={!connected}
-                            >
-                                Disconnect
-                            </button>
-                        </div>
-                    </div>
+                    <div>{roomNo}: 현재 방 주소</div>
                 </div>
                 <div className="col-md-6">
                     <div className="form-inline">
                         <div className="form-group">
-
-
-                            <label htmlFor="chatRoomId">Chat Room ID</label>
+                            <label htmlFor="name">Name</label>
                             <input
                                 type="text"
-                                id="chatRoomId"
-                                className="form-control"
-                                value={chatRoomId.current}
-                                onChange={(e) => {
-                                    chatRoomId.current = e.target.value;
-                                }}
-                            />
-
-
-                            <label htmlFor="na">Name</label>
-                            <input
-                                type="text"
-                                id="na"
+                                id="name"
                                 className="form-control"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                             />
-                            <label htmlFor="name">Content</label>
+                            <br/>
+                            <label htmlFor="content">Content</label>
                             <input
                                 type="text"
-                                id="name"
+                                id="content"
                                 className="form-control"
                                 value={content}
                                 onChange={(e) => setContent(e.target.value)}
@@ -141,20 +93,9 @@ const FightZone = () => {
             </div>
             <div className="row">
                 <div className="col-md-12">
-                    <table id="conversation" className="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Chat messages</th>
-                        </tr>
-                        </thead>
-                        <tbody id="greetings">
-                        {messages.map((message, index) => (
-                            <tr key={index}>
-                                <td>{message}</td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
+                    {messages.map((message, index) => (
+                        <div key={index}>{message}</div>
+                    ))}
                 </div>
             </div>
         </div>
