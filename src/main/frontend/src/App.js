@@ -12,6 +12,7 @@ import Confirm from "./components/common/ConfirmComponents";
 import {useState} from "react";
 import TestPage from "./pages/TestPage";
 import PagingTestPage from "./pages/PagingTestPage";
+import FightZone from "./pages/FightZone";
 
 function App() {
     return (
@@ -29,7 +30,6 @@ function App() {
                     </Layout>
                 }/>
 
-
                 <Route path="/mypage" element={
                     <AsideLayout>
                         <div>마이페이지 입니다.......</div>
@@ -41,6 +41,10 @@ function App() {
                         <TestPage/>
                     </AsideLayout>
                 } />
+
+                <Route path="/fight-zone/:roomNo" element={
+                    <FightZone/>
+                }/>
             </Routes>
         </main>
     );
