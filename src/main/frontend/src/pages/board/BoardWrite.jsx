@@ -7,7 +7,7 @@ import HashTag from "../../components/board/HashTagComponents";
 import BoardWriteHandler from "../../services/board/BoardWriteHandler";
 import Select from "../../components/common/SelectComponents";
 import BigBtn from "../../components/common/BigBtnComponents";
-import Tiptap from "../../components/common/TipTapEditor";
+import Tiptap from "../../components/editor/TipTapEditor";
 
 
 const BoardWrite = () => {
