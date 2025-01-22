@@ -1,0 +1,59 @@
+.inputContainer {
+    width: 100%;
+    max-width: 430px;
+    margin: 10px auto;
+}
+
+.label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #00000080;
+}
+
+.inputGroup {
+    display: flex;
+    align-items: center;
+}
+
+.input {
+    flex: 1;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #AAAAAA;
+    border-radius: 10px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input::placeholder {
+    color: #AAAAAA;
+}
+
+
+.input:focus {
+    border-color: #FFB733;
+    outline: none;
+}
+
+.checkButton {
+    margin-left: 10px;
+    padding: 10px 15px;
+    font-size: 14px;
+    background-color: #FFB733;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.checkButton:hover {
+    background-color: #E0A800;
+}
+
+.errorMessage {
+    color: #FF0000;
+    font-size: 12px;
+    margin-top: 5px;
+}

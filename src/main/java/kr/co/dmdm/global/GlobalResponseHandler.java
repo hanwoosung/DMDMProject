@@ -47,9 +47,6 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
                                   Class selectedConverterType,
                                   ServerHttpRequest request,
                                   ServerHttpResponse response) {
-        if (body instanceof Response) {
-            return body;
-        }
         return Response.success(body);
     }
 }

@@ -1,12 +1,14 @@
 package kr.co.dmdm.controller;
 
-import kr.co.dmdm.dto.TestDto;
 import kr.co.dmdm.global.exception.CustomException;
 import kr.co.dmdm.global.exception.ExceptionEnum;
 import kr.co.dmdm.utils.PagingUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,7 +51,7 @@ public class TestController {
 
     @GetMapping("/error")
     public String errorTest() {
-        throw new CustomException(ExceptionEnum.NOT_FOUND);
+        throw new CustomException(ExceptionEnum.RUNTIME_EXCEPTION);
     }
 
     @GetMapping("/error2")
@@ -60,16 +62,5 @@ public class TestController {
     @GetMapping("/error3")
     public String errorTest3() {
         throw new RuntimeException("런타임 에러");
-    }
-
-    @GetMapping("/test1")
-    public String test1() {
-        return "테스트2";
-    }
-
-    @GetMapping("/test2")
-    public TestDto test2(@RequestBody TestDto testDto) {
-        System.out.println(testDto);
-        return testDto;
     }
 }

@@ -1,0 +1,252 @@
+.signUpMainContainer {
+    width: 500px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 0 auto 100px;
+}
+
+.signUpLogo {
+    height: 100px;
+    margin-top: 40px;
+}
+
+.signUpTitle {
+    color: #000000;
+    font-size: 30px;
+    margin-top: 20px;
+}
+
+.signUpSubTitle {
+    color: #AAAAAA;
+    font-size: 15px;
+    margin-top: 18px;
+}
+
+.lineContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin-top: 20px;
+    align-items: center;
+}
+
+.line {
+    flex: 1;
+    height: 1px;
+    background-color: #AAAAAA80;
+    margin: 0 10px;
+}
+
+.lineText {
+    color: #AAAAAA;
+    font-size: 18px;
+}
+
+.snsContainer {
+    display: flex;
+    gap: 45px;
+    margin-top: 19px;
+}
+
+.snsKakaoBtn {
+    width: 70px;
+    height: 70px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("../image/img_kakao.png");
+}
+
+.snsNaverBtn {
+    width: 70px;
+    height: 70px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("../image/img_naver.png");
+}
+
+.snsGithubBtn {
+    width: 70px;
+    height: 70px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("../image/img_github.png");
+}
+
+.snsGoogleBtn {
+    width: 70px;
+    height: 70px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("../image/img_google.png");
+}
+
+
+.emailAgreeSection {
+    display: flex;
+    align-items: start;
+    width: 88%;
+    margin-bottom: 10px;
+    padding: 10px 0;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 25px;
+    margin-right: 15px;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 25px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 19px;
+    width: 19px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #FFC107;
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+
+.emailText {
+    font-size: 16px;
+    color: #555555;
+}
+
+.emailDescription {
+    font-size: 14px;
+    color: #AAAAAA;
+    margin-top: 5px;
+}
+
+.termsSection {
+    width: 88%;
+    margin-top: 7px;
+}
+
+.termsTitle {
+    font-size: 18px;
+    color: #555555;
+    margin-bottom: 10px;
+}
+
+.termsLine {
+    flex: 1;
+    height: 2px;
+    margin-top: 15px;
+    background-color: #AAAAAA80;
+}
+
+.termsCheckbox {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #555555;
+    cursor: pointer;
+}
+
+.termsCheckbox label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.termsCheckbox label input[type="checkbox"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #AAAAAA;
+    border-radius: 3px;
+    background-color: white;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.termsCheckbox label input[type="checkbox"]:checked {
+    background-color: #FFC107;
+    border-color: #FFC107;
+}
+
+.termsCheckbox label input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 5.5px;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+
+.captchaSection {
+    margin: 20px 0;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    color: #555555;
+}
+
+.confirmButton {
+    width: 100%;
+    padding: 15px;
+    max-width: 450px;
+    background-color: #FFC107;
+    color: white;
+    font-size: 16px;
+    margin-top: 10px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.confirmButton:disabled {
+    background-color: #E0E0E0;
+    color: #AAAAAA;
+    cursor: not-allowed;
+}
+
+.confirmButton:hover:enabled {
+    background-color: #E0A800;
+}
+
+.errorMessage {
+    color: #FF0000;
+    font-size: 12px;
+    margin-top: 5px;
+}

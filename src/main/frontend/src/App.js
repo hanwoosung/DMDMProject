@@ -4,6 +4,7 @@ import Layout from "./components/layout/Layout";
 import AsideLayout from "./components/layout/AsideLayout";
 import TestPage from "./pages/TestPage";
 import PagingTestPage from "./pages/PagingTestPage";
+import SignUpPage from "./pages/SignUpPage";
 
 function App() {
     return (
@@ -32,6 +33,11 @@ function App() {
                     <AsideLayout>
                         <TestPage/>
                     </AsideLayout>
+                } />
+
+
+                <Route path="/sign-up" element={
+                        <SignUpPage/>
                 } />
             </Routes>
         </main>
