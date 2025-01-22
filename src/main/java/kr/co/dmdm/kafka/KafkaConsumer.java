@@ -6,34 +6,58 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-
 @Service
 public class KafkaConsumer {
-	
-	@Bean
-    public NewTopic topic1() {
-    	return TopicBuilder.name("topic1")
-    			.partitions(10) // 10개의 파티션으로 분할
-    			.replicas(1) // 1개의 레플리카로 복
-    			.build();
+
+    @Bean
+    public NewTopic commentTopic() {
+        return TopicBuilder.name("notifications.comment")
+                .partitions(10)
+                .replicas(1)
+                .build();
     }
 
-    @KafkaListener(topics = "topic1", groupId = "foo")
-    public void consume1(String message) throws IOException {
-    	System.out.println("Consumer topic: topic1, message: " + message);
+    @KafkaListener(topics = "notifications.comment", groupId = "comment-service")
+    public void consumeCommentWrite(String message) {
+        System.out.println("Consumer topic: notifications.comment, message: " + message);
     }
-    
+
     @Bean
-    public NewTopic topic2() {
-    	return TopicBuilder.name("topic2")
-    			.partitions(10)
-    			.replicas(1)
-    			.build();
+    public NewTopic emoticonTopic() {
+        return TopicBuilder.name("notifications.emoticon")
+                .partitions(10)
+                .replicas(1)
+                .build();
     }
-    
-    @KafkaListener(topics = "topic2", groupId = "foo")
-    public void consume2(String message) throws IOException {
-    	System.out.println("Consumer topic: topic2, message: " + message);
+
+    @KafkaListener(topics = "notifications.emoticon", groupId = "emoticon-service")
+    public void consumeEmoticonBuy(String message) {
+        System.out.println("Consumer topic: notifications.emoticon, message: " + message);
+    }
+
+    @Bean
+    public NewTopic messageTopic() {
+        return TopicBuilder.name("notifications.message")
+                .partitions(10)
+                .replicas(1)
+                .build();
+    }
+
+    @KafkaListener(topics = "notifications.message", groupId = "message-service")
+    public void consumeMessageSend(String message) {
+        System.out.println("Consumer topic: notifications.message, message: " + message);
+    }
+
+    @Bean
+    public NewTopic fightTopic() {
+        return TopicBuilder.name("notifications.fight")
+                .partitions(10)
+                .replicas(1)
+                .build();
+    }
+
+    @KafkaListener(topics = "notifications.fight", groupId = "fight-service")
+    public void consumeFightSend(String message) {
+        System.out.println("Consumer topic: notifications.fight, message: " + message);
     }
 }

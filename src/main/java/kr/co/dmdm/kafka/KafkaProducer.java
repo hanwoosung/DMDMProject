@@ -1,5 +1,6 @@
 package kr.co.dmdm.kafka;
 
+import kr.co.dmdm.type.Alarm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -9,13 +10,18 @@ import org.springframework.stereotype.Service;
 public class KafkaProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public void sendMessage1(String message) {
-    	System.out.println("Producer topic: topic1, message: " + message);
-        kafkaTemplate.send("topic1", message);
+    public void sendMessage(Alarm alarmType, String message) {
+        String topic = getTopicByAlarmType(alarmType);
+        System.out.println("Producer topic: " + topic + ", message: " + message);
+        kafkaTemplate.send(topic, message);
     }
-    
-    public void sendMessage2(String message) {
-    	System.out.println("Producer topic: topic2, message: " + message);
-        kafkaTemplate.send("topic2", message);
+
+    private String getTopicByAlarmType(Alarm alarmType) {
+        return switch (alarmType) {
+            case COMMENT_WRITE -> "notifications.comment";
+            case EMOTICON_BUY -> "notifications.emoticon";
+            case MESSAGE_SEND -> "notifications.message";
+            case FIGHT_SEND -> "notifications.fight";
+        };
     }
 }
