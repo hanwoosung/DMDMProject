@@ -49,6 +49,7 @@ const TestPage = () => {
             <Search onClick={alert2} />
 
             <Filter list={[{label: "전체", value: ""}, {label: "전체2", value: "2"}]}
+                    defaultValue={"2"}
                     onClick={(value) => {
                         alert(value)
                     }}
