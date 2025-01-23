@@ -1,0 +1,20 @@
+.tag{
+    padding: 7px;
+    border: 1px solid #AAAAAA;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+
+.tagStyle{
+    font-size: 0.8rem;
+    color: #838383;
+    padding-right: 2px;
+}
+
+.removeTag{
+    padding-left: 4px;
+    color: red;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+}

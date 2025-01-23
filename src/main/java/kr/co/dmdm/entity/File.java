@@ -44,7 +44,7 @@ public class File extends Auditable {
     private String fileExt;        // 파일 확장자
 
     @Column(name="file_size")
-    private Integer fileSize;      // 파일 크기 (단위: MB)
+    private Long fileSize;      // 파일 크기 (단위: MB)
 
     @Column(name="user_id" , length = 15)
     private String userId;

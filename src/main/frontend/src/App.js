@@ -4,6 +4,9 @@ import Layout from "./components/layout/Layout";
 import AsideLayout from "./components/layout/AsideLayout";
 import TestPage from "./pages/TestPage";
 import PagingTestPage from "./pages/PagingTestPage";
+import BoardWrite from "./pages/board/BoardWrite";
+import SignUpPage from "./pages/SignUpPage";
+import LoginPage from "./pages/LoginPage";
 import FightZone from "./pages/FightZone";
 
 function App() {
@@ -22,6 +25,7 @@ function App() {
                     </Layout>
                 }/>
 
+
                 <Route path="/mypage" element={
                     <AsideLayout>
                         <div>마이페이지 입니다.......</div>
@@ -32,6 +36,21 @@ function App() {
                     <AsideLayout>
                         <TestPage/>
                     </AsideLayout>
+                } />
+
+                <Route path="/boardWrite" element={
+                    <Layout>
+                        <BoardWrite/>
+                    </Layout>
+                } />
+
+
+                <Route path="/sign-up" element={
+                        <SignUpPage/>
+                } />
+
+                <Route path="/login" element={
+                    <LoginPage />
                 } />
 
                 <Route path="/fight-zone/:roomNo" element={
