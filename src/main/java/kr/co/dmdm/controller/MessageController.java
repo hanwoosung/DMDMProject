@@ -1,7 +1,10 @@
 package kr.co.dmdm.controller;
 
-import kr.co.dmdm.dto.chat.ChatMessageRequestDto;
-import kr.co.dmdm.dto.chat.ChatMessageResponseDto;
+import kr.co.dmdm.dto.ChatMessageRequestDto;
+import kr.co.dmdm.dto.ChatMessageResponseDto;
+import kr.co.dmdm.dto.VoteRequestDto;
+import kr.co.dmdm.dto.VoteResponseDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 2025-01-22        최기환       최초 생성
  */
 @RestController
+@RequiredArgsConstructor
 @Slf4j
 public class MessageController {
     @MessageMapping("/observer.{chatRoomId}")
@@ -39,6 +43,15 @@ public class MessageController {
             @DestinationVariable Long chatRoomId
     ) {
         return new ChatMessageResponseDto(request.getUsername(), request.getContent());
+    }
+
+    @MessageMapping("/vote.{chatRoomId}")
+    @SendTo("/subscribe/observer.{chatRoomId}")
+    public VoteResponseDto sendVote(
+            VoteRequestDto request,
+            @DestinationVariable Long chatRoomId
+    ){
+       return new VoteResponseDto(0,0);
     }
 
     @MessageExceptionHandler

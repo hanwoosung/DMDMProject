@@ -2,18 +2,24 @@ import React, {useEffect, useRef, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {Client} from '@stomp/stompjs';
 import SmallBtn from "../components/common/SmallBtnComponents";
-import leftFighter from "../assets/image/ex_profile.png";
-import rightFighter from "../assets/image/ex_big_nose.jpg";
+import leftFighterImg from "../assets/image/ex_profile.png";
+import rightFighterImg from "../assets/image/ex_big_nose.jpg";
 import styles from '../assets/css/FightZone.module.css';
 
 const FightZone = () => {
     const {roomNo} = useParams();
-    const [messages, setMessages] = useState([]);
+    const stompClient = useRef(null);
+    const leftUser = useRef("doge");
+    const rightUser = useRef("nose");
+    const fighterMessageEnd = useRef();
+    const observerMessageEnd = useRef();
+    const [fighterMessages, setFighterMessages] = useState([]);
     const [observerMessages, setObserverMessages] = useState([]);
     const [observerUsers, setObserverUsers] = useState([]);
-    const [username, setUsername] = useState('');
-    const [content, setContent] = useState('');
-    const stompClient = useRef(null);
+    const [fighterName, setFighterName] = useState('');
+    const [fighterContent, setFighterContent] = useState('');
+    const [observerName, setObserverName] = useState('');
+    const [observerContent, setObserverContent] = useState('');
     const [selectedVote, setSelectedVote] = useState(null);
 
     // 방 접속시 연결 및 구독설정
@@ -23,11 +29,12 @@ const FightZone = () => {
             onConnect: (frame) => {
                 console.log('Connected: ' + frame);
 
-                // // 토론자 채팅 구독
-                // stompClient.current.subscribe(`/subscribe/fighter.${roomNo}`, (message) => {
-                //     const body = JSON.parse(message.body);
-                //     setMessages((prevMessages) => [...prevMessages, body]);
-                // });
+                // 토론자 채팅 구독
+                stompClient.current.subscribe(`/subscribe/fighter.${roomNo}`, (message) => {
+                    const body = JSON.parse(message.body);
+                    console.log(body);
+                    setFighterMessages((prevMessages) => [...prevMessages, body]);
+                });
 
                 // 관전자 채팅 구독
                 stompClient.current.subscribe(`/subscribe/observer.${roomNo}`, (message) => {
@@ -57,20 +64,38 @@ const FightZone = () => {
         };
     }, [roomNo]);
 
+    useEffect(() => {
+        fighterMessageEnd.current.scrollIntoView();
+    }, [fighterMessages]);
+
+    useEffect(() => {
+        observerMessageEnd.current.scrollIntoView();
+    }, [observerMessages]);
+
     //투표 버튼 이벤트
     const handleVote = (candidate) => {
         setSelectedVote(selectedVote === candidate ? null : candidate);
     };
 
+    //메시지 전송
+    const sendFighterChat = () => {
+        if (fighterName && fighterContent) {
+            stompClient.current.publish({
+                destination: `/publish/fighter.${roomNo}`,
+                body: JSON.stringify({username: fighterName, content: fighterContent}),
+            });
+            setFighterContent('');
+        }
+    };
 
     //메시지 전송
-    const sendChat = () => {
-        if (username && content) {
+    const sendObserverChat = () => {
+        if (observerName && observerContent) {
             stompClient.current.publish({
                 destination: `/publish/observer.${roomNo}`,
-                body: JSON.stringify({username, content}),
+                body: JSON.stringify({username: observerName, content: observerContent}),
             });
-            setContent('');
+            setObserverContent('');
         }
     };
 
@@ -92,7 +117,7 @@ const FightZone = () => {
     });
 
     return (
-        <div style={{background: "#FFFBF4"}}>
+        <div style={{background: "#FFFBF4", width: "100%", height: "100%"}}>
             <div className={styles.fightZone}>
                 {/* 토론자 채팅 공간 */}
                 <div className={styles.fighterSection}>
@@ -105,7 +130,7 @@ const FightZone = () => {
                                 >신입 유저
                                 </div>
                             </div>
-                            <img src={leftFighter} alt="도지"
+                            <img src={leftFighterImg} alt="프로필사진"
                                  className={styles.fighterImage}
                                  style={{border: "3px solid #300CFF"}}/>
                             <div className={styles.fighterName}>도지</div>
@@ -114,12 +139,12 @@ const FightZone = () => {
                                 styles.leftNoVoteBtn}
                                     onClick={() => handleVote("doge")}
                             >
-                                투표
+                                투표하기
                             </button>
                         </div>
                         <div className={styles.fightStatus}>
                             <div className={styles.fightTitle}>HTML이 프로그래밍 언어겠냐?</div>
-                            <SmallBtn width={100} title={"토론 시작"}/>
+                            <SmallBtn title={"토론 시작"} style={{fontSize: 18, width: 150}} />
                             <SmallBtn width={100} title={"마감"} style={{display: "none"}}/>
                             <div className={styles.timeCount}>남은시간 00:00:00</div>
                             <div className={styles.percentBox}>
@@ -135,7 +160,7 @@ const FightZone = () => {
                                 >뉴비 절단기
                                 </div>
                             </div>
-                            <img src={rightFighter} alt="코가 길어 슬픈 원숭이"
+                            <img src={rightFighterImg} alt="프로필 사진"
                                  className={styles.fighterImage}
                                  style={{border: "3px solid #FF0000"}}/>
                             <div className={styles.fighterName}>코큰 댕댕이</div>
@@ -145,42 +170,82 @@ const FightZone = () => {
                             }
                                     onClick={() => handleVote("monkey")}
                             >
-                                투표
+                                투표하기
                             </button>
                         </div>
                     </div>
 
                     <div className={styles.chatSection}>
                         <div className={styles.chatMessages}>
-                            {messages.map((message, index) => (
-                                <div key={index} className={styles.chatMessage}>
-                                    <span className={styles.username}>{message.username}:</span> <span
-                                    className={styles.content}>{message.content}</span>
-                                </div>
-                            ))}
+                            {fighterMessages.map((message, index) => {
+                                if (message.username === leftUser.current) {
+                                    return (
+                                        <div key={index}
+                                             className={styles.chatMessage}
+                                             style={{alignSelf: "start"}}
+                                        >
+                                            <img
+                                                className={styles.chatProfile}
+                                                src={leftFighterImg}
+                                                style={{border: "2px solid #300CFF"}}
+                                                alt="fighterImg"
+                                            />
+                                            <span className={styles.fighterLeftContent}>{message.content}</span>
+                                        </div>
+                                    );
+                                }
+
+                                if (message.username === rightUser.current) {
+                                    return (
+                                        <div key={index}
+                                             className={styles.chatMessage}
+                                             style={{alignSelf: "end"}}
+                                        >
+                                            <span className={styles.fighterRightContent}>{message.content}</span>
+                                            <img
+                                                className={styles.chatProfile}
+                                                src={rightFighterImg}
+                                                style={{border: "2px solid #FF0000"}}
+                                                alt="fighterImg"
+                                            />
+                                        </div>
+                                    );
+                                }
+
+                                return null;
+                            })}
+                            <div ref={fighterMessageEnd}></div>
                         </div>
+
                         <div className={styles.chatInputContainer}>
                             <input
                                 type="text"
                                 placeholder="사용자 이름"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                value={fighterName}
+                                onChange={(e) => setFighterName(e.target.value)}
                                 className={styles.input}
                             />
                             <input
                                 type="text"
                                 placeholder="메시지를 입력하세요"
-                                value={content}
-                                onChange={(e) => setContent(e.target.value)}
+                                value={fighterContent}
+                                onChange={(e) => setFighterContent(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        sendFighterChat();
+                                    }
+                                }}
                                 className={styles.input}
+                                style={{flex: 1}}
                             />
-                            <button className={styles.sendButton} onClick={sendChat}>보내기</button>
+                            <SmallBtn title={"시간연장"}/>
                         </div>
                     </div>
                 </div>
 
                 {/* 관전자 채팅 공간 */}
                 <div className={styles.observerSection}>
+                    {/* 관전자 목록 공간 */}
                     <div className={styles.userSection}>
                         <div className={styles.chatTitle}>현재 관전자 리스트 //방 번호: {roomNo}</div>
                         <div className={styles.userList}>
@@ -197,23 +262,29 @@ const FightZone = () => {
                                     className={styles.content}>{message.content}</span>
                                 </div>
                             ))}
+                            <div ref={observerMessageEnd}></div>
                         </div>
                         <div className={styles.chatInputContainer}>
-                            <input
+                        <input
                                 type="text"
                                 placeholder="사용자 이름"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                value={observerName}
+                                onChange={(e) => setObserverName(e.target.value)}
                                 className={styles.input}
                             />
                             <input
                                 type="text"
                                 placeholder="메시지를 입력하세요"
-                                value={content}
-                                onChange={(e) => setContent(e.target.value)}
+                                value={observerContent}
+                                onChange={(e) => setObserverContent(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        sendObserverChat();
+                                    }
+                                }}
+                                style={{flex: 1}}
                                 className={styles.input}
                             />
-                            <button className={styles.sendButton} onClick={sendChat}>보내기</button>
                         </div>
                     </div>
                 </div>

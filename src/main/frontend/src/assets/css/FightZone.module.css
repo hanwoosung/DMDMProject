@@ -39,7 +39,9 @@
 .chatSection {
     display: flex;
     flex-direction: column;
-    flex: 4;
+    flex: 3;
+    gap: 10px;
+    max-height: 67vh;
     background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
@@ -123,11 +125,25 @@
 
 .chatMessages {
     flex: 1;
+    display: flex;
+    max-height: 100%;
+    flex-direction: column;
+    gap: 10px;
     overflow-y: auto;
+    scroll-snap-type: y mandatory
 }
 
 .chatMessage {
-    margin-bottom: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.chatProfile{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
 }
 
 .username {
@@ -135,8 +151,18 @@
     color: #2980b9;
 }
 
+
 .content {
     margin-left: 5px;
+}
+
+.fighterLeftContent{
+    color: #12007e;
+    font-weight: bold;
+}
+.fighterRightContent{
+    color: #7e0000;
+    font-weight: bold;
 }
 
 .observerSection{
@@ -168,7 +194,8 @@
 .observerChatSection {
     display: flex;
     flex-direction: column;
-    flex: 4;
+    max-height: 67vh;
+    flex: 3;
     background-color: #ffffff;
     border-radius: 10px;
     border: 1px solid #DADADA;
@@ -224,7 +251,6 @@
 
 .fighterInfoContainer {
     display: flex;
-    flex: 1;
     justify-content: space-between;
     align-items: center;
     border-radius: 10px;
@@ -276,4 +302,3 @@
     background-color: #ff7b7b;
     color: black;
 }
-
