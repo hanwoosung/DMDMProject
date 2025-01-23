@@ -2,6 +2,7 @@ package kr.co.dmdm.global;
 
 import kr.co.dmdm.global.exception.CustomException;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,11 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
         if (body instanceof Response) {
             return body;
         }
+
+        if (body instanceof Resource) {
+            return body;
+        }
+
         return Response.success(body);
     }
 }
