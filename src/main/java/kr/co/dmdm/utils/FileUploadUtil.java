@@ -67,6 +67,7 @@ public class FileUploadUtil {
         FileDto fileDto = new FileDto();
         fileDto.setFileType(fileGbnCd);
         fileDto.setFileRefNo(fileRefId);
+        fileDto.setUserId(userId);
         fileDto.setFileNewName(newFileName);
         fileDto.setFileOldName(fileNameWithoutExt);
         fileDto.setFileExt(fileExt);
