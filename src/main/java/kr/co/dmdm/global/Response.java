@@ -58,4 +58,5 @@ public class Response<T> {
     public static Response<Void> failure(HttpStatus status, String message) {
         return new Response<>(status, Result.FAILURE, message, null);
     }
+    
 }
