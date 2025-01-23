@@ -6,11 +6,13 @@ const BigBtn = ({
                     title = "큰버튼",
                     width,
                     height,
+                    padding,
+                    margin,
                     ...rest
                 }) => {
 
     return (
-        <button style={{width: width, height: height}}
+        <button style={{width: width, height: height, padding: padding, margin: margin}}
                 className={BtnStyles.bigBtn}
                 id={id}
                 name={name}

@@ -1,5 +1,6 @@
 package kr.co.dmdm.service.common;
 
+import kr.co.dmdm.dto.common.FileDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -17,5 +18,7 @@ public interface FileService {
                          String userId) throws IOException;
 
     void deleteFileById(Integer fileId);
+
+    FileDto findFileByRefNoAndFileType(String fileRefId, String fileType);
 
 }

@@ -4,6 +4,7 @@ import Layout from "./components/layout/Layout";
 import AsideLayout from "./components/layout/AsideLayout";
 import TestPage from "./pages/TestPage";
 import PagingTestPage from "./pages/PagingTestPage";
+import BoardWrite from "./pages/board/BoardWrite";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
 
@@ -34,6 +35,12 @@ function App() {
                     <AsideLayout>
                         <TestPage/>
                     </AsideLayout>
+                } />
+
+                <Route path="/boardWrite" element={
+                    <Layout>
+                        <BoardWrite/>
+                    </Layout>
                 } />
 
 
