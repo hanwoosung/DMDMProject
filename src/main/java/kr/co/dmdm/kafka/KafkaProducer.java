@@ -1,6 +1,6 @@
 package kr.co.dmdm.kafka;
 
-import kr.co.dmdm.type.Alarm;
+import kr.co.dmdm.type.AlarmType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -24,13 +24,13 @@ public class KafkaProducer {
     @Value("${kafka.topic.fight-send}")
     private String fightSendTopic;
 
-    public void sendMessage(Alarm alarmType, String message) {
+    public void sendMessage(AlarmType alarmType, String message) {
         String topic = getTopicByAlarmType(alarmType);
         System.out.println("Producer topic: " + topic + ", message: " + message);
         kafkaTemplate.send(topic, message);
     }
 
-    private String getTopicByAlarmType(Alarm alarmType) {
+    private String getTopicByAlarmType(AlarmType alarmType) {
         return switch (alarmType) {
             case COMMENT_WRITE -> commentWriteTopic;
             case EMOTICON_BUY -> emoticonBuyTopic;
