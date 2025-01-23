@@ -23,9 +23,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 public class MessageController {
-    @MessageMapping("/chat.{chatRoomId}")
-    @SendTo("/subscribe/chat.{chatRoomId}")
-    public ChatMessageResponseDto sendMessage(
+    @MessageMapping("/observer.{chatRoomId}")
+    @SendTo("/subscribe/observer.{chatRoomId}")
+    public ChatMessageResponseDto sendObserverMessage(
+            ChatMessageRequestDto request,
+            @DestinationVariable Long chatRoomId
+    ) {
+        return new ChatMessageResponseDto(request.getUsername(), request.getContent());
+    }
+
+    @MessageMapping("/fighter.{chatRoomId}")
+    @SendTo("/subscribe/fighter.{chatRoomId}")
+    public ChatMessageResponseDto sendFighterMessage(
             ChatMessageRequestDto request,
             @DestinationVariable Long chatRoomId
     ) {

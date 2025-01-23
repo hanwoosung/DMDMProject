@@ -1,0 +1,279 @@
+.flexColumn{
+    display: flex;
+    flex-direction: Column;
+}
+
+.flexRow{
+    display: flex;
+    flex-direction: row;
+}
+
+.fightZone {
+    margin: 0 auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    width: 1520px;
+    height: 100vh;
+    gap: 25px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    font-size: 18px;
+}
+
+.roomInfo {
+    font-weight: bold;
+}
+
+.status {
+    font-style: italic;
+}
+
+.chatSection {
+    display: flex;
+    flex-direction: column;
+    flex: 4;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #DADADA;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+
+.fighterSection{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.fighterLevel, .fighterBadge {
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.fighterBadge {
+    padding: 1px 5px;
+}
+
+.fighterName {
+    font-size: 14px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.fightStatus {
+    height: 100%;
+    flex-grow: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.timeCount{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.fightTitle{
+    font-size: 24px;
+    font-weight: bold;
+    color: #e67e22;
+    margin-bottom: 30px
+}
+
+.percentBox{
+    composes: flexRow;
+    width: 100%;
+    padding: 0 30px;
+}
+
+.percent{
+    padding: 10px 3px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+}
+
+.leftPercent{
+    composes: percent;
+    border-radius: 10px 0 0 10px;
+    background-color: #300CFF;
+    width: 50%;
+}
+
+.rightPercent{
+    composes: percent;
+    border-radius: 0 10px 10px 0;
+    background-color: #FF0000;
+    width: 50%;
+}
+
+.chatMessages {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.chatMessage {
+    margin-bottom: 8px;
+}
+
+.username {
+    font-weight: bold;
+    color: #2980b9;
+}
+
+.content {
+    margin-left: 5px;
+}
+
+.observerSection{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.userSection{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 10px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #DADADA;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chatTitle{
+    background-color: #FFB733;
+    border-radius: 10px;
+    padding: 7px 10px;
+    font-weight: bold;
+    font-size: 20px;
+}
+.observerChatSection {
+    display: flex;
+    flex-direction: column;
+    flex: 4;
+    background-color: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #DADADA;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.userList {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.userItem {
+    padding: 5px 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.chatInputContainer {
+    display: flex;
+    background-color: #ffffff;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.input {
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #ffffff;
+}
+
+.sendButton {
+    text-wrap: nowrap;
+    padding: 10px 20px;
+    background-color: #27ae60;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.sendButton:hover {
+    background-color: #2ecc71;
+}
+
+.sendButton:active {
+    background-color: #1e8449;
+}
+
+.fighterInfoContainer {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.fighterInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.fighterImage {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.voteBtn {
+    width: 100%;
+    padding: 8px 16px;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.leftVoteBtn {
+    composes: voteBtn;
+    background-color: #300CFF;
+}
+
+.leftNoVoteBtn {
+    composes: voteBtn;
+    background-color: #62a1ff;
+    color: black;
+}
+
+.rightVoteBtn {
+    composes: voteBtn;
+    background-color: #FF0000;
+}
+
+.rightNoVoteBtn {
+    composes: voteBtn;
+    background-color: #ff7b7b;
+    color: black;
+}
+
