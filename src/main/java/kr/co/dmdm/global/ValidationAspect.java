@@ -27,7 +27,7 @@ public class ValidationAspect {
     public void validateRequest(JoinPoint joinPoint, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getFieldError().getDefaultMessage();
-            throw new CustomException(ExceptionEnum.INVALID_PARAMETER.getStatus(), errorMessage);
+            throw new CustomException(ExceptionEnum.INVALID_DATA_FORMAT.getStatus(), errorMessage);
         }
     }
 }

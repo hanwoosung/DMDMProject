@@ -28,6 +28,8 @@ dependencies {
     implementation 'org.modelmapper:modelmapper:3.1.0'
     //validation
     implementation group:'org.springframework.boot', name: 'spring-boot-starter-validation'
+    // Kafka
+    implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'

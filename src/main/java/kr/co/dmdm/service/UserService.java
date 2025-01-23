@@ -1,5 +1,8 @@
 package kr.co.dmdm.service;
 
+import kr.co.dmdm.dto.user.request.SignUpUserDto;
+import kr.co.dmdm.entity.User;
+
 /**
  * packageName    : kr.co.dmdm.service
  * fileName       : UserService
@@ -13,4 +16,5 @@ package kr.co.dmdm.service;
  */
 public interface UserService {
     String findByUserId(String userId);
+    String saveUser(SignUpUserDto user);
 }

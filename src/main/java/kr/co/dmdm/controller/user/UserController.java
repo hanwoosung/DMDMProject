@@ -35,14 +35,12 @@ public class UserController {
 
     @PostMapping("/id-check")
     public String userDuplicationIdCheck(@RequestBody DuplicationIdCheckDto idCheckDto) {
-        log.info("아이디가 왔는가용 {}" , idCheckDto.getUserId());
         return userService.findByUserId(idCheckDto.getUserId());
     }
 
     @PostMapping
     public String signUp(@RequestBody @Valid SignUpUserDto userDto, BindingResult bindingResult) {
-        log.info("dsafasfsaf{}", userDto);
-        return "";
+        return userService.saveUser(userDto);
     }
 
 }

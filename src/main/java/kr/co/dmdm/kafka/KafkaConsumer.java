@@ -1,3 +1,4 @@
+/*
 package kr.co.dmdm.kafka;
 
 import org.apache.kafka.clients.admin.NewTopic;
@@ -127,3 +128,4 @@ public class KafkaConsumer {
         // TODO: 메시지에 대한 실제 로직 추가
     }
 }
+*/

@@ -7,6 +7,7 @@ import useApi from "../hooks/common/useApi";
 import ReCAPTCHA from "react-google-recaptcha";
 import Alert from "../components/common/AlertComponents";
 import CustomDatePicker from "../components/user/CustomDatePicker";
+import {useNavigate} from "react-router-dom";
 
 const SignUpPage = () => {
     const {post} = useApi();
@@ -19,7 +20,7 @@ const SignUpPage = () => {
     const [email, setEmail] = useState("");
     const [isAlert, setIsAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
-
+    const navigate = useNavigate();
     const [isEmailAgree, setIsEmailAgree] = useState(false);
     const [isTermsChecked, setIsTermsChecked] = useState({
         terms: false,
@@ -27,8 +28,10 @@ const SignUpPage = () => {
         all: false,
     });
 
+    const SITE_KEY = process.env.REACT_APP_SITE_KEY;
     const [captchaToken, setCaptchaToken] = useState("");
     const [errors, setErrors] = useState({});
+    const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
 
     const refs = {
         userId: useRef(null),
@@ -43,7 +46,15 @@ const SignUpPage = () => {
         setCaptchaToken(token);
     };
 
+    useEffect(() => {
+        if (!captchaToken) {
+            setIsCaptchaVerified(false);
+        }
+    }, [captchaToken]);
 
+
+
+    //아이디 중복 체크
     const handleUserIdCheck = async () => {
         setErrors((prev) => ({
             ...prev,
@@ -66,7 +77,7 @@ const SignUpPage = () => {
 
         try {
             const response = await post("/api/v1/user/id-check", {
-                body: { userId },
+                body: {userId},
             });
 
             if (response.result === "SUCCESS" && response.data !== "중복된 아이디") {
@@ -88,14 +99,7 @@ const SignUpPage = () => {
         }
     };
 
-
-
-    useEffect(() => {
-        console.log(captchaToken)
-    }, [captchaToken]);
-
-    const SITE_KEY = process.env.REACT_APP_SITE_KEY;
-
+    //유효성 체크
     const validateForm = () => {
         const newErrors = {};
 
@@ -156,33 +160,84 @@ const SignUpPage = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
 
+    //회원가입 로직
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         if (!validateForm()) {
             console.log("유효성 검사 실패:", errors);
             return;
         }
 
+        if (!captchaToken) {
+            setAlertMessage("로봇 검증을 완료해주세요.");
+            setIsAlert(true);
+            return;
+        }
+
+        if (isCaptchaVerified) {
+            const response = await post("/api/v1/recaptcha/verify", {body: {captchaToken}});
+
+            if (!response.data) {
+                setAlertMessage("로봇 검증에 실패했습니다. 다시 시도해주세요.");
+                setIsAlert(true);
+
+                setCaptchaToken("");
+                setIsCaptchaVerified(false);
+                return;
+            }else {
+                setIsCaptchaVerified(true);
+            }
+        }
+
         const data = {
             userId,
-            password,
-            nickname,
-            birth,
-            email,
-            isEmailAgree,
+            userPw: password,
+            userName: nickname,
+            userBirth: birth,
+            userEmail: email,
+            userEmailPushYn: isEmailAgree ? "Y" : "N",
         };
 
         console.log("폼 데이터 확인:", data);
+        try {
+            const response = await post("/api/v1/user", { body: data });
+            if (response.result === "SUCCESS") {
+                setAlertMessage("회원가입이 완료되었습니다!");
+                setIsAlert(true);
+                navigate("/login");
+            } else {
+                setAlertMessage(
+                    <span style={{ color: "red" }}>
+                    회원가입 실패
+                    <br />
+                    <span style={{ color: "black" }}> {response.message}</span>
+                </span>
+                );
+                setIsAlert(true);
+            }
+        } catch (error) {
+            console.error("회원가입 오류:", error);
+            setAlertMessage(
+                <span style={{ color: "red" }}>
+                회원가입 실패
+                <br />
+                <span style={{ color: "black" }}> 서버 오류가 발생했습니다.</span>
+                <br />
+                <span style={{ color: "black" }}> 다시 시도해주세요.</span>
+            </span>
+            );
+            setIsAlert(true);
+        }
     };
 
 
-    // 이메일 수신 동의 토글
+    // 이메일 수신 동의 
     const handleEmailAgreeToggle = () => {
         setIsEmailAgree(!isEmailAgree);
     };
 
-    // 약관 전체 동의 토글
+    // 약관 전체 동의 
     const handleAllTermsToggle = () => {
         const newValue = !isTermsChecked.all;
         setIsTermsChecked({
@@ -192,7 +247,7 @@ const SignUpPage = () => {
         });
     };
 
-    // 개별 약관 동의 토글
+    // 개별 약관 동의 
     const handleTermsChange = (type) => {
         setIsTermsChecked((prev) => {
             const updatedState = {
@@ -203,6 +258,55 @@ const SignUpPage = () => {
             updatedState.all = updatedState.terms && updatedState.privacy;
             return updatedState;
         });
+    };
+
+    // 이 밑으로 인풋 체인지 이벤트
+    const handleUserIdChange = (e) => {
+        setUserId(e.target.value);
+        setErrors((prev) => ({
+            ...prev,
+            userId: null,
+        }));
+    };
+
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
+        setErrors((prev) => ({
+            ...prev,
+            password: null,
+        }));
+    };
+
+    const handlePasswordConfirmChange = (e) => {
+        setPasswordConfirm(e.target.value);
+        setErrors((prev) => ({
+            ...prev,
+            passwordConfirm: null,
+        }));
+    };
+
+    const handleNicknameChange = (e) => {
+        setNickname(e.target.value);
+        setErrors((prev) => ({
+            ...prev,
+            nickname: null,
+        }));
+    };
+
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
+        setErrors((prev) => ({
+            ...prev,
+            email: null,
+        }));
+    };
+
+    const handleBirthChange = (date) => {
+        setBirth(date);
+        setErrors((prev) => ({
+            ...prev,
+            birth: null,
+        }));
     };
 
     const isSubmitDisabled = !isTermsChecked.terms || !isTermsChecked.privacy;
@@ -235,7 +339,7 @@ const SignUpPage = () => {
                 label="아이디"
                 placeholder="4 ~ 15자 이내(영문, 숫자 필수)"
                 value={userId}
-                onChange={(e) => setUserId(e.target.value)}
+                onChange={handleUserIdChange}
                 errorMessage={errors.userId}
                 type="text"
                 buttonText={"중복 체크"}
@@ -248,7 +352,7 @@ const SignUpPage = () => {
                 label="비밀번호"
                 placeholder="최소 6자 이상(알파벳, 숫자 필수)"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handlePasswordChange}
                 errorMessage={errors.password}
                 type="password"
                 ref={refs.password}
@@ -258,7 +362,7 @@ const SignUpPage = () => {
                 label="비밀번호 확인"
                 placeholder="동일한 비밀번호를 입력해주세요."
                 value={passwordConfirm}
-                onChange={(e) => setPasswordConfirm(e.target.value)}
+                onChange={handlePasswordConfirmChange}
                 errorMessage={errors.passwordConfirm}
                 type="password"
                 ref={refs.passwordConfirm}
@@ -268,13 +372,13 @@ const SignUpPage = () => {
                 label="닉네임"
                 placeholder="알파벳, 숫자, 한글 20자 이내"
                 value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
+                onChange={handleNicknameChange}
                 errorMessage={errors.nickname}
                 type="text"
                 ref={refs.nickname}
             />
 
-   {/*         <UserInput
+            {/*         <UserInput
                 label="생년월일"
                 placeholder="YYYY-MM-DD"
                 value={birth}
@@ -287,7 +391,7 @@ const SignUpPage = () => {
             <CustomDatePicker
                 label="생년월일"
                 value={birth}
-                onChange={(date) => setBirth(date)}
+                onChange={handleBirthChange}
                 errorMessage={errors.birth}
             />
 
@@ -295,7 +399,7 @@ const SignUpPage = () => {
                 label="이메일"
                 placeholder="example@test.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
                 errorMessage={errors.email}
                 type="email"
                 ref={refs.email}

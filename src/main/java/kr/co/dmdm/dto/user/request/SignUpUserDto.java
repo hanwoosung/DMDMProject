@@ -45,8 +45,6 @@ public class SignUpUserDto {
     @Email(message = "유효한 이메일 형식이 아닙니다.")
     private String userEmail;
 
-    @NotNull(message = "이메일 수신 동의 여부는 필수 항목입니다.")
-    @Pattern(regexp = "[YN]", message = "이메일 수신 동의 여부는 'Y' 또는 'N'이어야 합니다.")
     private Character userEmailPushYn;
 
     private String userRole;

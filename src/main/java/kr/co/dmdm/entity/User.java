@@ -1,9 +1,6 @@
 package kr.co.dmdm.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import kr.co.dmdm.entity.common.AuditableAddUpdate;
 import lombok.Getter;
 import lombok.Setter;
@@ -75,4 +72,28 @@ public class User extends AuditableAddUpdate {
     @Column(name = "bronze_medal")
     private Integer bronzeMedal;
 
+    @PrePersist
+    public void prePersist() {
+        if (this.userExp == null) {
+            this.userExp = 0;
+        }
+        if (this.userLevel == null) {
+            this.userLevel = 0;
+        }
+        if (this.userPoint == null) {
+            this.userPoint = 100;
+        }
+        if (this.status == null) {
+            this.status = "ACTIVE";
+        }
+        if (this.userRole == null) {
+            this.userRole = "ROLE_MEMBER";
+        }
+        if (this.userJoinType == null) {
+            this.userJoinType = "NORMAL";
+        }
+        if (this.userEmailPushYn == null) {
+            this.userEmailPushYn = 'N';
+        }
+    }
 }
