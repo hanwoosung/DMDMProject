@@ -1,6 +1,6 @@
 package kr.co.dmdm.kafka;
 
-import kr.co.dmdm.type.Alarm;
+import kr.co.dmdm.type.AlarmType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,18 +15,18 @@ public class KafkaController {
 
     @PostMapping("/message")
     public void sendMessage1(@RequestParam String message) {
-        producer.sendMessage(Alarm.MESSAGE_SEND, message);
+        producer.sendMessage(AlarmType.MESSAGE_SEND, message);
     }
     @PostMapping("/fight")
     public void sendMessage2(@RequestParam String message) {
-        producer.sendMessage(Alarm.FIGHT_SEND, message);
+        producer.sendMessage(AlarmType.FIGHT_SEND, message);
     }
     @PostMapping("/emoticon")
     public void sendMessage3(@RequestParam String message) {
-        producer.sendMessage(Alarm.EMOTICON_BUY, message);
+        producer.sendMessage(AlarmType.EMOTICON_BUY, message);
     }
     @PostMapping("/comment")
     public void sendMessage4(@RequestParam String message) {
-        producer.sendMessage(Alarm.COMMENT_WRITE, message);
+        producer.sendMessage(AlarmType.COMMENT_WRITE, message);
     }
 }

@@ -11,7 +11,7 @@ package kr.co.dmdm.type;
  * -----------------------------------------------------------
  * 2025-01-22        황승현       최초 생성
  */
-public enum Alarm {
+public enum AlarmType {
     MESSAGE_SEND,
     EMOTICON_BUY,
     COMMENT_WRITE,
