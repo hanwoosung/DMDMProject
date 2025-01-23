@@ -20,7 +20,7 @@ const MenuBar = ({ editor }) => {
 
         handleSaveFile(formData)
             .then((res) => {
-
+                // if (res.data)
             }).catch((res) => {
                 console.log(res);
             });
