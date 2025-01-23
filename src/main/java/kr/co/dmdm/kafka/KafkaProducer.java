@@ -1,3 +1,4 @@
+/*
 package kr.co.dmdm.kafka;
 
 import kr.co.dmdm.type.Alarm;
@@ -38,4 +39,4 @@ public class KafkaProducer {
             case FIGHT_SEND -> fightSendTopic;
         };
     }
-}
+}*/

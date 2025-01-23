@@ -20,4 +20,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class AlarmServiceImpl implements AlarmService {
 
+    @Override
+    public void sendNotification() {
+
+    }
+
+    @Override
+    public void getNotifications(String receiveUserId) {
+
+    }
 }

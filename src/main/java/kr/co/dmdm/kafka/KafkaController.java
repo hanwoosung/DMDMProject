@@ -1,3 +1,4 @@
+/*
 package kr.co.dmdm.kafka;
 
 import kr.co.dmdm.type.Alarm;
@@ -30,3 +31,4 @@ public class KafkaController {
         producer.sendMessage(Alarm.COMMENT_WRITE, message);
     }
 }
+*/
