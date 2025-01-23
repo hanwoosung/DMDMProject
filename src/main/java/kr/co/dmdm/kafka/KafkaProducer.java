@@ -1,5 +1,6 @@
 package kr.co.dmdm.kafka;
 
+import kr.co.dmdm.dto.Alarm.request.AlarmRequestDto;
 import kr.co.dmdm.type.AlarmType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,9 +10,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class KafkaProducer {
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, AlarmRequestDto> kafkaTemplate;
 
-    // 각 토픽 이름을 application.properties에서 가져옴
     @Value("${kafka.topic.comment-write}")
     private String commentWriteTopic;
 
@@ -24,10 +24,9 @@ public class KafkaProducer {
     @Value("${kafka.topic.fight-send}")
     private String fightSendTopic;
 
-    public void sendMessage(AlarmType alarmType, String message) {
-        String topic = getTopicByAlarmType(alarmType);
-        System.out.println("Producer topic: " + topic + ", message: " + message);
-        kafkaTemplate.send(topic, message);
+    public void sendMessage(AlarmRequestDto alarmDto) {
+        String topic = getTopicByAlarmType(alarmDto.getAlarmType());
+        kafkaTemplate.send(topic, alarmDto);
     }
 
     private String getTopicByAlarmType(AlarmType alarmType) {

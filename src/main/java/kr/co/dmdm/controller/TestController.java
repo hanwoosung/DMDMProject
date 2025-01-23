@@ -1,8 +1,10 @@
 package kr.co.dmdm.controller;
 
+import kr.co.dmdm.dto.Alarm.request.AlarmRequestDto;
 import kr.co.dmdm.dto.TestDto;
 import kr.co.dmdm.global.exception.CustomException;
 import kr.co.dmdm.global.exception.ExceptionEnum;
+import kr.co.dmdm.kafka.KafkaProducer;
 import kr.co.dmdm.utils.PagingUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,12 @@ import java.util.stream.IntStream;
 @RequestMapping("/api/test")
 @Slf4j
 public class TestController {
+
+    private final KafkaProducer kafkaProducer;
+
+    public TestController(KafkaProducer kafkaProducer) {
+        this.kafkaProducer = kafkaProducer;
+    }
 
     // 더미 데이터 생성
     private List<String> generateDummyData(int totalCount) {
@@ -71,5 +79,12 @@ public class TestController {
     public TestDto test2(@RequestBody TestDto testDto) {
         System.out.println(testDto);
         return testDto;
+    }
+
+    @PostMapping("/alarm")
+    public void alarm(@RequestBody AlarmRequestDto alarmDto) {
+        System.out.println(alarmDto);
+        kafkaProducer.sendMessage(alarmDto);
+//        return alarmDto;
     }
 }

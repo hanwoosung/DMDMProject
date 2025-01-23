@@ -4,6 +4,7 @@ import Layout from "./components/layout/Layout";
 import AsideLayout from "./components/layout/AsideLayout";
 import TestPage from "./pages/TestPage";
 import PagingTestPage from "./pages/PagingTestPage";
+import AlarmTestPage from "./pages/AlarmTestPage";
 
 function App() {
     return (
@@ -33,7 +34,15 @@ function App() {
                         <TestPage/>
                     </AsideLayout>
                 } />
+
+                <Route path="/test-alarm" element={
+                    <AsideLayout>
+                        <AlarmTestPage/>
+                    </AsideLayout>
+                } />
             </Routes>
+
+
         </main>
     );
 }

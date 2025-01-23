@@ -30,7 +30,7 @@ public class CommonHttpMessageConverter extends AbstractHttpMessageConverter<Res
 
     @Override
     public List<MediaType> getSupportedMediaTypes() {
-        return Collections.singletonList(MediaType.APPLICATION_JSON);
+        return List.of(MediaType.APPLICATION_JSON, MediaType.TEXT_EVENT_STREAM);
     }
 
     @Override
