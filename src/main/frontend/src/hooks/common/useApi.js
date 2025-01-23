@@ -59,7 +59,7 @@ const useApi = () => {
                 "color: #2ecc71; font-weight: bold;",
                 "color: #9b59b6; font-weight: bold;",
                 response.data);
-            return response.data.body;
+            return response.data;
 
         } catch (err) {
             console.error(`%c[ERROR] %c${method.toUpperCase()} %c${url}`,

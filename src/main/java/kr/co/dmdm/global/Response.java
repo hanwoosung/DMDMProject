@@ -22,7 +22,6 @@ import java.time.LocalDateTime;
 public class Response<T> {
 
     private final HttpStatus status;
-    private final int statusCode;
     private final Result result;
     private final String message;
     private final T data;
@@ -30,7 +29,6 @@ public class Response<T> {
 
     public Response(HttpStatus status, Result result, String message, T data) {
         this.status = status;
-        this.statusCode = status.value();
         this.result = result;
         this.message = message;
         this.data = data;
@@ -58,4 +56,5 @@ public class Response<T> {
     public static Response<Void> failure(HttpStatus status, String message) {
         return new Response<>(status, Result.FAILURE, message, null);
     }
+    
 }
