@@ -16,27 +16,62 @@ const BoardWrite = () => {
         handleSave,
         hashTags,
         boardType,
-        editorRef
+        editorRef,
+        setBoardFiles,
+        boardData,
+        setBoardData,
+        alertMessage,
+        setAlertMessage
     } = BoardWriteHandler();
-
 
     return (
         <div className={BoardWriteStyles.boardWriteContainer}>
             <Title title="게시글 작성" />
 
             <SubTitle title="제목" />
-            <Input width={"100%"} maxLength={100} placeholder={"제목을 입력 해주세요"} />
+            <Input
+                width={"100%"}
+                maxLength={100}
+                placeholder={"제목을 입력 해주세요"}
+                onChange={(e) =>
+                    setBoardData((prevState) => ({
+                        ...prevState,
+                        title: e.target.value, // 제목 상태 업데이트
+                    }))
+                }
+            />
 
-            <Select options={boardType} />
+            <Select
+                display={"none"}
+                options={boardType}
+                onChange={(value) => {
+                    // setSelectedBoardType(e.target.value); // 선택된 값으로 상태 업데이트
+                    setBoardData((prevState) => ({
+                        ...prevState,
+                        boardType: value, // 게시판 유형 상태 업데이트
+                    }));
+                }}
+                value={boardData.boardType} // 초기값 설정
+            />
 
             <SubTitle title="내용" />
-
-            <Tiptap onEditorReady={(editor) => (editorRef.current = editor)} />
+            <Tiptap
+                onEditorReady={(editor) => (editorRef.current = editor)}
+                setFiles={setBoardFiles}
+            />
 
             <SubTitle title="해시태그 (5개)" />
-            <HashTag hashTags={hashTags} onAdd={handleAddHashTag} onRemove={handleRemoveHashTag} />
+            <HashTag
+                hashTags={hashTags}
+                onAdd={handleAddHashTag}
+                onRemove={handleRemoveHashTag}
+            />
 
-            <BigBtn title={"저장"} margin={"20px 0px 20px 0px"} onClick={handleSave} />
+            <BigBtn
+                title={"저장"}
+                margin={"20px 0px 20px 0px"}
+                onClick={handleSave}
+            />
         </div>
     );
 };

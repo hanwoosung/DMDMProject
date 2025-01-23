@@ -1,20 +1,20 @@
 import {useEffect, useRef, useState} from "react";
 import useFetch from "../../hooks/common/useFetch";
+import {useParams} from "react-router-dom";
 
 const useBoardWriteData = () => {
 
+    const {boardType: boardTypeParam} = useParams();
+
     const [hashTags, setHashTags] = useState([]);
     const [boardType, setBoardType] = useState([]);
+    const [boardFiles, setBoardFiles] = useState([]);
     const editorRef = useRef(null); // 에디터 객체를 참조
-
-    // 저장 버튼 클릭 시 호출되는 함수
-    const handleSave = () => {
-        if (editorRef.current) {
-            const content = editorRef.current.getHTML(); // 에디터 내용 가져오기
-            console.log("Editor Content:", content); // 콘솔에 출력 (디버깅용)
-            alert("작성된 내용:\n" + content); // 작성된 내용을 확인
-        }
-    };
+    const [boardData, setBoardData] = useState({
+        title: "",
+        boardType: boardTypeParam
+    });
+    const [alertMessage, setAlertMessage] = useState("ㅎㅇ");
 
     const {data: fetchedEvents, loading} = useFetch(`/api/v1/gubn`, {
         data: {
@@ -39,7 +39,18 @@ const useBoardWriteData = () => {
 
     }, [fetchedEvents]);
 
-    return {hashTags, setHashTags, boardType, editorRef}
+    return {
+        hashTags,
+        setHashTags,
+        boardType,
+        editorRef,
+        boardFiles,
+        setBoardFiles,
+        boardData,
+        setBoardData,
+        alertMessage,
+        setAlertMessage
+    }
 }
 
 export default useBoardWriteData;

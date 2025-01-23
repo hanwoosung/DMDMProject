@@ -37,7 +37,7 @@ function App() {
                     </AsideLayout>
                 } />
 
-                <Route path="/boardWrite" element={
+                <Route path="/board-write/:boardType" element={
                     <Layout>
                         <BoardWrite/>
                     </Layout>
