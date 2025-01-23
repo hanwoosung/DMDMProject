@@ -6,6 +6,7 @@ import {useEffect, useRef, useState} from "react";
 import useApi from "../hooks/common/useApi";
 import ReCAPTCHA from "react-google-recaptcha";
 import Alert from "../components/common/AlertComponents";
+import CustomDatePicker from "../components/user/CustomDatePicker";
 
 const SignUpPage = () => {
     const {post} = useApi();
@@ -43,13 +44,23 @@ const SignUpPage = () => {
     };
 
 
-
     const handleUserIdCheck = async () => {
-        if (!userId || errors.userId) {
-            setErrors({
-                ...errors,
-                userId: "아이디를 올바르게 입력한 후 중복 체크를 진행해주세요.",
-            });
+        setErrors((prev) => ({
+            ...prev,
+            userId: null,
+        }));
+
+        if (!userId) {
+            setErrors((prev) => ({
+                ...prev,
+                userId: "아이디를 입력해주세요.",
+            }));
+            return;
+        } else if (!/^[a-zA-Z0-9]{4,15}$/.test(userId)) {
+            setErrors((prev) => ({
+                ...prev,
+                userId: "아이디는 영문, 숫자 조합 4~15자여야 합니다.",
+            }));
             return;
         }
 
@@ -58,23 +69,25 @@ const SignUpPage = () => {
                 body: { userId },
             });
 
-            if (response.result === "SUCCESS") {
-                setAlertMessage("사용 가능한 아이디 입니다! 🎉");
+            if (response.result === "SUCCESS" && response.data !== "중복된 아이디") {
+                setAlertMessage("사용 가능한 아이디입니다! 🎉");
                 setIsAlert(true);
                 setIsUserIdChecked(true);
             } else {
-                setErrors({
-                    ...errors,
+                setErrors((prev) => ({
+                    ...prev,
                     userId: "이미 사용 중인 아이디입니다.",
-                });
+                }));
             }
         } catch (err) {
-            setErrors({
-                ...errors,
-                userId: "아이디 중복 확인 중 오류가 발생했습니다.",
-            });
+            console.error(err);
+            setErrors((prev) => ({
+                ...prev,
+                userId: "아이디 중복 확인 중 오류가 발생했습니다. 다시 시도해주세요.",
+            }));
         }
     };
+
 
 
     useEffect(() => {
@@ -100,7 +113,10 @@ const SignUpPage = () => {
             newErrors.password = "비밀번호를 입력해주세요.";
         } else if (password.length < 6) {
             newErrors.password = "비밀번호는 최소 6자 이상이어야 합니다.";
+        } else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(password)) {
+            newErrors.password = "비밀번호는 알파벳과 숫자를 포함해야 합니다.";
         }
+
 
         if (password !== passwordConfirm) {
             newErrors.passwordConfirm = "비밀번호가 일치하지 않습니다.";
@@ -108,10 +124,19 @@ const SignUpPage = () => {
 
         if (!nickname) {
             newErrors.nickname = "닉네임을 입력해주세요.";
+        } else if (!/^[a-zA-Z0-9가-힣]{1,20}$/.test(nickname)) {
+            newErrors.nickname = "닉네임은 특수문자를 제외한 1~20자 이내로 입력해주세요.";
         }
 
         if (!birth) {
             newErrors.birth = "생년월일을 입력해주세요.";
+        } else {
+            const birthDate = new Date(birth);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if (birthDate > today) {
+                newErrors.birth = "오늘 이후의 날짜는 선택할 수 없습니다.";
+            }
         }
 
         if (!email) {
@@ -149,7 +174,6 @@ const SignUpPage = () => {
         };
 
         console.log("폼 데이터 확인:", data);
-        alert("폼 데이터가 성공적으로 검증되었습니다. 서버로 전송하지 않습니다.");
     };
 
 
@@ -181,7 +205,6 @@ const SignUpPage = () => {
         });
     };
 
-    // 제출 버튼 활성화 여부
     const isSubmitDisabled = !isTermsChecked.terms || !isTermsChecked.privacy;
 
     return (
@@ -221,7 +244,6 @@ const SignUpPage = () => {
                 disabled={isUserIdChecked}
             />
 
-
             <UserInput
                 label="비밀번호"
                 placeholder="최소 6자 이상(알파벳, 숫자 필수)"
@@ -252,7 +274,7 @@ const SignUpPage = () => {
                 ref={refs.nickname}
             />
 
-            <UserInput
+   {/*         <UserInput
                 label="생년월일"
                 placeholder="YYYY-MM-DD"
                 value={birth}
@@ -260,6 +282,13 @@ const SignUpPage = () => {
                 errorMessage={errors.birth}
                 type="date"
                 ref={refs.birth}
+            />*/}
+
+            <CustomDatePicker
+                label="생년월일"
+                value={birth}
+                onChange={(date) => setBirth(date)}
+                errorMessage={errors.birth}
             />
 
             <UserInput

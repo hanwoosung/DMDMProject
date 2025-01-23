@@ -57,3 +57,10 @@
     font-size: 12px;
     margin-top: 5px;
 }
+
+.checkButton:disabled {
+    background-color: #CCCCCC;
+    color: #888888;
+    cursor: not-allowed;
+}
+

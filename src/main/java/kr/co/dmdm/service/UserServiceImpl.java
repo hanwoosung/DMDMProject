@@ -27,4 +27,5 @@ public class UserServiceImpl implements UserService {
     public String findByUserId(String userId) {
         return userRepository.findById(userId).isPresent() ? "중복된 아이디" : "사용 가능한 아이디";
     }
+
 }

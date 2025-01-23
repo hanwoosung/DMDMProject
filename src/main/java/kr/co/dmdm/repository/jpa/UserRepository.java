@@ -15,5 +15,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * 2025-01-22        한우성       최초 생성
  */
 public interface UserRepository extends JpaRepository<User, String> {
-    User findByUserId(String userId);
+    User findByUserEmail(String email);
+    User findByUserName(String userName);
 }

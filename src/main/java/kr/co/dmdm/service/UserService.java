@@ -1,7 +1,5 @@
 package kr.co.dmdm.service;
 
-import kr.co.dmdm.dto.user.response.UserDto;
-
 /**
  * packageName    : kr.co.dmdm.service
  * fileName       : UserService
