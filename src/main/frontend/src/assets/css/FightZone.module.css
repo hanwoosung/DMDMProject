@@ -182,6 +182,7 @@
 }
 
 .userSection{
+    height: 100%;
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -215,6 +216,7 @@
 .userList {
     flex: 1;
     overflow-y: auto;
+    max-height: 200px;
 }
 
 .userItem {

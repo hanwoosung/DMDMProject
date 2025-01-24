@@ -32,12 +32,14 @@ public class UserSocketController {
     @MessageMapping("/chatRoom/join/{chatRoomId}")
     @SendTo("/subscribe/chatRoom.{chatRoomId}")
     public List<ChatUserDto> joinChatRoom(ChatUserDto request, @DestinationVariable Long chatRoomId){
+        System.out.println("입실 발생!!!!!!!!!!!!!!"+ request);
         return roomMemberHandler.joinUser(request, chatRoomId);
     }
 
     @MessageMapping("/chatRoom/leave/{chatRoomId}")
     @SendTo("/subscribe/chatRoom.{chatRoomId}")
     public List<ChatUserDto> leaveChatRoom(ChatUserDto request, @DestinationVariable Long chatRoomId){
+        System.out.println("퇴실 발생!!!!!!!!!!!!!!"+ request);
         return roomMemberHandler.leaveUser(request, chatRoomId);
     }
 }

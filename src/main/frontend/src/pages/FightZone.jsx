@@ -9,6 +9,7 @@ import styles from '../assets/css/FightZone.module.css';
 const FightZone = () => {
     const {roomNo} = useParams();
     const stompClient = useRef(null);
+    const exUserName = 'user47282';
 
     const leftUser = useRef("doge");
     const rightUser = useRef("nose");
@@ -61,16 +62,13 @@ const FightZone = () => {
                 stompClient.current.subscribe(`/subscribe/chatRoom.${roomNo}`, (message) => {
                     const body = JSON.parse(message.body);
                     console.log(body);
-                    setObserverUsers((prevMember) => [...prevMember, body]);
+                    setObserverUsers(body);
                 });
 
-
-                // const rand_0_99 = Math.floor(Math.random() * 100);
-                //
-                // stompClient.current.publish({
-                //     destination: `/publish/chatRoom/join/${roomNo}`,
-                //     body: JSON.stringify({username: `user${rand_0_99}`, nickname: "닉넴닉넴"}),
-                // })
+                stompClient.current.publish({
+                    destination: `/publish/chatRoom/join/${roomNo}`,
+                    body: JSON.stringify({username: `user${exUserName}`, nickname: "닉넴닉넴"}),
+                })
             },
             onWebSocketError: (error) => {
                 console.error('Error with websocket', error);
@@ -82,11 +80,14 @@ const FightZone = () => {
         });
 
         stompClient.current.activate();
+        window.addEventListener('beforeunload', leaveUser);
 
         return () => {
             stompClient.current.deactivate();
+            window.removeEventListener('beforeunload', leaveUser);
         };
-    }, [roomNo]);
+    //불필요한 재렌더링 방지. 혹여나 오류 발생시 roomNo 집어넣기
+    }, []);
 
     useEffect(() => {
         if (isFirstRender.current) {
@@ -104,6 +105,17 @@ const FightZone = () => {
     useEffect(() => {
         observerMessageEnd.current.scrollIntoView();
     }, [observerMessages]);
+
+    const leaveUser = () => {
+        if (stompClient.current) {
+            stompClient.current.publish({
+                destination: `/publish/chatRoom/leave/${roomNo}`,
+                body: JSON.stringify({ username: `user${exUserName}`, nickname: "닉넴닉넴" }),
+            });
+
+            stompClient.current.deactivate();
+        }
+    }
 
     const sendVote = (vote) => {
         if (observerName.length === 0) return;
@@ -299,10 +311,13 @@ const FightZone = () => {
                 <div className={styles.observerSection}>
                     {/* 관전자 목록 공간 */}
                     <div className={styles.userSection}>
-                        <div className={styles.chatTitle}>현재 관전자 리스트 //방 번호: {roomNo}</div>
+                        <div className={styles.chatTitle}>현재 관전자 리스트({observerUsers.length}) // 방 번호: {roomNo}</div>
                         <div className={styles.userList}>
                             {observerUsers.map((user, index) => (
-                                <div key={index} className={styles.userItem}>{user}</div>
+                                <div key={index} className={styles.userItem}>
+                                    <span>{user.username}/</span>
+                                    <span>{user.nickname}</span>
+                                </div>
                             ))}
                         </div>
                     </div>
