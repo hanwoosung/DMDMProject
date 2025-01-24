@@ -2,11 +2,14 @@ package kr.co.dmdm.controller;
 
 import kr.co.dmdm.dto.Alarm.request.AlarmRequestDto;
 import kr.co.dmdm.dto.TestDto;
+import kr.co.dmdm.entity.Alarm;
 import kr.co.dmdm.global.exception.CustomException;
 import kr.co.dmdm.global.exception.ExceptionEnum;
 import kr.co.dmdm.kafka.KafkaProducer;
+import kr.co.dmdm.repository.jpa.AlarmRepository;
 import kr.co.dmdm.utils.PagingUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +23,13 @@ import java.util.stream.IntStream;
 public class TestController {
 
     private final KafkaProducer kafkaProducer;
+    private final AlarmRepository alarmRepository;
+    private final ModelMapper modelMapper;
 
-    public TestController(KafkaProducer kafkaProducer) {
+    public TestController(KafkaProducer kafkaProducer, AlarmRepository alarmRepository, ModelMapper modelMapper) {
         this.kafkaProducer = kafkaProducer;
+        this.alarmRepository = alarmRepository;
+        this.modelMapper = modelMapper;
     }
 
     // 더미 데이터 생성
@@ -83,8 +90,6 @@ public class TestController {
 
     @PostMapping("/alarm")
     public void alarm(@RequestBody AlarmRequestDto alarmDto) {
-        System.out.println(alarmDto);
         kafkaProducer.sendMessage(alarmDto);
-//        return alarmDto;
     }
 }

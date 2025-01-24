@@ -26,6 +26,7 @@ public class KafkaProducer {
 
     public void sendMessage(AlarmRequestDto alarmDto) {
         String topic = getTopicByAlarmType(alarmDto.getAlarmType());
+//        System.out.println("producer alarmDto : " + alarmDto);
         kafkaTemplate.send(topic, alarmDto);
     }
 

@@ -49,8 +49,14 @@ public class Alarm {
 
     @PrePersist
     protected void onCreate() {
-        insertDt = Instant.now();
-        alarmContent = alarmContent == null ? "" : alarmContent;
-        status = status == null ? "ACTIVE" : status;
+        if (insertDt == null) {
+            insertDt = Instant.now();
+        }
+        if (status == null || status.isEmpty()) {
+            status = "ACTIVE";
+        }
+        if (alarmContent == null) {
+            alarmContent = "";
+        }
     }
 }

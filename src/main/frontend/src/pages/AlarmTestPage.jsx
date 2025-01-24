@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import {data} from "react-router-dom";
 
 const AlarmTestPage = () => {
     const [notifications, setNotifications] = useState([]);
@@ -10,7 +11,11 @@ const AlarmTestPage = () => {
 
         eventSource.onmessage = (event) => {
             console.log("Received event:", event.data);
+            console.log(event.data);
+            const obj = JSON.parse(event.data);
+            console.log(obj);
             // setNotifications((prev) => [...prev, event.data]); // 알림 추가
+            alert(obj.message);
         };
 
         eventSource.onerror = (err) => {
