@@ -20,4 +20,6 @@ public interface FileRepository extends JpaRepository<File, Integer> {
 
     File findFirstByFileRefNoAndFileTypeOrderByInsertDtDesc(String fileRefNo, String fileType);
 
+    void deleteByFileRefNoAndFileType(String fileRefNo, String fileType);
+
 }

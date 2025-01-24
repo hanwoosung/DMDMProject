@@ -8,6 +8,8 @@ import BoardWriteHandler from "../../services/board/BoardWriteHandler";
 import Select from "../../components/common/SelectComponents";
 import BigBtn from "../../components/common/BigBtnComponents";
 import Tiptap from "../../components/editor/TipTapEditor";
+import Alert from "../../components/common/AlertComponents";
+import Confirm from "../../components/common/ConfirmComponents";
 
 const BoardWrite = () => {
     const {
@@ -21,7 +23,12 @@ const BoardWrite = () => {
         boardData,
         setBoardData,
         alertMessage,
-        setAlertMessage
+        isAlert,
+        setIsAlert,
+        isConfirmVisible,
+        setIsConfirmVisible,
+        setConfirmMessage,
+        confirmMessage,
     } = BoardWriteHandler();
 
     return (
@@ -36,7 +43,7 @@ const BoardWrite = () => {
                 onChange={(e) =>
                     setBoardData((prevState) => ({
                         ...prevState,
-                        title: e.target.value, // 제목 상태 업데이트
+                        boardTitle: e.target.value, // 제목 상태 업데이트
                     }))
                 }
             />
@@ -70,8 +77,27 @@ const BoardWrite = () => {
             <BigBtn
                 title={"저장"}
                 margin={"20px 0px 20px 0px"}
-                onClick={handleSave}
+                onClick={() => {
+                    setConfirmMessage("저장 하시겠습니까?");
+                    setIsConfirmVisible(true);
+                }}
             />
+
+            <Alert message={alertMessage}
+                   isVisible={isAlert}
+            onAlert={() => {
+                setIsAlert(false);
+            }}/>
+
+            <Confirm message={confirmMessage}
+                     isVisible={isConfirmVisible}
+                     onConfirm={() => {
+                         setIsConfirmVisible(false);
+                         handleSave();
+                     }}
+                     onCancel={() => {
+                         setIsConfirmVisible(false)
+                     }} />
         </div>
     );
 };

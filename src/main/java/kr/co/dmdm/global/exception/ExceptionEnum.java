@@ -23,6 +23,7 @@ public enum ExceptionEnum {
     DUPLICATE_REQUEST(HttpStatus.BAD_REQUEST, "중복된 요청입니다."),
     INVALID_DATA_FORMAT(HttpStatus.BAD_REQUEST, "데이터 형식이 올바르지 않습니다."),
     RESOURCE_NOT_FOUND(HttpStatus.BAD_REQUEST, "요청한 리소스를 찾을 수 없습니다."),
+    BAD_WORD(HttpStatus.BAD_REQUEST, "비속어를 사용 하였습니다."),
 
     // 401 UNAUTHORIZED
     ACCESS_DENIED(HttpStatus.UNAUTHORIZED, "접근이 거부되었습니다."),

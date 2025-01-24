@@ -4,11 +4,11 @@ import extensions from "./TipTapExtentions"; // 확장 배열
 import styles from "../../assets/css/tiptapEditor/Editor.module.css"; // 스타일 적용
 import MenuBar from "./MenuBar"; // 메뉴바 컴포넌트
 
-const TipTapEditor = ({onEditorReady, setFiles}) => {
+const TipTapEditor = ({onEditorReady, setFiles, content}) => {
 
     const editor = useEditor({
         extensions,
-        content: "<p>여기에 본문을 입력하세요.</p>", // 초기 콘텐츠
+        content: content, // 초기 콘텐츠
     });
 
     // 에디터 객체를 부모 컴포넌트로 전달

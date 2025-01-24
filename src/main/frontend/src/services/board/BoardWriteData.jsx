@@ -11,11 +11,14 @@ const useBoardWriteData = () => {
     const [boardFiles, setBoardFiles] = useState([]);
     const editorRef = useRef(null); // 에디터 객체를 참조
     const [boardData, setBoardData] = useState({
-        title: "",
-        boardType: boardTypeParam
+        boardTitle: "",
+        boardType: boardTypeParam,
+        boardContent: "",
     });
     const [alertMessage, setAlertMessage] = useState("ㅎㅇ");
-
+    const [isAlert, setIsAlert] = useState(false);
+    const [isConfirmVisible, setIsConfirmVisible] = useState(false);
+    const [confirmMessage, setConfirmMessage] = useState("ㅎㅇ");
     const {data: fetchedEvents, loading} = useFetch(`/api/v1/gubn`, {
         data: {
             parentCode: "BOARD_CATEGORY"
@@ -49,7 +52,13 @@ const useBoardWriteData = () => {
         boardData,
         setBoardData,
         alertMessage,
-        setAlertMessage
+        setAlertMessage,
+        isAlert,
+        setIsAlert,
+        isConfirmVisible,
+        setIsConfirmVisible,
+        confirmMessage,
+        setConfirmMessage
     }
 }
 
