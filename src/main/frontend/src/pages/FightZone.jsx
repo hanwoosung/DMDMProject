@@ -3,24 +3,34 @@ import {useParams} from 'react-router-dom';
 import {Client} from '@stomp/stompjs';
 import SmallBtn from "../components/common/SmallBtnComponents";
 import leftFighterImg from "../assets/image/ex_profile.png";
-import rightFighterImg from "../assets/image/ex_big_nose.jpg";
+import rightFighterImg from "../assets/image/ex_chiwawa.jpg";
 import styles from '../assets/css/FightZone.module.css';
 
 const FightZone = () => {
     const {roomNo} = useParams();
     const stompClient = useRef(null);
+
     const leftUser = useRef("doge");
     const rightUser = useRef("nose");
+
+    const isFirstRender = useRef(true); // 첫 렌더링 여부 추적
+
     const fighterMessageEnd = useRef();
     const observerMessageEnd = useRef();
+
     const [fighterMessages, setFighterMessages] = useState([]);
-    const [observerMessages, setObserverMessages] = useState([]);
-    const [observerUsers, setObserverUsers] = useState([]);
     const [fighterName, setFighterName] = useState('');
     const [fighterContent, setFighterContent] = useState('');
+
+    const [observerMessages, setObserverMessages] = useState([]);
     const [observerName, setObserverName] = useState('');
     const [observerContent, setObserverContent] = useState('');
+    const [observerUsers, setObserverUsers] = useState([]);
+
     const [selectedVote, setSelectedVote] = useState(null);
+
+    const [leftPercent, setLeftPercent] = useState(0);
+    const [rightPercent, setRightPercent] = useState(0);
 
     // 방 접속시 연결 및 구독설정
     useEffect(() => {
@@ -32,7 +42,6 @@ const FightZone = () => {
                 // 토론자 채팅 구독
                 stompClient.current.subscribe(`/subscribe/fighter.${roomNo}`, (message) => {
                     const body = JSON.parse(message.body);
-                    console.log(body);
                     setFighterMessages((prevMessages) => [...prevMessages, body]);
                 });
 
@@ -42,11 +51,26 @@ const FightZone = () => {
                     setObserverMessages((prevMessages) => [...prevMessages, body]);
                 });
 
-                // // 관전자 유저 리스트 구독
-                // stompClient.current.subscribe(`/subscribe/users.${roomNo}`, (message) => {
-                //     const body = JSON.parse(message.body);
-                //     setObserverUsers(body.users);
-                // });
+                stompClient.current.subscribe(`/subscribe/vote.${roomNo}`, (message) => {
+                    const body = JSON.parse(message.body);
+                    setLeftPercent(body.leftVote);
+                    setRightPercent(body.rightVote);
+                });
+
+                // 관전자 유저 리스트 구독
+                stompClient.current.subscribe(`/subscribe/chatRoom.${roomNo}`, (message) => {
+                    const body = JSON.parse(message.body);
+                    console.log(body);
+                    setObserverUsers((prevMember) => [...prevMember, body]);
+                });
+
+
+                // const rand_0_99 = Math.floor(Math.random() * 100);
+                //
+                // stompClient.current.publish({
+                //     destination: `/publish/chatRoom/join/${roomNo}`,
+                //     body: JSON.stringify({username: `user${rand_0_99}`, nickname: "닉넴닉넴"}),
+                // })
             },
             onWebSocketError: (error) => {
                 console.error('Error with websocket', error);
@@ -65,6 +89,15 @@ const FightZone = () => {
     }, [roomNo]);
 
     useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
+
+        sendVote(selectedVote)
+    }, [selectedVote]);
+
+    useEffect(() => {
         fighterMessageEnd.current.scrollIntoView();
     }, [fighterMessages]);
 
@@ -72,12 +105,20 @@ const FightZone = () => {
         observerMessageEnd.current.scrollIntoView();
     }, [observerMessages]);
 
+    const sendVote = (vote) => {
+        if (observerName.length === 0) return;
+
+        stompClient.current.publish({
+            destination: `/publish/vote.${roomNo}`,
+            body: JSON.stringify({username: observerName, vote: vote}),
+        })
+    }
+
     //투표 버튼 이벤트
     const handleVote = (candidate) => {
         setSelectedVote(selectedVote === candidate ? null : candidate);
     };
 
-    //메시지 전송
     const sendFighterChat = () => {
         if (fighterName && fighterContent) {
             stompClient.current.publish({
@@ -88,7 +129,6 @@ const FightZone = () => {
         }
     };
 
-    //메시지 전송
     const sendObserverChat = () => {
         if (observerName && observerContent) {
             stompClient.current.publish({
@@ -98,6 +138,21 @@ const FightZone = () => {
             setObserverContent('');
         }
     };
+
+    const fightPercent = () => {
+        if (leftPercent === 0 && rightPercent === 0) {
+            return;
+        }
+
+        const leftWidth = Math.floor(leftPercent / (leftPercent + rightPercent) * 100);
+
+        return (
+            <div className={styles.percentBox}>
+                <div className={styles.leftPercent} style={{width: `${leftWidth}%`}}>{leftWidth}%</div>
+                <div className={styles.rightPercent} style={{width: `${100 - leftWidth}%`}}>{100 - leftWidth}%</div>
+            </div>
+        )
+    }
 
     // 뱃지 스타일 결정
     const getBadgeStyle = (fontColor, borderColor) => ({
@@ -117,7 +172,7 @@ const FightZone = () => {
     });
 
     return (
-        <div style={{background: "#FFFBF4", width: "100%", height: "100%"}}>
+        <div className={styles.fightBoard}>
             <div className={styles.fightZone}>
                 {/* 토론자 채팅 공간 */}
                 <div className={styles.fighterSection}>
@@ -134,23 +189,20 @@ const FightZone = () => {
                                  className={styles.fighterImage}
                                  style={{border: "3px solid #300CFF"}}/>
                             <div className={styles.fighterName}>도지</div>
-                            <button className={selectedVote === "doge" ?
+                            <button className={selectedVote === "LEFT" ?
                                 styles.leftVoteBtn :
                                 styles.leftNoVoteBtn}
-                                    onClick={() => handleVote("doge")}
+                                    onClick={() => handleVote("LEFT")}
                             >
                                 투표하기
                             </button>
                         </div>
                         <div className={styles.fightStatus}>
                             <div className={styles.fightTitle}>HTML이 프로그래밍 언어겠냐?</div>
-                            <SmallBtn title={"토론 시작"} style={{fontSize: 18, width: 150}} />
+                            <SmallBtn title={"토론 시작"} style={{fontSize: 18, width: 150}}/>
                             <SmallBtn width={100} title={"마감"} style={{display: "none"}}/>
                             <div className={styles.timeCount}>남은시간 00:00:00</div>
-                            <div className={styles.percentBox}>
-                                <div className={styles.leftPercent}>00%</div>
-                                <div className={styles.rightPercent}>00%</div>
-                            </div>
+                            {fightPercent()}
                         </div>
                         <div className={styles.fighterInfo}>
                             <div className={styles.flexRow} style={{gap: 10}}>
@@ -164,11 +216,11 @@ const FightZone = () => {
                                  className={styles.fighterImage}
                                  style={{border: "3px solid #FF0000"}}/>
                             <div className={styles.fighterName}>코큰 댕댕이</div>
-                            <button className={selectedVote === "monkey" ?
+                            <button className={selectedVote === "RIGHT" ?
                                 styles.rightVoteBtn :
                                 styles.rightNoVoteBtn
                             }
-                                    onClick={() => handleVote("monkey")}
+                                    onClick={() => handleVote("RIGHT")}
                             >
                                 투표하기
                             </button>
@@ -258,14 +310,14 @@ const FightZone = () => {
                         <div className={styles.chatMessages}>
                             {observerMessages.map((message, index) => (
                                 <div key={index} className={styles.chatMessage}>
-                                    <span className={styles.username}>{message.username}:</span> <span
-                                    className={styles.content}>{message.content}</span>
+                                    <span className={styles.username}>{message.username}:</span>
+                                    <span>{message.content}</span>
                                 </div>
                             ))}
                             <div ref={observerMessageEnd}></div>
                         </div>
                         <div className={styles.chatInputContainer}>
-                        <input
+                            <input
                                 type="text"
                                 placeholder="사용자 이름"
                                 value={observerName}

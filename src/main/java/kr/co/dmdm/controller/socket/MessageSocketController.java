@@ -1,5 +1,6 @@
-package kr.co.dmdm.controller;
+package kr.co.dmdm.controller.socket;
 
+import kr.co.dmdm.component.VoteManager;
 import kr.co.dmdm.dto.ChatMessageRequestDto;
 import kr.co.dmdm.dto.ChatMessageResponseDto;
 import kr.co.dmdm.dto.VoteRequestDto;
@@ -17,16 +18,20 @@ import org.springframework.web.bind.annotation.RestController;
  * fileName       : MessageController
  * author         : 최기환
  * date           : 2025-01-22
- * description    :
+ * description    : 메시지 관련 컨트롤러
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
  * 2025-01-22        최기환       최초 생성
+ * 2025-01-23        최기환       투표 기능 추가
  */
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class MessageController {
+public class MessageSocketController {
+
+    private final VoteManager voteManager;
+
     @MessageMapping("/observer.{chatRoomId}")
     @SendTo("/subscribe/observer.{chatRoomId}")
     public ChatMessageResponseDto sendObserverMessage(
@@ -46,13 +51,15 @@ public class MessageController {
     }
 
     @MessageMapping("/vote.{chatRoomId}")
-    @SendTo("/subscribe/observer.{chatRoomId}")
+    @SendTo("/subscribe/vote.{chatRoomId}")
     public VoteResponseDto sendVote(
             VoteRequestDto request,
             @DestinationVariable Long chatRoomId
-    ){
-       return new VoteResponseDto(0,0);
+    ) {
+        return voteManager.registerVote(chatRoomId, request);
     }
+
+    
 
     @MessageExceptionHandler
     public void handleException(RuntimeException e) {
