@@ -1,18 +1,17 @@
-package com.example.springjwt.dto;
+package kr.co.dmdm.security;
 
-import com.example.springjwt.entity.UserEntity;
+import kr.co.dmdm.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class CustomUserDetails  implements UserDetails {
+public class CustomUserDetails implements UserDetails {
 
-    private final UserEntity userEntity;
+    private final User userEntity;
 
-    public CustomUserDetails(UserEntity userEntity) {
-
+    public CustomUserDetails(User userEntity) {
         this.userEntity = userEntity;
     }
 
@@ -27,7 +26,7 @@ public class CustomUserDetails  implements UserDetails {
             @Override
             public String getAuthority() {
 
-                return userEntity.getRole();
+                return userEntity.getUserRole();
             }
         });
 
@@ -37,13 +36,16 @@ public class CustomUserDetails  implements UserDetails {
     @Override
     public String getPassword() {
 
-        return userEntity.getPassword();
+        return userEntity.getUserPw();
     }
 
     @Override
     public String getUsername() {
+        return userEntity.getUserId();
+    }
 
-        return userEntity.getUsername();
+    public String getUserNickName() {
+        return userEntity.getUserName();
     }
 
     @Override

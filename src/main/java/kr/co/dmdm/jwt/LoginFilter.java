@@ -1,9 +1,14 @@
-package com.example.springjwt.jwt;
+package kr.co.dmdm.jwt;
 
-import com.example.springjwt.dto.CustomUserDetails;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.co.dmdm.dto.user.request.LoginRequestDto;
+import kr.co.dmdm.global.Response;
+import kr.co.dmdm.global.exception.CustomException;
+import kr.co.dmdm.security.CustomUserDetails;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,8 +16,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+
+import static kr.co.dmdm.utils.CookieUtil.createCookie;
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -28,14 +36,26 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
-        String username = obtainUsername(request);
-        String password = obtainPassword(request);
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            LoginRequestDto loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequestDto.class);
 
-        System.out.println(username);
+            String username = loginRequest.getUserId();
+            String password = loginRequest.getUserPw();
 
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
+            System.out.println("Received username: " + username);
 
-        return authenticationManager.authenticate(authToken);
+            if (username == null || password == null) {
+                throw new CustomException(HttpStatus.BAD_REQUEST, "Username or password is missing");
+            }
+
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
+
+            return authenticationManager.authenticate(authToken);
+
+        } catch (IOException e) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, "Invalid JSON request");
+        }
     }
 
     @Override
@@ -48,18 +68,43 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
-
         String role = auth.getAuthority();
 
 
-        String token = jwtUtil.createJwt(username, role, 60*60*10L);
+        String access = jwtUtil.createJwt("access",username, role, 600000L);
+        String refresh = jwtUtil.createJwt("refresh",username, role, 86400000L);
+        String successMessage = "로그인 성공";
+        Response<String> successResponse = Response.successNoTime(successMessage);
 
-        response.addHeader("Authorization", "Bearer " + token);
+        try {
+            response.setHeader("access", access);
+            response.addCookie(createCookie("refresh", refresh));
+
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("application/json;charset=UTF-8");
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            response.getWriter().write(objectMapper.writeValueAsString(successResponse));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+        String errorMessage = "아이디 또는 비밀번호를 확인해주세요.";
 
-        response.setStatus(401);
+        Response<Void> errorResponse = Response.failureNoTime(HttpStatus.UNAUTHORIZED, errorMessage);
+
+        try {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 }
