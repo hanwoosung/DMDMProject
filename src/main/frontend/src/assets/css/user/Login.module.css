@@ -1,0 +1,159 @@
+.loginMainContainer {
+    width: 500px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 0 auto;
+}
+.LoginLogo {
+    height: 100px;
+    margin-top: 100px;
+}
+
+.LoginTitle {
+    color: #000000;
+    font-size: 30px;
+    margin-top: 20px;
+}
+
+.LoginSubTitle {
+    color: #AAAAAA;
+    font-size: 15px;
+    margin-top: 18px;
+}
+.lineContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 88%;
+    margin-top: 20px;
+    align-items: center;
+}
+
+.line {
+    flex: 1;
+    height: 1px;
+    background-color: #AAAAAA80;
+    margin: 0 10px;
+}
+
+.lineText {
+    color: #AAAAAA;
+    font-size: 18px;
+}
+
+.confirmButton{
+    width: 85%;
+    padding: 12px;
+    max-width: 450px;
+    background-color: #FFC107;
+    color: white;
+    font-size: 16px;
+    margin-top: 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.confirmButton:disabled {
+    background-color: #E0E0E0;
+    color: #AAAAAA;
+    cursor: not-allowed;
+}
+
+.confirmButton:hover:enabled {
+    background-color: #E0A800;
+}
+
+
+.snsContainer {
+    display: flex;
+    gap: 45px;
+    margin-top: 19px;
+}
+
+.snsKakaoBtn {
+    width: 70px;
+    height: 70px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("../../image/img_kakao.png");
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.snsKakaoBtn:hover {
+    transform: scale(1.1);
+}
+
+.snsNaverBtn {
+    width: 70px;
+    height: 70px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("../../image/img_naver.png");
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.snsNaverBtn:hover {
+    transform: scale(1.1);
+}
+
+.snsGithubBtn {
+    width: 70px;
+    height: 70px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("../../image/img_github.png");
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.snsGithubBtn:hover {
+    transform: scale(1.1);
+}
+
+.snsGoogleBtn {
+    width: 70px;
+    height: 70px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("../../image/img_google.png");
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.snsGoogleBtn:hover {
+    transform: scale(1.1);
+}
+
+
+.findText{
+    display: flex;
+    justify-content: end;
+    width: 85%;
+    color: #AAAAAA;
+    font-size: 15px;
+}
+
+.findText {
+    display: inline-flex;
+    align-items: center;
+    width: 85%;
+    justify-content: end;
+    margin-top: 10px;
+    gap: 5px;
+}
+
+.accountFind:hover {
+    color: #FFB733;
+    cursor: pointer;
+}
+
+.signUp:hover {
+    color: #FFB733;
+    cursor: pointer;
+}
