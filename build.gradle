@@ -26,6 +26,8 @@ repositories {
 dependencies {
     //ModelMapper
     implementation 'org.modelmapper:modelmapper:3.1.0'
+    //validation
+    implementation group:'org.springframework.boot', name: 'spring-boot-starter-validation'
     // Kafka
     implementation 'org.springframework.kafka:spring-kafka'
     // reactor

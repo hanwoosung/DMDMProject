@@ -4,11 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.dmdm.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
@@ -51,10 +55,12 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
                                   Class selectedConverterType,
                                   ServerHttpRequest request,
                                   ServerHttpResponse response) {
-//        System.out.println("selectedContentType : " + selectedContentType);
-//        System.out.println("body : " + body);
 
-        if (body instanceof Response) {
+        if (MediaType.TEXT_EVENT_STREAM.equalsTypeAndSubtype(selectedContentType)) {
+            return body;
+        }
+
+        if (body instanceof Response || body instanceof Resource) {
             return body;
         }
 

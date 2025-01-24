@@ -4,6 +4,9 @@ import Layout from "./components/layout/Layout";
 import AsideLayout from "./components/layout/AsideLayout";
 import TestPage from "./pages/TestPage";
 import PagingTestPage from "./pages/PagingTestPage";
+import BoardWrite from "./pages/board/BoardWrite";
+import SignUpPage from "./pages/SignUpPage";
+import LoginPage from "./pages/LoginPage";
 import AlarmTestPage from "./pages/AlarmTestPage";
 
 function App() {
@@ -40,9 +43,22 @@ function App() {
                         <AlarmTestPage/>
                     </AsideLayout>
                 } />
+
+                <Route path="/boardWrite" element={
+                    <Layout>
+                        <BoardWrite/>
+                    </Layout>
+                } />
+
+
+                <Route path="/sign-up" element={
+                        <SignUpPage/>
+                } />
+
+                <Route path="/login" element={
+                    <LoginPage />
+                } />
             </Routes>
-
-
         </main>
     );
 }

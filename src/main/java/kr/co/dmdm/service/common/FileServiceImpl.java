@@ -35,6 +35,7 @@ public class FileServiceImpl implements FileService {
 
     /**
      * 파일 유효성 검사
+     *
      * @param file 업로드할 파일
      */
     private void validateFile(MultipartFile file) {
@@ -52,15 +53,16 @@ public class FileServiceImpl implements FileService {
 
     /**
      * 파일 저장
-     * @param file 파일
-     * @param fileType 파일 구분 코드
+     *
+     * @param file      파일
+     * @param fileType  파일 구분 코드
      * @param fileRefId 파일 참조 ID
-     * @param userId 사용자 ID
+     * @param userId    사용자 ID
      * @throws IOException 파일 저장 중 오류 발생 시
      */
     @Transactional
     @Override
-    public void saveFile(MultipartFile file, String fileType, String fileRefId, String userId) throws IOException {
+    public void  saveFile(MultipartFile file, String fileType, String fileRefId, String userId) throws IOException {
         log.info("파일 저장 시작: 파일명={}, 사용자={}", file.getOriginalFilename(), userId);
         validateFile(file);
 
@@ -79,6 +81,7 @@ public class FileServiceImpl implements FileService {
 
     /**
      * 파일 ID로 파일 삭제
+     *
      * @param fileId 파일 ID
      */
     @Override
@@ -96,5 +99,17 @@ public class FileServiceImpl implements FileService {
             log.error("파일 삭제 실패: {}", e.getMessage(), e);
             throw new RuntimeException("파일 삭제 실패: " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * 파일 영향번호랑 타입으로 최신 1개 가져오기
+     *
+     * @param fileRefNo 파일 영향키
+     * @param fileType  파일 타입
+     */
+    @Override
+    public FileDto findFileByRefNoAndFileType(String fileRefNo, String fileType) {
+        File fileEntity = fileRepository.findFirstByFileRefNoAndFileTypeOrderByInsertDtDesc(fileRefNo, fileType);
+        return modelMapper.map(fileEntity, FileDto.class);
     }
 }
