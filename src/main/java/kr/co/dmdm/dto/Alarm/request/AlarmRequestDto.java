@@ -1,6 +1,5 @@
 package kr.co.dmdm.dto.Alarm.request;
 
-import jakarta.persistence.Column;
 import kr.co.dmdm.type.AlarmType;
 import lombok.Data;
 

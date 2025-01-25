@@ -1,6 +1,8 @@
 package kr.co.dmdm.sse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.co.dmdm.entity.Alarm;
+import kr.co.dmdm.type.AlarmType;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
@@ -27,11 +29,11 @@ public class SseServiceImpl implements SseService {
     }
 
     @Override
-    public void sendAlarmToUser(String userId, String message) {
+    public void sendAlarmToUser(String userId, AlarmType alarmType) {
         Sinks.Many<String> sink = userSinks.get(userId);
         if (sink != null) {
             try {
-                String jsonMessage = objectMapper.writeValueAsString(Map.of("message", message));
+                String jsonMessage = objectMapper.writeValueAsString(Map.of("message", alarmType.getMessage(), "alarmType", alarmType.getAlarmCode()));
                 sink.tryEmitNext(jsonMessage);
             } catch (Exception e) {
                 System.err.println("Failed to convert message to JSON: " + e.getMessage());

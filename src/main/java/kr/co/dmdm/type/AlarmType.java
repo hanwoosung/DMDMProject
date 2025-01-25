@@ -1,6 +1,5 @@
 package kr.co.dmdm.type;
 
-import lombok.Data;
 import lombok.Getter;
 
 /**
@@ -16,13 +15,15 @@ import lombok.Getter;
  */
 @Getter
 public enum AlarmType {
-    MESSAGE_SEND("새로운 쪽지가 도착했습니다."),
-    EMOTICON_BUY("이모티콘이 판매되었습니다."),
-    COMMENT_WRITE("새로운 댓글이 작성되었습니다."),
-    FIGHT_SEND("투기 신청이 걸려왔습니다.");
+    MESSAGE_SEND("새로운 쪽지가 도착했습니다.", AlarmCode.MESSAGE),
+    EMOTICON_BUY("이모티콘이 판매되었습니다.", AlarmCode.NOTIFICATIONS),
+    COMMENT_WRITE("새로운 댓글이 작성되었습니다.", AlarmCode.NOTIFICATIONS),
+    FIGHT_SEND("투기 신청이 걸려왔습니다.", AlarmCode.NOTIFICATIONS);
 
     private final String message;
-    AlarmType(String message) {
+    private final AlarmCode alarmCode;
+    AlarmType(String message, AlarmCode alarmCode) {
         this.message = message;
+        this.alarmCode = alarmCode;
     }
 }

@@ -23,6 +23,6 @@ public class KafkaConsumer {
         alarm.setId(null);
         alarmRepository.save(alarm);
 
-        sseServiceImpl.sendAlarmToUser(alarmDto.getReceiveUserId(), alarmDto.getAlarmType().getMessage());
+        sseServiceImpl.sendAlarmToUser(alarmDto.getReceiveUserId(), alarmDto.getAlarmType());
     }
 }
