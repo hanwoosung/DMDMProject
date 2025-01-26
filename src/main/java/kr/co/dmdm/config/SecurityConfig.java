@@ -4,6 +4,8 @@ import kr.co.dmdm.jwt.CustomLogoutFilter;
 import kr.co.dmdm.jwt.JWTFilter;
 import kr.co.dmdm.jwt.JWTUtil;
 import kr.co.dmdm.jwt.LoginFilter;
+import kr.co.dmdm.security.CustomOAuth2SuccessHandler;
+import kr.co.dmdm.security.CustomOAuth2UserService;
 import kr.co.dmdm.service.common.TokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,11 +29,13 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final CustomOAuth2UserService customOAuth2UserService;
     private final JWTUtil jwtUtil;
     private final TokenService tokenService;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, TokenService tokenService) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, CustomOAuth2UserService customOAuth2UserService, JWTUtil jwtUtil, TokenService tokenService) {
         this.authenticationConfiguration = authenticationConfiguration;
+        this.customOAuth2UserService = customOAuth2UserService;
         this.jwtUtil = jwtUtil;
         this.tokenService = tokenService;
     }
@@ -48,6 +52,8 @@ public class SecurityConfig {
         configuration.addAllowedOrigin("http://localhost:3000");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
+        configuration.addExposedHeader("access");
+        configuration.addExposedHeader("refresh");
         configuration.addExposedHeader("Authorization");
         configuration.setAllowCredentials(true);
 
@@ -81,6 +87,15 @@ public class SecurityConfig {
                 );
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+
+        http
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
+                                .userService(customOAuth2UserService)
+                        )
+                        .successHandler(new CustomOAuth2SuccessHandler(jwtUtil, tokenService))
+                );
+
         http
                 .addFilterAt(new LoginFilter(tokenService, authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
         http

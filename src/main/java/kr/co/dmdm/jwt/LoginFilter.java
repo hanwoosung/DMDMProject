@@ -68,6 +68,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
         String userId = customUserDetails.getUsername();
+        String userNickName = customUserDetails.getUserNickName();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -79,11 +80,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String refresh = jwtUtil.createJwt("refresh",userId, role, 86400000L);
         tokenService.saveRefreshToken(userId, refresh);
 
-        Response<String> successResponse = Response.successNoTime("로그인 성공");
+        Response<String> successResponse = Response.successNoTime("로그인 성공",userNickName);
 
         try {
             response.setHeader("access", access);
-            response.addCookie(createCookie("refresh", refresh));
+            response.addCookie(createCookie("refresh", refresh,24*60*60));
 
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json;charset=UTF-8");

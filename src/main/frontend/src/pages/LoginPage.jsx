@@ -1,11 +1,12 @@
 import styles from "../assets/css/user/Login.module.css";
 import logo from "../assets/image/img_logo.jpg";
 import UserInput from "../components/user/UserInput";
-import {useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {useLocation, useNavigate} from "react-router-dom";
 import axios from "axios";
 import {Response} from "../type/Response";
 import Alert from "../components/common/AlertComponents";
+import { useLogin } from '../contexts/AuthContext';
 
 const LoginPage = () => {
     const [userId, setUserId] = useState("");
@@ -14,6 +15,16 @@ const LoginPage = () => {
     const [isAlert, setIsAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
     const navigate = useNavigate();
+    const location = useLocation();
+    const { isLoggedIn, setIsLoggedIn, setLoginUser } = useLogin();
+    const prevUrl = location.state || "/test";
+
+    // 로그인 상태 확인 후 리다이렉트
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate("/test", { replace: true });
+        }
+    }, [isLoggedIn, navigate]);
 
     const handleUserIdChange = (e) => {
         setUserId(e.target.value);
@@ -40,18 +51,22 @@ const LoginPage = () => {
                 userPw: password,
             }, {
                 headers: {"Content-Type": "application/json"},
+                withCredentials: true,
             });
             if (response.data.result === Response.SUCCESS) {
-                const token = response.headers["authorization"];
 
+                const  name =  response.data.data;
                 setAlertMessage("로그인 성공");
                 setIsAlert(true);
 
-                if (token && token.startsWith("Bearer ")) {
-                    localStorage.setItem("token", token.split(" ")[1]);
-                }
+                window.localStorage.setItem("access", response.headers.get("access"));
+                window.localStorage.setItem("name", name);
 
-                /*navigate("/a"); TODO : 이거 메인 만들면 넣어줘야함 */
+                setIsLoggedIn(true);
+                setLoginUser(name);
+
+                // 로그인 완료 후, 이전 요청이 존재하면 이전 요청으로 이동
+                navigate(prevUrl, { replace: true });
             }
         } catch (err) {
             setErrorMessage("아이디 또는 비밀번호를 확인해주세요.");

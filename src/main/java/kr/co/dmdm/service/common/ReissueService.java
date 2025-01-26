@@ -66,7 +66,7 @@ public class ReissueService {
 
         // 응답에 토큰 추가
         response.setHeader("access", newAccess);
-        response.addCookie(createCookie("refresh", newRefresh));
+        response.addCookie(createCookie("refresh", newRefresh,24*60*60));
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

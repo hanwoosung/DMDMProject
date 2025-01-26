@@ -32,7 +32,8 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         // 요청 URI와 메서드 확인
         String requestUri = request.getRequestURI();
-        if (!requestUri.equals("/logout")) {
+
+        if (!requestUri.matches("^\\/logout$")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -55,21 +56,24 @@ public class CustomLogoutFilter extends GenericFilterBean {
         }
 
         if (refresh == null) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            System.out.println("리프레시 토큰이 없습니다. 기본 로그아웃 처리 진행.");
+            response.setStatus(HttpServletResponse.SC_OK);
             return;
         }
+
 
         // 리프레시 토큰 유효성 검사
         try {
             jwtUtil.isExpired(refresh);
         } catch (ExpiredJwtException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setStatus(HttpServletResponse.SC_OK);
+            System.out.println("만료된 리프레시 토큰: " + refresh);
             return;
         }
 
         String category = jwtUtil.getCategory(refresh);
         if (!"refresh".equals(category)) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
@@ -78,7 +82,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         String storedRefresh = tokenService.getRefreshToken(userId);
 
         if (storedRefresh == null || !storedRefresh.equals(refresh)) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
