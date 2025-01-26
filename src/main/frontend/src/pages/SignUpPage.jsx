@@ -28,7 +28,7 @@ const SignUpPage = () => {
         all: false,
     });
 
-    const SITE_KEY = process.env.REACT_APP_SITE_KEY;
+    const SITE_KEY = "6Ld5aMAqAAAAAOBvbwqxT5i8vLcB2nvDmrNqsFjX";
     const [captchaToken, setCaptchaToken] = useState("");
     const [errors, setErrors] = useState({});
     const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);

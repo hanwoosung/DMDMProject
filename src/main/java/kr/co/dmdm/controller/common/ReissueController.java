@@ -1,8 +1,11 @@
 package kr.co.dmdm.controller.common;
 
-import kr.co.dmdm.jwt.JWTUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import kr.co.dmdm.service.common.ReissueService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -20,5 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ReissueController {
     private final ReissueService reissueService;
+
+    @PostMapping("/reissue")
+    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
+        return reissueService.reissue(request, response);
+    }
 
 }

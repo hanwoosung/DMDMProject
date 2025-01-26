@@ -12,71 +12,62 @@ import org.springframework.stereotype.Service;
 
 import static kr.co.dmdm.utils.CookieUtil.createCookie;
 
-/**
- * packageName    : kr.co.dmdm.service.common
- * fileName       : ReissueService
- * author         : 한우성
- * date           : 2025-01-24
- * description    :
- * ===========================================================
- * DATE              AUTHOR             NOTE
- * -----------------------------------------------------------
- * 2025-01-24        한우성       최초 생성
- */
 @Service
 @RequiredArgsConstructor
 public class ReissueService {
 
     private final JWTUtil jwtUtil;
+    private final TokenService tokenService;
 
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
-        //get refresh token
         String refresh = null;
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
-
             if (cookie.getName().equals("refresh")) {
-
                 refresh = cookie.getValue();
             }
         }
 
         if (refresh == null) {
-
-            //response status code
             return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
         }
 
-        //expired check
+        // 레디스에서 리프레시 토큰 확인
+        String userId = jwtUtil.getUsername(refresh);
+        String storedRefreshToken = tokenService.getRefreshToken(userId);
+
+        if (storedRefreshToken == null || !storedRefreshToken.equals(refresh)) {
+            return new ResponseEntity<>("invalid or expired refresh token", HttpStatus.BAD_REQUEST);
+        }
+
+        // 토큰 만료 여부 확인
         try {
             jwtUtil.isExpired(refresh);
         } catch (ExpiredJwtException e) {
-
-            //response status code
             return new ResponseEntity<>("refresh token expired", HttpStatus.BAD_REQUEST);
         }
 
-        // 토큰이 refresh인지 확인 (발급시 페이로드에 명시)
+        // 토큰이 리프레시 토큰인지 확인
         String category = jwtUtil.getCategory(refresh);
-
         if (!category.equals("refresh")) {
-
-            //response status code
             return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
         }
 
-        String username = jwtUtil.getUsername(refresh);
+        // 기존 리프레시 토큰 삭제
+        tokenService.deleteRefreshToken(userId);
+
+        // 새로운 액세스 및 리프레시 토큰 생성
         String role = jwtUtil.getRole(refresh);
+        String newAccess = jwtUtil.createJwt("access", userId, role, 600000L);
+        String newRefresh = jwtUtil.createJwt("refresh", userId, role, 86400000L);
 
-        //make new JWT
-        String newAccess = jwtUtil.createJwt("access", username, role, 600000L);
-        String newRefresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
+        // 새로운 리프레시 토큰을 레디스에 저장
+        tokenService.saveRefreshToken(userId, newRefresh);
 
-        //response
+        // 응답에 토큰 추가
         response.setHeader("access", newAccess);
         response.addCookie(createCookie("refresh", newRefresh));
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

@@ -8,6 +8,8 @@ import kr.co.dmdm.dto.user.request.LoginRequestDto;
 import kr.co.dmdm.global.Response;
 import kr.co.dmdm.global.exception.CustomException;
 import kr.co.dmdm.security.CustomUserDetails;
+import kr.co.dmdm.service.common.TokenService;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,16 +21,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 
 import static kr.co.dmdm.utils.CookieUtil.createCookie;
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
+    private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
-
+    public LoginFilter(TokenService tokenService, AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
+        this.tokenService = tokenService;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
     }
@@ -63,7 +67,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        String username = customUserDetails.getUsername();
+        String userId = customUserDetails.getUsername();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -71,10 +75,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
 
-        String access = jwtUtil.createJwt("access",username, role, 600000L);
-        String refresh = jwtUtil.createJwt("refresh",username, role, 86400000L);
-        String successMessage = "로그인 성공";
-        Response<String> successResponse = Response.successNoTime(successMessage);
+        String access = jwtUtil.createJwt("access",userId, role, 600000L);
+        String refresh = jwtUtil.createJwt("refresh",userId, role, 86400000L);
+        tokenService.saveRefreshToken(userId, refresh);
+
+        Response<String> successResponse = Response.successNoTime("로그인 성공");
 
         try {
             response.setHeader("access", access);
