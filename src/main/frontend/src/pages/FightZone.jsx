@@ -33,6 +33,12 @@ const FightZone = () => {
     const [leftPercent, setLeftPercent] = useState(0);
     const [rightPercent, setRightPercent] = useState(0);
 
+    const [timerStart, setTimerStart] = useState(false);
+    const [timerExtend, setTimerExtend] = useState(false);
+    const [timerEnd, setTimerEnd] = useState(false);
+
+    const [roomTimer, setRoomTimer] = useState(3600);
+
     // 방 접속시 연결 및 구독설정
     useEffect(() => {
         stompClient.current = new Client({
@@ -52,8 +58,11 @@ const FightZone = () => {
                     setObserverMessages((prevMessages) => [...prevMessages, body]);
                 });
 
+                //투표 구독
                 stompClient.current.subscribe(`/subscribe/vote.${roomNo}`, (message) => {
                     const body = JSON.parse(message.body);
+                    console.log("투표 결과")
+                    console.log(body)
                     setLeftPercent(body.leftVote);
                     setRightPercent(body.rightVote);
                 });
@@ -65,9 +74,22 @@ const FightZone = () => {
                     setObserverUsers(body);
                 });
 
+                // 타이머 구독
+                stompClient.current.subscribe(`/subscribe/timer.${roomNo}`, (message) => {
+                    const body = JSON.parse(message.body);
+                    setRoomTimer(body);
+                })
+
+                // 연결 신호 보내기
                 stompClient.current.publish({
                     destination: `/publish/chatRoom/join/${roomNo}`,
                     body: JSON.stringify({username: `user${exUserName}`, nickname: "닉넴닉넴"}),
+                })
+
+                // 투표 현황 반환
+                stompClient.current.publish({
+                    destination: `/publish/vote.${roomNo}`,
+                    body: ""
                 })
             },
             onWebSocketError: (error) => {
@@ -86,7 +108,7 @@ const FightZone = () => {
             stompClient.current.deactivate();
             window.removeEventListener('beforeunload', leaveUser);
         };
-    //불필요한 재렌더링 방지. 혹여나 오류 발생시 roomNo 집어넣기
+        //불필요한 재렌더링 방지. 혹여나 오류 발생시 roomNo 집어넣기
     }, []);
 
     useEffect(() => {
@@ -97,6 +119,12 @@ const FightZone = () => {
 
         sendVote(selectedVote)
     }, [selectedVote]);
+
+    useEffect(() => {
+        if(roomTimer === 0){
+            alert("토론이 종료되었습니다!");
+        }
+    },[roomTimer])
 
     useEffect(() => {
         fighterMessageEnd.current.scrollIntoView();
@@ -110,7 +138,7 @@ const FightZone = () => {
         if (stompClient.current) {
             stompClient.current.publish({
                 destination: `/publish/chatRoom/leave/${roomNo}`,
-                body: JSON.stringify({ username: `user${exUserName}`, nickname: "닉넴닉넴" }),
+                body: JSON.stringify({username: `user${exUserName}`, nickname: "닉넴닉넴"}),
             });
 
             stompClient.current.deactivate();
@@ -125,11 +153,6 @@ const FightZone = () => {
             body: JSON.stringify({username: observerName, vote: vote}),
         })
     }
-
-    //투표 버튼 이벤트
-    const handleVote = (candidate) => {
-        setSelectedVote(selectedVote === candidate ? null : candidate);
-    };
 
     const sendFighterChat = () => {
         if (fighterName && fighterContent) {
@@ -151,18 +174,87 @@ const FightZone = () => {
         }
     };
 
-    const fightPercent = () => {
-        if (leftPercent === 0 && rightPercent === 0) {
-            return;
-        }
+    const timerStarter = () => {
+        console.log('토론 시작됨')
+        stompClient.current.publish({
+            destination: `/publish/timer.${roomNo}/start`,
+        })
+    }
 
-        const leftWidth = Math.floor(leftPercent / (leftPercent + rightPercent) * 100);
+    const timerToggleStarter = () => {
+        console.log('토론 시작됨')
+        stompClient.current.publish({
+            destination: `/publish/timer.${roomNo}/start`,
+            body: JSON.stringify({username: fighterName})
+        })
+    }
+
+    const timeStopper = () =>{
+        console.log(`토론 중지`)
+        stompClient.current.publish({
+            destination: `/publish/timer.${roomNo}/stop`,
+        })
+    }
+
+    const timeExtend = () => {
+        console.log(`토론 연장`)
+        stompClient.current.publish({
+            destination: `/publish/timer.${roomNo}/extend`,
+        })
+    }
+
+    //투표 버튼 이벤트
+    const handleVote = (candidate) => {
+        setSelectedVote(selectedVote === candidate ? null : candidate);
+    };
+
+    const zeroInsert = (num) => {
+        return num < 10 ? `0${num}` : num
+    }
+
+    const fightTimerComp = () => {
+        let hour = Math.floor( roomTimer / 3600)
+        let min = Math.floor( roomTimer%3600 / 60 )
+        let sec = roomTimer%60
+
+        return (
+            <div className={styles.timeCount}>
+                <span>{zeroInsert(hour)}</span>
+                <span>:</span>
+                <span>{zeroInsert(min)}</span>
+                <span>:</span>
+                <span>{zeroInsert(sec)}</span>
+            </div>
+        )
+    }
+
+    const fightPercentComp = () => {
+        let leftWidth = 50;
+
+        if (leftPercent !== 0 || rightPercent !== 0) {
+            leftWidth = Math.floor(leftPercent / (leftPercent + rightPercent) * 100);
+        }
 
         return (
             <div className={styles.percentBox}>
                 <div className={styles.leftPercent} style={{width: `${leftWidth}%`}}>{leftWidth}%</div>
                 <div className={styles.rightPercent} style={{width: `${100 - leftWidth}%`}}>{100 - leftWidth}%</div>
             </div>
+        )
+    }
+
+    //timerStarter
+
+    const toggleBtnComp = (title, setState) => {
+
+        return (
+            <button className={timerStart?
+                styles.inactiveBtn :
+                styles.activeBtn}
+                    onClick={() => setState(prevState => !prevState)}
+            >
+                {title}
+            </button>
         )
     }
 
@@ -211,10 +303,12 @@ const FightZone = () => {
                         </div>
                         <div className={styles.fightStatus}>
                             <div className={styles.fightTitle}>HTML이 프로그래밍 언어겠냐?</div>
-                            <SmallBtn title={"토론 시작"} style={{fontSize: 18, width: 150}}/>
-                            <SmallBtn width={100} title={"마감"} style={{display: "none"}}/>
-                            <div className={styles.timeCount}>남은시간 00:00:00</div>
-                            {fightPercent()}
+
+                            <SmallBtn title={"토론 시작"} style={{fontSize: 18, width: 150}}
+                                      onClick={() => timerStarter()}/>
+                            <SmallBtn width={100} title={"마감"} onClick={() => timeStopper()}/>
+                            {fightTimerComp()}
+                            {fightPercentComp()}
                         </div>
                         <div className={styles.fighterInfo}>
                             <div className={styles.flexRow} style={{gap: 10}}>
@@ -302,7 +396,7 @@ const FightZone = () => {
                                 className={styles.input}
                                 style={{flex: 1}}
                             />
-                            <SmallBtn title={"시간연장"}/>
+                            <SmallBtn title={"시간연장"} onClick={() =>timeExtend()}/>
                         </div>
                     </div>
                 </div>

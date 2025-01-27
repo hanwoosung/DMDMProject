@@ -34,13 +34,16 @@ public class VoteManager {
      * @return 투표결과 반환
      */
     public VoteResponseDto registerVote(Long chatRoomId, VoteRequestDto request) {
-        String username = request.getUsername();
         Map<String, String> votes = getVoteData(chatRoomId);
 
+        if(request == null) {
+            return voteResult(votes);
+        }
+
         if(request.getVote() == null){
-            votes.remove(username);
+            votes.remove(request.getUsername());
         } else {
-            votes.put(username, request.getVote());
+            votes.put(request.getUsername(), request.getVote());
         }
 
         return voteResult(votes);

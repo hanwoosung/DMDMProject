@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * fileName       : RoomMemberHandler
  * author         : 최기환
  * date           : 2025-01-24
- * description    :
+ * description    : 채팅창 연결 목록 조회 서비스
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------

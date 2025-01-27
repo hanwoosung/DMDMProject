@@ -24,8 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequiredArgsConstructor
-@Slf4j
-public class UserSocketController {
+public class UserSocketController extends BaseWebSocketController {
 
     private final RoomMemberHandler roomMemberHandler;
 

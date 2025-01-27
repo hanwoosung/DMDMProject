@@ -7,10 +7,7 @@ import kr.co.dmdm.dto.VoteRequestDto;
 import kr.co.dmdm.dto.VoteResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.handler.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -27,8 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
-@Slf4j
-public class MessageSocketController {
+public class MessageSocketController extends BaseWebSocketController {
 
     private final VoteManager voteManager;
 
@@ -53,16 +49,9 @@ public class MessageSocketController {
     @MessageMapping("/vote.{chatRoomId}")
     @SendTo("/subscribe/vote.{chatRoomId}")
     public VoteResponseDto sendVote(
-            VoteRequestDto request,
+            @Payload(required = false) VoteRequestDto request,
             @DestinationVariable Long chatRoomId
     ) {
         return voteManager.registerVote(chatRoomId, request);
-    }
-
-    
-
-    @MessageExceptionHandler
-    public void handleException(RuntimeException e) {
-        log.info("Exception: {}", e.getMessage());
     }
 }
