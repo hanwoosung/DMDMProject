@@ -2,6 +2,8 @@ import React, {useEffect, useRef, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {Client} from '@stomp/stompjs';
 import SmallBtn from "../components/common/SmallBtnComponents";
+import ObserverChat from '../components/fightzone/ObserverChatComponent';
+import ObserverUsers from '../components/fightzone/ObserverUserComponent';
 import leftFighterImg from "../assets/image/ex_profile.png";
 import rightFighterImg from "../assets/image/ex_chiwawa.jpg";
 import styles from '../assets/css/FightZone.module.css';
@@ -129,10 +131,6 @@ const FightZone = () => {
     useEffect(() => {
         fighterMessageEnd.current.scrollIntoView();
     }, [fighterMessages]);
-
-    useEffect(() => {
-        observerMessageEnd.current.scrollIntoView();
-    }, [observerMessages]);
 
     const leaveUser = () => {
         if (stompClient.current) {
@@ -404,50 +402,20 @@ const FightZone = () => {
                 {/* 관전자 채팅 공간 */}
                 <div className={styles.observerSection}>
                     {/* 관전자 목록 공간 */}
-                    <div className={styles.userSection}>
-                        <div className={styles.chatTitle}>현재 관전자 리스트({observerUsers.length}) // 방 번호: {roomNo}</div>
-                        <div className={styles.userList}>
-                            {observerUsers.map((user, index) => (
-                                <div key={index} className={styles.userItem}>
-                                    <span>{user.username}/</span>
-                                    <span>{user.nickname}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    <div className={styles.observerChatSection}>
-                        <div className={styles.chatMessages}>
-                            {observerMessages.map((message, index) => (
-                                <div key={index} className={styles.chatMessage}>
-                                    <span className={styles.username}>{message.username}:</span>
-                                    <span>{message.content}</span>
-                                </div>
-                            ))}
-                            <div ref={observerMessageEnd}></div>
-                        </div>
-                        <div className={styles.chatInputContainer}>
-                            <input
-                                type="text"
-                                placeholder="사용자 이름"
-                                value={observerName}
-                                onChange={(e) => setObserverName(e.target.value)}
-                                className={styles.input}
-                            />
-                            <input
-                                type="text"
-                                placeholder="메시지를 입력하세요"
-                                value={observerContent}
-                                onChange={(e) => setObserverContent(e.target.value)}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        sendObserverChat();
-                                    }
-                                }}
-                                style={{flex: 1}}
-                                className={styles.input}
-                            />
-                        </div>
-                    </div>
+                    <ObserverUsers
+                        observerUsers={observerUsers}
+                        roomNo={roomNo}
+                    />
+                    <ObserverChat
+                        ref={observerMessageEnd}
+                        observerMessageEnd={observerMessageEnd}
+                        observerMessages={observerMessages}
+                        observerName={observerName}
+                        setObserverName={setObserverName}
+                        observerContent={observerContent}
+                        setObserverContent={setObserverContent}
+                        sendObserverChat={sendObserverChat}
+                    />
                 </div>
             </div>
         </div>
