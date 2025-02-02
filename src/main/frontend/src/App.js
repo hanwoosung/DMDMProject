@@ -7,6 +7,7 @@ import PagingTestPage from "./pages/PagingTestPage";
 import BoardWrite from "./pages/board/BoardWrite";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
+import BoardList from "./pages/board/BoardList";
 
 function App() {
     return (
@@ -40,6 +41,12 @@ function App() {
                 <Route path="/board-write/:boardType" element={
                     <Layout>
                         <BoardWrite/>
+                    </Layout>
+                } />
+
+                <Route path="/board-list/:boardType" element={
+                    <Layout>
+                        <BoardList/>
                     </Layout>
                 } />
 

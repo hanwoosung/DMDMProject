@@ -3,10 +3,7 @@ package kr.co.dmdm.controller.common;
 import kr.co.dmdm.dto.common.GubnDto;
 import kr.co.dmdm.service.common.GubnService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,5 +28,10 @@ public class GubnController {
     @PostMapping("/gubn")
     public List<GubnDto> findGubnList(@RequestBody GubnDto gubnDto){
         return gubnService.findAllByIdParentCode(gubnDto.getParentCode());
+    }
+
+    @PostMapping("/gubn/{parentCode}")
+    public GubnDto findGubnById(@PathVariable("parentCode") String parentCode){
+        return null;
     }
 }

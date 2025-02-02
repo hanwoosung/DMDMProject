@@ -49,11 +49,7 @@ const useBoardWriteHandler = () => {
                 hashTags: hashTags,
             }
 
-            console.log(params);
-
-
             setIsAlert(false);
-
 
             await post("/api/v1/board", {
                 headers: {"Content-Type": "application/json"},

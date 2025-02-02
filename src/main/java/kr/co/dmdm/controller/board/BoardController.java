@@ -38,19 +38,18 @@ public class BoardController {
     @PostMapping("/file")
     public FileDto saveFiles(@RequestParam("image") MultipartFile file) throws IOException {
 
-        String fileType = "BOARD_TYPE";
+        String fileType = "BOARD";
         String userId = "yiok79";
 
 //        1차로 refId는 사용자 Id 넣음
         fileService.saveFile(file, fileType, userId, userId);
 
 //        이후 저장한거 넘김
-        return fileService.findFileByRefNoAndFileType("yiok79", "BOARD_TYPE");
+        return fileService.findFileByRefNoAndFileType(userId, fileType);
     }
 
     @PostMapping
     public void saveBoards(@RequestBody Map<String, Object> params) throws IOException {
-
         boardService.saveBoard(params);
     }
 

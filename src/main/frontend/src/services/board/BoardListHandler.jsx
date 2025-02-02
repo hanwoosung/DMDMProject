@@ -2,20 +2,9 @@ import {useEffect, useRef, useState} from "react";
 import useFetch from "../../hooks/common/useFetch";
 import {useParams, useNavigate} from "react-router-dom";
 
-const useBoardWriteData = () => {
+const useBoardListHandler = () => {
 
-    const navigate = useNavigate();
-    const {boardType: boardTypeParam} = useParams();
 
-    const [hashTags, setHashTags] = useState([]);
-    const [boardType, setBoardType] = useState([]);
-    const [boardFiles, setBoardFiles] = useState([]);
-    const editorRef = useRef(null); // 에디터 객체를 참조
-    const [boardData, setBoardData] = useState({
-        boardTitle: "",
-        boardType: boardTypeParam,
-        boardContent: "",
-    });
     const [alertMessage, setAlertMessage] = useState("");
     const [isAlert, setIsAlert] = useState(false);
     const [isConfirmVisible, setIsConfirmVisible] = useState(false);
@@ -50,14 +39,6 @@ const useBoardWriteData = () => {
     }, [fetchedEvents]);
 
     return {
-        hashTags,
-        setHashTags,
-        boardType,
-        editorRef,
-        boardFiles,
-        setBoardFiles,
-        boardData,
-        setBoardData,
         alertMessage,
         setAlertMessage,
         isAlert,
@@ -69,4 +50,4 @@ const useBoardWriteData = () => {
     }
 }
 
-export default useBoardWriteData;
+export default useBoardListHandler;

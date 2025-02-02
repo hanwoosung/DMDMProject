@@ -12,6 +12,7 @@ import kr.co.dmdm.entity.board.BoardTagId;
 import kr.co.dmdm.global.exception.CustomException;
 import kr.co.dmdm.global.exception.ExceptionEnum;
 import kr.co.dmdm.repository.jpa.board.BoardRepository;
+import kr.co.dmdm.repository.jpa.board.BoardTagRepository;
 import kr.co.dmdm.repository.jpa.common.FileRepository;
 import kr.co.dmdm.service.common.BadWordService;
 import kr.co.dmdm.service.common.FileService;
@@ -20,6 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +35,7 @@ public class BoardServiceImpl implements BoardService {
     private final FileService fileService;
     private final FileRepository fileRepository;
     private final BoardRepository boardRepository;
+    private final BoardTagRepository boardTagRepository;
     private final BadWordService badWordService;
     private final ModelMapper modelMapper;
 
@@ -44,14 +49,19 @@ public class BoardServiceImpl implements BoardService {
             validateBoardContent(boardDto);
 
             Board boardEntity = convertToEntity(boardDto);
-            saveBoardEntity(boardEntity);
+            boardEntity = boardRepository.saveAndFlush(boardEntity);
+
+            if (boardEntity.getBoardId() == null) {
+                throw new CustomException(ExceptionEnum.DATABASE_ERROR);
+            }
 
             List<FileDto> files = convertFiles(params);
             processFiles(files, boardEntity.getBoardId(), userId);
-            log.info("게시글 저장이 성공적으로 완료되었습니다: {}", boardEntity);
 
             List<String> hashTags = convertHashTags(params);
             processHash(hashTags, boardEntity.getBoardId(), userId);
+
+            log.info("게시글 저장이 성공적으로 완료되었습니다: {}", boardEntity);
 
         } catch (CustomException e) {
             log.error("비즈니스 로직 처리 중 오류 발생: {}", e.getMessage());
@@ -59,102 +69,68 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
-    /**
-     * Map에서 BoardDto로 변환
-     */
     private BoardDto convertBoardDto(Map<String, Object> params, String userId) {
         ObjectMapper objectMapper = new ObjectMapper();
         BoardDto boardDto = objectMapper.convertValue(params.get("board"), BoardDto.class);
-
-        // User ID 설정 (임시 설정)
         boardDto.setUserId(userId);
-
         log.info("BoardDto 변환 완료: {}", boardDto);
         return boardDto;
     }
 
-    /**
-     * 비속어 검증
-     */
     private void validateBoardContent(BoardDto boardDto) {
         badWordService.checkBadWord(boardDto.getBoardTitle());
         badWordService.checkBadWord(boardDto.getBoardContent());
         log.info("게시글 제목과 내용에 대한 비속어 검증 완료");
     }
 
-    /**
-     * BoardDto -> Board 변환
-     */
     private Board convertToEntity(BoardDto boardDto) {
         Board boardEntity = modelMapper.map(boardDto, Board.class);
         log.info("BoardEntity 변환 완료: {}", boardEntity);
         return boardEntity;
     }
 
-    /**
-     * Board 엔티티 저장
-     */
-    private void saveBoardEntity(Board boardEntity) {
-        try {
-            boardRepository.save(boardEntity);
-            log.info("BoardEntity 저장 성공: {}", boardEntity);
-        } catch (Exception e) {
-            log.error("BoardEntity 저장 중 오류 발생: {}", e.getMessage());
-            throw new CustomException(ExceptionEnum.DATABASE_ERROR);
-        }
-    }
-
-    /**
-     * Map에서 파일 리스트로 변환
-     */
     private List<FileDto> convertFiles(Map<String, Object> params) {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.convertValue(params.get("files"), new TypeReference<List<FileDto>>() {
         });
     }
 
-    /**
-     * 파일 처리
-     */
     private void processFiles(List<FileDto> files, Integer boardId, String userId) {
-
-        String fileType = "BOARD_TYPE";
+        String fileType = "BOARD";
 
         if (files != null && !files.isEmpty()) {
             files.forEach(file -> {
                 file.setFileRefNo(String.valueOf(boardId));
+                // 날짜 타입 수정: LocalDate.now() -> Instant.now()
+                file.setInsertDt(LocalDate.now());
+
                 File fileEntity = modelMapper.map(file, File.class);
                 fileRepository.save(fileEntity);
             });
-        } else {
-            fileRepository.deleteByFileRefNoAndFileType(userId, fileType);
-            log.info("첨부 파일 없음");
         }
+
+        fileService.deleteFileByRefNoAndFileType(userId, fileType);
     }
 
-    /**
-     * Map에서 해쉬 리스트로 변환
-     */
     private List<String> convertHashTags(Map<String, Object> params) {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.convertValue(params.get("hashTags"), new TypeReference<List<String>>() {
         });
     }
 
-    /**
-     * 해쉬태그
-     */
     private void processHash(List<String> hashTags, Integer boardId, String userId) {
-        if (hashTags != null && !hashTags.isEmpty()) {
-            hashTags.forEach(hashTag -> {
-                BoardTag boardTag = BoardTag.builder()
-                        .id(new BoardTagId(boardId, hashTag))
-                        .orderNo(1)
-                        .build();
+        List<BoardTag> boardTags = new ArrayList<>();
 
-            });
-        } else {
-            log.info("해쉬태그 없음");
+        for (int i = 0; i < hashTags.size(); i++) {
+            String hashTag = hashTags.get(i);
+            BoardTag boardTag = BoardTag.builder()
+                    .id(new BoardTagId(boardId, hashTag))
+                    .orderNo(i + 1)
+                    .build();
+
+            boardTags.add(boardTag);
         }
+
+        boardTagRepository.saveAll(boardTags);
     }
 }
