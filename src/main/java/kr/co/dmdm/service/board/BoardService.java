@@ -1,5 +1,8 @@
 package kr.co.dmdm.service.board;
 
+import kr.co.dmdm.dto.board.BoardDto;
+
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -17,6 +20,7 @@ import java.util.Objects;
 
 public interface BoardService {
 
-    public void saveBoard(Map<String, Object> params);
+    void saveBoard(Map<String, Object> params);
 
+    List<BoardDto> getBoards(String boardType, String status);
 }

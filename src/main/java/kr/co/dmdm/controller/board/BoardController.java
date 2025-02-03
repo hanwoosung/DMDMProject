@@ -53,5 +53,10 @@ public class BoardController {
         boardService.saveBoard(params);
     }
 
+    @GetMapping("/{boardType}")
+    public List<BoardDto> getBoards(@PathVariable String boardType) throws IOException {
+        return boardService.getBoards(boardType, "ACTIVE");
+    }
+
 
 }

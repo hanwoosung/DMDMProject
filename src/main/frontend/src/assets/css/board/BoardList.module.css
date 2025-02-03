@@ -3,3 +3,64 @@
     margin: 0 auto;
     height: 100%;
 }
+
+.noticeContainer{
+    width: 100%;
+    padding-bottom: 20px;
+}
+
+.noticeList{
+    display: flex;
+    width: 100%;
+    padding: 7px 0 7px 0;
+    font-weight: bold;
+}
+
+.noticeList svg{
+    padding-right: 10px;
+    width: 34px;
+    height: 24px;
+}
+
+.noticeList span{
+    padding-right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.noticeList span:nth-child(2){
+    cursor: pointer;
+}
+
+.selectWrap{
+    display: flex;
+    justify-content: right;
+}
+
+.basicContainer{
+    width: 100%;
+}
+
+.basicList{
+    width: 100%;
+    display: flex;
+    padding: 7px 0 7px 0;
+}
+
+.basicList img{
+    border-radius: 100%;
+    width: 70px;
+    height: 70px;
+}
+
+.basicList .detail{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: 7px;
+}
+
+.basicList .detail .title{
+    font-weight: bold;
+}

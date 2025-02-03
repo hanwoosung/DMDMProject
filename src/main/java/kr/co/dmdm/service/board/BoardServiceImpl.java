@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +66,19 @@ public class BoardServiceImpl implements BoardService {
             log.error("비즈니스 로직 처리 중 오류 발생: {}", e.getMessage());
             throw e;
         }
+    }
+
+    @Override
+    public List<BoardDto> getBoards(String boardType, String status) {
+
+        List<Board> boardList = boardRepository.findAllByBoardTypeAndStatus(boardType, status);
+        List<BoardDto> boardDtoList = new ArrayList<>();
+
+        for (Board board : boardList) {
+            boardDtoList.add(modelMapper.map(board, BoardDto.class));
+        }
+
+        return boardDtoList;
     }
 
     private BoardDto convertBoardDto(Map<String, Object> params, String userId) {

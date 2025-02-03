@@ -4,6 +4,8 @@ import useApi from "../../hooks/common/useApi";
 const useBoardWriteHandler = () => {
 
     const {
+        navigate,
+        title,
         hashTags,
         setHashTags,
         boardType,
@@ -60,6 +62,8 @@ const useBoardWriteHandler = () => {
                     setAlertMessage(res.message);
                     return;
                 }
+                navigate(`/board-list/${title.value}`);
+
                 console.log(res);
             }).catch((res) => {
                 if (res.statusCode !== 200) {
@@ -89,6 +93,7 @@ const useBoardWriteHandler = () => {
         handleRemoveHashTag,
         handleAddHashTag,
         handleSave,
+        title,
         hashTags,
         boardType,
         editorRef,

@@ -7,6 +7,7 @@ const useBoardWriteData = () => {
     const navigate = useNavigate();
     const {boardType: boardTypeParam} = useParams();
 
+    const [title, setTitle] = useState({});
     const [hashTags, setHashTags] = useState([]);
     const [boardType, setBoardType] = useState([]);
     const [boardFiles, setBoardFiles] = useState([]);
@@ -44,12 +45,16 @@ const useBoardWriteData = () => {
                 navigate("/"); // 🚀 메인 페이지로 이동
             }
 
+            const selectedItem = selectInfo.find((select) => select.value === boardTypeParam);
+            setTitle(selectedItem ? selectedItem : '');
             setBoardType(selectInfo);
         }
 
     }, [fetchedEvents]);
 
     return {
+        navigate,
+        title,
         hashTags,
         setHashTags,
         boardType,

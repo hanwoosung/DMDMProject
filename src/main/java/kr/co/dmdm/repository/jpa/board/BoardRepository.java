@@ -3,6 +3,8 @@ package kr.co.dmdm.repository.jpa.board;
 import kr.co.dmdm.entity.board.Board;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * 패키지명        : kr.co.dmdm.repository.jpa.board
  * 파일명          : BoardRepository
@@ -17,4 +19,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BoardRepository extends JpaRepository<Board, Integer> {
 
+    List<Board> findAllByBoardTypeAndStatus(String boardType, String status);
 }

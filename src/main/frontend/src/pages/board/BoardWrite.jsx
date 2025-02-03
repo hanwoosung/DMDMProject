@@ -16,6 +16,7 @@ const BoardWrite = () => {
         handleRemoveHashTag,
         handleAddHashTag,
         handleSave,
+        title,
         hashTags,
         boardType,
         editorRef,
@@ -33,7 +34,7 @@ const BoardWrite = () => {
 
     return (
         <div className={BoardWriteStyles.boardWriteContainer}>
-            <Title title="게시글 작성" />
+            <Title title={title.label + " 작성"} />
 
             <SubTitle title="제목" />
             <Input
@@ -85,9 +86,9 @@ const BoardWrite = () => {
 
             <Alert message={alertMessage}
                    isVisible={isAlert}
-            onAlert={() => {
-                setIsAlert(false);
-            }}/>
+                   onAlert={() => {
+                       setIsAlert(false);
+                   }} />
 
             <Confirm message={confirmMessage}
                      isVisible={isConfirmVisible}

@@ -4,12 +4,13 @@ import {useParams, useNavigate} from "react-router-dom";
 
 const useBoardListHandler = () => {
 
-
+    const {boardType: boardTypeParam} = useParams();
+    const [boardType, setBoardType] = useState({});
     const [alertMessage, setAlertMessage] = useState("");
     const [isAlert, setIsAlert] = useState(false);
     const [isConfirmVisible, setIsConfirmVisible] = useState(false);
     const [confirmMessage, setConfirmMessage] = useState("");
-    const {data: fetchedEvents, loading} = useFetch(`/api/v1/gubn`, {
+    const {data: fetchedEvents, loading} = useFetch(`/api/v1/gubn/BOARD_CATEGORY/${boardTypeParam}`, {
         data: {
             parentCode: "BOARD_CATEGORY"
         }
@@ -19,26 +20,20 @@ const useBoardListHandler = () => {
 
         // fetchedEvents 로드 후 기본 화면 설정
         if (fetchedEvents) {
-            console.log(fetchedEvents);
-            const selectInfo = fetchedEvents.data.map((data) => {
-                return {
-                    value: data.code,
-                    label: data.name
-                }
-            })
-            const isValidBoardType = selectInfo.some((item) => item.value === boardTypeParam);
-
-            if (!isValidBoardType) {
-                console.warn(`boardTypeParam(${boardTypeParam})이 유효하지 않아 메인으로 이동`);
-                navigate("/"); // 🚀 메인 페이지로 이동
+            if (fetchedEvents.statusCode === 200) {
+                setBoardType(fetchedEvents.data);
+            } else {
+                setIsAlert(true);
+                setAlertMessage(fetchedEvents.message);
             }
 
-            setBoardType(selectInfo);
         }
+
 
     }, [fetchedEvents]);
 
     return {
+        boardType,
         alertMessage,
         setAlertMessage,
         isAlert,
