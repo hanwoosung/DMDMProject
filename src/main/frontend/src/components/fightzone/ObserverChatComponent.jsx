@@ -1,7 +1,7 @@
 import styles from "../../assets/css/FightZone.module.css";
 import React, {forwardRef, useEffect} from "react";
 
-const ObserverChatComponent = forwardRef((props,ref) => {
+const ObserverChatComponent = forwardRef((props, ref) => {
 
     useEffect(() => {
         ref.current.scrollIntoView();

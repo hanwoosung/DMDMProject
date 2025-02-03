@@ -4,6 +4,8 @@ import {Client} from '@stomp/stompjs';
 import SmallBtn from "../components/common/SmallBtnComponents";
 import ObserverChat from '../components/fightzone/ObserverChatComponent';
 import ObserverUsers from '../components/fightzone/ObserverUserComponent';
+import FighterChat from '../components/fightzone/FighterChatComponent';
+import FighterInfo from '../components/fightzone/FighterInfoComponent';
 import leftFighterImg from "../assets/image/ex_profile.png";
 import rightFighterImg from "../assets/image/ex_chiwawa.jpg";
 import styles from '../assets/css/FightZone.module.css';
@@ -123,10 +125,10 @@ const FightZone = () => {
     }, [selectedVote]);
 
     useEffect(() => {
-        if(roomTimer === 0){
+        if (roomTimer === 0) {
             alert("토론이 종료되었습니다!");
         }
-    },[roomTimer])
+    }, [roomTimer])
 
     useEffect(() => {
         fighterMessageEnd.current.scrollIntoView();
@@ -172,22 +174,15 @@ const FightZone = () => {
         }
     };
 
-    const timerStarter = () => {
+    const timeStarter = () => {
         console.log('토론 시작됨')
         stompClient.current.publish({
             destination: `/publish/timer.${roomNo}/start`,
         })
     }
 
-    const timerToggleStarter = () => {
-        console.log('토론 시작됨')
-        stompClient.current.publish({
-            destination: `/publish/timer.${roomNo}/start`,
-            body: JSON.stringify({username: fighterName})
-        })
-    }
 
-    const timeStopper = () =>{
+    const timeStopper = () => {
         console.log(`토론 중지`)
         stompClient.current.publish({
             destination: `/publish/timer.${roomNo}/stop`,
@@ -201,52 +196,18 @@ const FightZone = () => {
         })
     }
 
-    //투표 버튼 이벤트
-    const handleVote = (candidate) => {
-        setSelectedVote(selectedVote === candidate ? null : candidate);
-    };
-
-    const zeroInsert = (num) => {
-        return num < 10 ? `0${num}` : num
-    }
-
-    const fightTimerComp = () => {
-        let hour = Math.floor( roomTimer / 3600)
-        let min = Math.floor( roomTimer%3600 / 60 )
-        let sec = roomTimer%60
-
-        return (
-            <div className={styles.timeCount}>
-                <span>{zeroInsert(hour)}</span>
-                <span>:</span>
-                <span>{zeroInsert(min)}</span>
-                <span>:</span>
-                <span>{zeroInsert(sec)}</span>
-            </div>
-        )
-    }
-
-    const fightPercentComp = () => {
-        let leftWidth = 50;
-
-        if (leftPercent !== 0 || rightPercent !== 0) {
-            leftWidth = Math.floor(leftPercent / (leftPercent + rightPercent) * 100);
-        }
-
-        return (
-            <div className={styles.percentBox}>
-                <div className={styles.leftPercent} style={{width: `${leftWidth}%`}}>{leftWidth}%</div>
-                <div className={styles.rightPercent} style={{width: `${100 - leftWidth}%`}}>{100 - leftWidth}%</div>
-            </div>
-        )
+    const timerToggleStarter = () => {
+        console.log('토론 시작됨')
+        stompClient.current.publish({
+            destination: `/publish/timer.${roomNo}/start`,
+            body: JSON.stringify({username: fighterName})
+        })
     }
 
     //timerStarter
-
     const toggleBtnComp = (title, setState) => {
-
         return (
-            <button className={timerStart?
+            <button className={timerStart ?
                 styles.inactiveBtn :
                 styles.activeBtn}
                     onClick={() => setState(prevState => !prevState)}
@@ -256,147 +217,34 @@ const FightZone = () => {
         )
     }
 
-    // 뱃지 스타일 결정
-    const getBadgeStyle = (fontColor, borderColor) => ({
-        fontSize: '14px',
-        fontWeight: 800,
-        color: fontColor,
-        textShadow: `
-        1px 1px 0 ${borderColor},
-        -1px -1px 0 ${borderColor},
-        -1px 1px 0 ${borderColor},
-        1px -1px 0 ${borderColor},
-        0px 1px 0 ${borderColor},
-        0px -1px 0 ${borderColor},
-        1px 0px 0 ${borderColor},
-        -1px 0px 0 ${borderColor}
-    `,
-    });
-
     return (
         <div className={styles.fightBoard}>
             <div className={styles.fightZone}>
                 {/* 토론자 채팅 공간 */}
                 <div className={styles.fighterSection}>
-                    <div className={styles.fighterInfoContainer}>
-                        <div className={styles.fighterInfo}>
-                            <div className={styles.flexRow} style={{gap: 10}}>
-                                <div className={styles.fighterBadge} style={{background: "#ffd633"}}>Lv. 6</div>
-                                <div className={styles.fighterLevel}
-                                     style={getBadgeStyle("#ffd633", "#000")}
-                                >신입 유저
-                                </div>
-                            </div>
-                            <img src={leftFighterImg} alt="프로필사진"
-                                 className={styles.fighterImage}
-                                 style={{border: "3px solid #300CFF"}}/>
-                            <div className={styles.fighterName}>도지</div>
-                            <button className={selectedVote === "LEFT" ?
-                                styles.leftVoteBtn :
-                                styles.leftNoVoteBtn}
-                                    onClick={() => handleVote("LEFT")}
-                            >
-                                투표하기
-                            </button>
-                        </div>
-                        <div className={styles.fightStatus}>
-                            <div className={styles.fightTitle}>HTML이 프로그래밍 언어겠냐?</div>
+                    <FighterInfo
+                        selectedVote = {selectedVote}
+                        setSelectedVote = {setSelectedVote}
+                        roomTimer = {roomTimer}
+                        timeStarter = {timeStarter}
+                        timeStopper = {timeStopper}
+                        leftPercent = {leftPercent}
+                        rightPercent = {rightPercent}
+                    />
 
-                            <SmallBtn title={"토론 시작"} style={{fontSize: 18, width: 150}}
-                                      onClick={() => timerStarter()}/>
-                            <SmallBtn width={100} title={"마감"} onClick={() => timeStopper()}/>
-                            {fightTimerComp()}
-                            {fightPercentComp()}
-                        </div>
-                        <div className={styles.fighterInfo}>
-                            <div className={styles.flexRow} style={{gap: 10}}>
-                                <div className={styles.fighterBadge} style={{background: "#ff3333"}}>Lv. 80</div>
-                                <div className={styles.fighterLevel}
-                                     style={getBadgeStyle("#ff3333", "#000")}
-                                >뉴비 절단기
-                                </div>
-                            </div>
-                            <img src={rightFighterImg} alt="프로필 사진"
-                                 className={styles.fighterImage}
-                                 style={{border: "3px solid #FF0000"}}/>
-                            <div className={styles.fighterName}>코큰 댕댕이</div>
-                            <button className={selectedVote === "RIGHT" ?
-                                styles.rightVoteBtn :
-                                styles.rightNoVoteBtn
-                            }
-                                    onClick={() => handleVote("RIGHT")}
-                            >
-                                투표하기
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className={styles.chatSection}>
-                        <div className={styles.chatMessages}>
-                            {fighterMessages.map((message, index) => {
-                                if (message.username === leftUser.current) {
-                                    return (
-                                        <div key={index}
-                                             className={styles.chatMessage}
-                                             style={{alignSelf: "start"}}
-                                        >
-                                            <img
-                                                className={styles.chatProfile}
-                                                src={leftFighterImg}
-                                                style={{border: "2px solid #300CFF"}}
-                                                alt="fighterImg"
-                                            />
-                                            <span className={styles.fighterLeftContent}>{message.content}</span>
-                                        </div>
-                                    );
-                                }
-
-                                if (message.username === rightUser.current) {
-                                    return (
-                                        <div key={index}
-                                             className={styles.chatMessage}
-                                             style={{alignSelf: "end"}}
-                                        >
-                                            <span className={styles.fighterRightContent}>{message.content}</span>
-                                            <img
-                                                className={styles.chatProfile}
-                                                src={rightFighterImg}
-                                                style={{border: "2px solid #FF0000"}}
-                                                alt="fighterImg"
-                                            />
-                                        </div>
-                                    );
-                                }
-
-                                return null;
-                            })}
-                            <div ref={fighterMessageEnd}></div>
-                        </div>
-
-                        <div className={styles.chatInputContainer}>
-                            <input
-                                type="text"
-                                placeholder="사용자 이름"
-                                value={fighterName}
-                                onChange={(e) => setFighterName(e.target.value)}
-                                className={styles.input}
-                            />
-                            <input
-                                type="text"
-                                placeholder="메시지를 입력하세요"
-                                value={fighterContent}
-                                onChange={(e) => setFighterContent(e.target.value)}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        sendFighterChat();
-                                    }
-                                }}
-                                className={styles.input}
-                                style={{flex: 1}}
-                            />
-                            <SmallBtn title={"시간연장"} onClick={() =>timeExtend()}/>
-                        </div>
-                    </div>
+                    {/*토론자 채팅 섹션*/}
+                    <FighterChat
+                        rightUser={rightUser}
+                        leftUser={leftUser}
+                        fighterName={fighterName}
+                        setFighterName={setFighterName}
+                        fighterContent={fighterContent}
+                        setFighterContent={setFighterContent}
+                        fighterMessages={fighterMessages}
+                        sendFighterChat={sendFighterChat}
+                        timeExtend={timeExtend}
+                        refs={{fighterMessageEnd, leftUser, rightUser}}
+                    />
                 </div>
 
                 {/* 관전자 채팅 공간 */}
