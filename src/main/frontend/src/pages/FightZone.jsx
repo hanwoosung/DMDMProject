@@ -214,6 +214,18 @@ const FightZone = () => {
         )
     }
 
+    //테스트) new 요청
+    const exampleTimer = (username,request) =>{
+        console.log(`${username}가 ${request} 요청`);
+        stompClient.current.publish({
+            destination: `/publish/example/timer.${roomNo}`,
+            body: JSON.stringify({
+                username: username,
+                request: request
+            })
+        })
+    }
+
     return (
         <div className={styles.fightBoard}>
             <div className={styles.fightZone}>
@@ -223,10 +235,12 @@ const FightZone = () => {
                         selectedVote = {selectedVote}
                         setSelectedVote = {setSelectedVote}
                         roomTimer = {roomTimer}
-                        timeStarter = {timeStarter}
-                        timeStopper = {timeStopper}
+                        fighterName = {fighterName}
                         leftPercent = {leftPercent}
                         rightPercent = {rightPercent}
+                        timeStarter = {timeStarter}
+                        timeStopper = {timeStopper}
+                        exampleTimer = {exampleTimer}
                     />
 
                     {/*토론자 채팅 섹션*/}

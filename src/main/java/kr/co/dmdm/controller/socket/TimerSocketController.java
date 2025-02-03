@@ -1,10 +1,13 @@
 package kr.co.dmdm.controller.socket;
 
 import kr.co.dmdm.component.TimerScheduler;
+import kr.co.dmdm.dto.ChatMessageResponseDto;
+import kr.co.dmdm.dto.TimerRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -19,14 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
  * 2025-01-27        최기환       최초 생성
  */
 @RestController
-@Slf4j
+@RequiredArgsConstructor
 public class TimerSocketController extends BaseWebSocketController {
 
     private final TimerScheduler timerScheduler;
-
-    public TimerSocketController(TimerScheduler timerScheduler) {
-        this.timerScheduler = timerScheduler;
-    }
 
     @MessageMapping("/timer.{chatRoomId}/start")
     public void startTimer(@DestinationVariable Long chatRoomId) {
@@ -41,5 +40,11 @@ public class TimerSocketController extends BaseWebSocketController {
     @MessageMapping("/timer.{chatRoomId}/extend")
     public void extendTimer(@DestinationVariable Long chatRoomId) {
         timerScheduler.extendTimer(chatRoomId, 1800);
+    }
+
+    @MessageMapping("/example/timer.{chatRoomId}")
+    @SendTo("/subscribe/fighter.{chatRoomId}")
+    public ChatMessageResponseDto startExampleTimer(@DestinationVariable Long chatRoomId, TimerRequestDto requestDto) {
+        return timerScheduler.requestInsert(chatRoomId, requestDto.getUsername(), requestDto.getRequest());
     }
 }

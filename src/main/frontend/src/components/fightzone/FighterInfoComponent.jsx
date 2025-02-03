@@ -6,7 +6,17 @@ import React, {forwardRef} from "react";
 
 const FighterInfoComponent = forwardRef((props, ref) => {
 
-    const {selectedVote, setSelectedVote, roomTimer, rightPercent, leftPercent, timeStopper, timeStarter} = props
+    const {
+        selectedVote,
+        setSelectedVote,
+        roomTimer,
+        rightPercent,
+        leftPercent,
+        timeStopper,
+        timeStarter,
+        exampleTimer,
+        fighterName
+    } = props
 
     //투표 버튼 이벤트
     const handleVote = (candidate) => {
@@ -96,6 +106,10 @@ const FighterInfoComponent = forwardRef((props, ref) => {
                 <SmallBtn width={100} title={"마감"} onClick={() => timeStopper()}/>
                 {fightTimerComp()}
                 {fightPercentComp()}
+
+                <SmallBtn title={"(test)토론 시작 요청"} onClick={() => exampleTimer(fighterName, "start")}/>
+                <SmallBtn title={"(test)토론 마감 요청"} onClick={() => exampleTimer(fighterName, "stop")}/>
+                <SmallBtn title={"(test)토론 추가 요청"} onClick={() => exampleTimer(fighterName, "extend")}/>
             </div>
             <div className={styles.fighterInfo}>
                 <div className={styles.flexRow} style={{gap: 10}}>
