@@ -161,6 +161,10 @@
     color: #2980b9;
 }
 
+.userContent{
+    overflow-wrap: anywhere;
+}
+
 .fighterLeftContent, .fighterRightContent{
     font-weight: bold;
     overflow-wrap: anywhere;
@@ -238,26 +242,6 @@
     border-radius: 5px;
     font-size: 14px;
     background-color: #ffffff;
-}
-
-.sendButton {
-    text-wrap: nowrap;
-    padding: 10px 20px;
-    background-color: #27ae60;
-    color: #ffffff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
-}
-
-.sendButton:hover {
-    background-color: #2ecc71;
-}
-
-.sendButton:active {
-    background-color: #1e8449;
 }
 
 .fighterInfoContainer {

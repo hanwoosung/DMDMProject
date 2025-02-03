@@ -1,13 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {Client} from '@stomp/stompjs';
-import SmallBtn from "../components/common/SmallBtnComponents";
 import ObserverChat from '../components/fightzone/ObserverChatComponent';
 import ObserverUsers from '../components/fightzone/ObserverUserComponent';
 import FighterChat from '../components/fightzone/FighterChatComponent';
 import FighterInfo from '../components/fightzone/FighterInfoComponent';
-import leftFighterImg from "../assets/image/ex_profile.png";
-import rightFighterImg from "../assets/image/ex_chiwawa.jpg";
 import styles from '../assets/css/FightZone.module.css';
 
 const FightZone = () => {

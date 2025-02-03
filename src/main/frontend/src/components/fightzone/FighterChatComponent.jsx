@@ -69,6 +69,7 @@ const FighterChatComponent = forwardRef((props, ref) => {
                             sendFighterChat();
                         }
                     }}
+                    maxLength={200}
                     className={styles.input}
                     style={{flex: 1}}
                 />

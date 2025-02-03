@@ -13,7 +13,7 @@ const ObserverChatComponent = forwardRef((props, ref) => {
                 {props.observerMessages.map((message, index) => (
                     <div key={index} className={styles.chatMessage}>
                         <span className={styles.username}>{message.username}:</span>
-                        <span>{message.content}</span>
+                        <span className={styles.userContent}>{message.content}</span>
                     </div>
                 ))}
                 <div ref={ref}></div>
@@ -37,6 +37,7 @@ const ObserverChatComponent = forwardRef((props, ref) => {
                         }
                     }}
                     style={{flex: 1}}
+                    maxLength={200}
                     className={styles.input}
                 />
             </div>
