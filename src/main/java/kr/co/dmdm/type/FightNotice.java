@@ -16,10 +16,10 @@ import lombok.Getter;
 @Getter
 public enum FightNotice {
     START_REQUEST("토론 시작을 신청하였습니다."),
-    END_REQUEST("토론 종료를 신청하였습니다."),
-    EXTEND_REQUEST("토론 연장을 신청하였습니다."),
     START_PROCEED("토론이 시작되었습니다."),
+    END_REQUEST("토론 종료를 신청하였습니다."),
     END_PROCEED("토론이 종료되었습니다."),
+    EXTEND_REQUEST("토론 연장을 신청하였습니다."),
     EXTEND_PROCEED("토론이 연장되었습니다.(30분)");
 
     final String message;

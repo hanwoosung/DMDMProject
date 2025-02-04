@@ -53,6 +53,8 @@ public class TimerScheduler {
         return chatRoomRequest.computeIfAbsent(chatRoomId, id -> new ConcurrentHashMap<>());
     }
 
+        //fightStatus 에서 start, end ,extend와 같은 request가 있고, 이거를 fightNotice에서 받는다고?
+
     public ChatMessageResponseDto requestInsert(Long chatRoomId, String username, String request) {
         Map<String, String> requestMap = getRoomRequest(chatRoomId);
 
@@ -73,16 +75,18 @@ public class TimerScheduler {
     private ChatMessageResponseDto requestMessage(String username, String request, boolean proceed) {
         String noticeContent = switch (request) {
             case "start" ->
-                    proceed ? FightNotice.START_PROCEED.getMessage() : FightNotice.START_REQUEST.getUserName(username);
+                    proceed ? FightNotice.START_PROCEED.getMessage() : FightNotice.START_REQUEST.getMessage();
             case "stop" ->
-                    proceed ? FightNotice.END_PROCEED.getMessage() : FightNotice.END_REQUEST.getUserName(username);
+                    proceed ? FightNotice.END_PROCEED.getMessage() : FightNotice.END_REQUEST.getMessage();
             case "extend" ->
-                    proceed ? FightNotice.EXTEND_PROCEED.getMessage() : FightNotice.EXTEND_REQUEST.getUserName(username);
+                    proceed ? FightNotice.EXTEND_PROCEED.getMessage() : FightNotice.EXTEND_REQUEST.getMessage();
             default -> "unknown error!";
         };
 
         return new ChatMessageResponseDto("NOTICE", noticeContent);
     }
+
+
 
     private void handleRequest(Long chatRoomId, String request) {
         switch (request) {
