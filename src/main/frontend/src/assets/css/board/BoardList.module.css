@@ -1,66 +1,102 @@
-.boardListContainer{
+.boardListContainer {
     width: 1440px;
     margin: 0 auto;
     height: 100%;
 }
 
-.noticeContainer{
+.noticeContainer {
     width: 100%;
     padding-bottom: 20px;
 }
 
-.noticeList{
+.noticeList {
     display: flex;
+    justify-content: space-between;
     width: 100%;
     padding: 7px 0 7px 0;
     font-weight: bold;
 }
 
-.noticeList svg{
+.noticeList svg {
     padding-right: 10px;
     width: 34px;
     height: 24px;
 }
 
-.noticeList span{
+.noticeList span {
     padding-right: 10px;
     display: flex;
     align-items: center;
 }
 
-.noticeList span:nth-child(2){
+.noticeList span:nth-child(2) {
     cursor: pointer;
 }
 
-.selectWrap{
+.selectWrap {
     display: flex;
     justify-content: right;
 }
 
-.basicContainer{
+.basicContainer {
     width: 100%;
 }
 
-.basicList{
+.basicList {
     width: 100%;
+    height: 100px;
     display: flex;
     padding: 7px 0 7px 0;
+    align-items: center;
 }
 
-.basicList img{
+.basicList img {
+    display: block;
+    margin: 0 auto;
     border-radius: 100%;
-    width: 70px;
-    height: 70px;
+    width: 80px;
+    height: 80px;
 }
 
-.basicList .detail{
+
+.basicList .detail {
+    width: 100%;
+    height: 100%;
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin-left: 7px;
+    margin-left: 10px;
 }
 
-.basicList .detail .title{
+.basicList .detail .name {
+    font-size: 0.9rem;
+}
+
+.basicList .detail div:nth-child(1) {
+    display: flex;
+    justify-content: space-between;
+}
+
+.basicList .detail div:nth-child(3) {
+    display: flex;
+    justify-content: space-between;
+}
+
+.basicList .detail div:nth-child(3) span {
+    display: flex;
+    align-items: center;
+}
+
+.basicList .detail .listCnt {
+    padding-left: 15px;
+    display: flex;
+}
+
+.basicList .detail .listCnt svg{
+    padding-right: 7px;
+}
+
+.basicList .detail .title {
     font-weight: bold;
 }

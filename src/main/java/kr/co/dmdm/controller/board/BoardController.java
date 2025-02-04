@@ -1,6 +1,7 @@
 package kr.co.dmdm.controller.board;
 
 import kr.co.dmdm.dto.board.BoardDto;
+import kr.co.dmdm.dto.board.BoardListDto;
 import kr.co.dmdm.dto.common.FileDto;
 import kr.co.dmdm.service.board.BoardServiceImpl;
 import kr.co.dmdm.service.common.FileServiceImpl;
@@ -54,9 +55,8 @@ public class BoardController {
     }
 
     @GetMapping("/{boardType}")
-    public List<BoardDto> getBoards(@PathVariable String boardType) throws IOException {
+    public List<BoardListDto> getBoards(@PathVariable String boardType) throws IOException {
         return boardService.getBoards(boardType, "ACTIVE");
     }
-
 
 }

@@ -10,11 +10,14 @@ const useBoardListHandler = () => {
     const [isAlert, setIsAlert] = useState(false);
     const [isConfirmVisible, setIsConfirmVisible] = useState(false);
     const [confirmMessage, setConfirmMessage] = useState("");
+    const [boardList, setBoardList] = useState([]);
     const {data: fetchedEvents, loading} = useFetch(`/api/v1/gubn/BOARD_CATEGORY/${boardTypeParam}`, {
         data: {
             parentCode: "BOARD_CATEGORY"
         }
     }, "post");
+
+    const {data: boardListData, boardListDataLoading} = useFetch(`/api/v1/board/${boardTypeParam}`, {}, "get");
 
     useEffect(() => {
 
@@ -29,10 +32,20 @@ const useBoardListHandler = () => {
 
         }
 
+        if (boardListData) {
+            if (boardListData.statusCode === 200) {
+                setBoardList(boardListData.data);
+            } else {
+                setBoardList([]);
+            }
+
+        }
+
 
     }, [fetchedEvents]);
 
     return {
+        boardList,
         boardType,
         alertMessage,
         setAlertMessage,

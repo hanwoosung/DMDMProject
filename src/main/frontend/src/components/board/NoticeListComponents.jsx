@@ -20,10 +20,15 @@ const NoticeList = () => {
                 notices.map((notice, index) => (
                     <div key={index} className={BoardListStyle.noticeList}>
                         <span>
-                            <NoticeIcon />
-                            {"[공지]"}
+                            <span>
+                                <NoticeIcon />
+                                {"[공지]"}
+                            </span>
+                            <span>{notice.boardTitle}</span>
                         </span>
-                        <span>{notice.boardTitle}</span>
+                        <span>
+                            {notice.insert}
+                        </span>
                     </div>
                 ))
             ) : ("")

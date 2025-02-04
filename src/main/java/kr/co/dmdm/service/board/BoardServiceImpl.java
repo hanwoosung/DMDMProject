@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import kr.co.dmdm.dto.board.BoardDto;
+import kr.co.dmdm.dto.board.BoardListDto;
 import kr.co.dmdm.dto.common.FileDto;
 import kr.co.dmdm.entity.board.Board;
 import kr.co.dmdm.entity.File;
@@ -11,6 +12,7 @@ import kr.co.dmdm.entity.board.BoardTag;
 import kr.co.dmdm.entity.board.BoardTagId;
 import kr.co.dmdm.global.exception.CustomException;
 import kr.co.dmdm.global.exception.ExceptionEnum;
+import kr.co.dmdm.repository.dao.board.BoardDao;
 import kr.co.dmdm.repository.jpa.board.BoardRepository;
 import kr.co.dmdm.repository.jpa.board.BoardTagRepository;
 import kr.co.dmdm.repository.jpa.common.FileRepository;
@@ -23,8 +25,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +37,7 @@ public class BoardServiceImpl implements BoardService {
 
     private final FileService fileService;
     private final FileRepository fileRepository;
+    private final BoardDao boardDao;
     private final BoardRepository boardRepository;
     private final BoardTagRepository boardTagRepository;
     private final BadWordService badWordService;
@@ -69,16 +74,28 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardDto> getBoards(String boardType, String status) {
+    public List<BoardListDto> getBoards(String boardType, String status) {
+        List<BoardListDto> boardList = boardDao.getBoardList(boardType, status);
 
-        List<Board> boardList = boardRepository.findAllByBoardTypeAndStatus(boardType, status);
-        List<BoardDto> boardDtoList = new ArrayList<>();
+        splitTag(boardList);
 
-        for (Board board : boardList) {
-            boardDtoList.add(modelMapper.map(board, BoardDto.class));
+        return boardList;
+    }
+
+    private static void splitTag(List<BoardListDto> boardList) {
+        for (BoardListDto board : boardList) {
+            if (board.getTag() != null && !board.getTag().isEmpty()) {
+
+                board.setTagList(
+                        Arrays.stream(board.getTag().split(","))
+                                .map(String::trim)
+                                .collect(Collectors.toList())
+                );
+
+            } else {
+                board.setTagList(new ArrayList<>());
+            }
         }
-
-        return boardDtoList;
     }
 
     private BoardDto convertBoardDto(Map<String, Object> params, String userId) {

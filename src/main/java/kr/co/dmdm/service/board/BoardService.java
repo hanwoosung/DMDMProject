@@ -1,10 +1,9 @@
 package kr.co.dmdm.service.board;
 
-import kr.co.dmdm.dto.board.BoardDto;
+import kr.co.dmdm.dto.board.BoardListDto;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * 패키지명        : kr.co.dmdm.service.board
@@ -22,5 +21,5 @@ public interface BoardService {
 
     void saveBoard(Map<String, Object> params);
 
-    List<BoardDto> getBoards(String boardType, String status);
+    List<BoardListDto> getBoards(String boardType, String status);
 }

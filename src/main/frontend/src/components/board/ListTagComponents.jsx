@@ -1,12 +1,12 @@
 import HashTagsStyles from "../../assets/css/board/HashTags.module.css";
 
-const ListTag = () => {
+const ListTag = ({tagList = []}) => {
     return(
-        <>
-            <span className={HashTagsStyles.listTag}><span>#</span>aaa</span>
-            <span className={HashTagsStyles.listTag}><span>#</span>nnn</span>
-            <span className={HashTagsStyles.listTag}><span>#</span>sss</span>
-        </>
+        <span>
+            {tagList.map((tag) => (
+                <span className={HashTagsStyles.listTag}><span>#</span>{tag}</span>
+            ))}
+        </span>
     );
 }
 

@@ -12,6 +12,7 @@ import BasicBoardList from "../../components/board/BasicBoardListComponent";
 const BoardList = () => {
 
     const {
+        boardList,
         boardType,
         alertMessage,
         setAlertMessage,
@@ -36,7 +37,7 @@ const BoardList = () => {
                 />
             </div>
 
-            <BasicBoardList />
+            <BasicBoardList boardList={boardList}/>
 
             <Alert message={alertMessage}
                    isVisible={isAlert}
