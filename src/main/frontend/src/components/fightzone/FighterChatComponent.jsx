@@ -46,6 +46,17 @@ const FighterChatComponent = forwardRef((props, ref) => {
                         );
                     }
 
+                    if (message.username === "NOTICE"){
+                        return (
+                            <div key={index}
+                                    className={styles.chatMessage}
+                                    style={{alignSelf: "center"}}
+                            >
+                                <span className={styles.fightNoticeContent}>{message.content}</span>
+                            </div>
+                        )
+                    }
+
                     return null;
                 })}
                 <div ref={fighterMessageEnd}></div>

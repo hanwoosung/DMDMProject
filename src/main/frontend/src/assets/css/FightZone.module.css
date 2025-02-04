@@ -165,9 +165,13 @@
     overflow-wrap: anywhere;
 }
 
-.fighterLeftContent, .fighterRightContent{
+.fighterLeftContent, .fighterRightContent, .fightNoticeContent{
     font-weight: bold;
     overflow-wrap: anywhere;
+}
+
+.fightNoticeContent{
+    color: #450000;
 }
 
 .fighterLeftContent{

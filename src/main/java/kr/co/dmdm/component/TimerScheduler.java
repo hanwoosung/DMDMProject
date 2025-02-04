@@ -1,6 +1,7 @@
 package kr.co.dmdm.component;
 
 import kr.co.dmdm.dto.ChatMessageResponseDto;
+import kr.co.dmdm.type.FightNotice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -53,26 +54,34 @@ public class TimerScheduler {
     }
 
     public ChatMessageResponseDto requestInsert(Long chatRoomId, String username, String request) {
-
         Map<String, String> requestMap = getRoomRequest(chatRoomId);
 
         if (request.equals(requestMap.get(username))) {
-            return null;
+            return requestMessage(username, request, false);
         }
 
         if (requestMap.containsValue(request)) {
             requestMap.clear();
             handleRequest(chatRoomId, request);
-            return null;
+            return requestMessage(username, request, true);
         }
 
         requestMap.put(username, request);
-        return null;
+        return requestMessage(username, request, false);
     }
 
-    private String requestMessage(String request){
+    private ChatMessageResponseDto requestMessage(String username, String request, boolean proceed) {
+        String noticeContent = switch (request) {
+            case "start" ->
+                    proceed ? FightNotice.START_PROCEED.getMessage() : FightNotice.START_REQUEST.getUserName(username);
+            case "stop" ->
+                    proceed ? FightNotice.END_PROCEED.getMessage() : FightNotice.END_REQUEST.getUserName(username);
+            case "extend" ->
+                    proceed ? FightNotice.EXTEND_PROCEED.getMessage() : FightNotice.EXTEND_REQUEST.getUserName(username);
+            default -> "unknown error!";
+        };
 
-        return "";
+        return new ChatMessageResponseDto("NOTICE", noticeContent);
     }
 
     private void handleRequest(Long chatRoomId, String request) {
