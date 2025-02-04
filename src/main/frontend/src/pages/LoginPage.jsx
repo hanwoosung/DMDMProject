@@ -17,12 +17,12 @@ const LoginPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { isLoggedIn, setIsLoggedIn, setLoginUser } = useLogin();
-    const prevUrl = location.state || "/test";
+    const prevUrl = location.state || "/";
 
     // 로그인 상태 확인 후 리다이렉트
     useEffect(() => {
         if (isLoggedIn) {
-            navigate("/test", { replace: true });
+            navigate("/", { replace: true });
         }
     }, [isLoggedIn, navigate]);
 
@@ -47,6 +47,18 @@ const LoginPage = () => {
     const onNaverLogin = () => {
         window.location.href = "http://localhost:8090/oauth2/authorization/naver"
     }
+    const onKakaoLogin = () => {
+        window.location.href = "http://localhost:8090/oauth2/authorization/kakao"
+    }
+
+    const onGithubLogin = () => {
+        window.location.href = "http://localhost:8090/oauth2/authorization/github"
+    }
+
+    const onGoogleLogin = () => {
+        window.location.href = "http://localhost:8090/oauth2/authorization/google"
+    }
+
 
     const handleLoginClick = async () => {
         try {
@@ -136,10 +148,10 @@ const LoginPage = () => {
             </div>
 
             <div className={styles.snsContainer}>
-                <div className={styles.snsKakaoBtn}></div>
-                <div className={styles.snsNaverBtn} onClick={onNaverLogin}></div>
-                <div className={styles.snsGithubBtn}></div>
-                <div className={styles.snsGoogleBtn}></div>
+                <div className={styles.snsKakaoBtn}  onClick={onKakaoLogin}></div>
+                <div className={styles.snsNaverBtn}  onClick={onNaverLogin}></div>
+                <div className={styles.snsGithubBtn} onClick={onGithubLogin}></div>
+                <div className={styles.snsGoogleBtn} onClick={onGoogleLogin}></div>
             </div>
 
             <Alert

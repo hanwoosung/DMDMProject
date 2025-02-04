@@ -56,7 +56,7 @@ function App() {
                 } />
                 <Route path="/oauth2-jwt-header" element={<OAuth2Redirect />} />
 
-                {isLoggedIn && <Route path="/logout" element={<Logout />} />}
+                <Route path="/logout" element={<Logout />} />
 
             </Routes>
         </main>

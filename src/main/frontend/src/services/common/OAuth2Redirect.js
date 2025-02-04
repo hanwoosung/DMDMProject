@@ -21,7 +21,7 @@ const OAuth2Redirect = () => {
                 setLoginUser(name);
             }
 
-            navigate('/test', { replace: true });
+            navigate('/', { replace: true });
         } catch (error) {
             console.log("error: ", error);
         }

@@ -91,4 +91,8 @@ public class TestController {
     public String getKey() {
         return redisTemplate.opsForValue().get("testKey");
     }
+    @PostMapping("/admin")
+    public String adminP(){
+        return "Admin Page";
+    }
 }

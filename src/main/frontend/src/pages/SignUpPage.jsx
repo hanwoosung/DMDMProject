@@ -309,6 +309,22 @@ const SignUpPage = () => {
         }));
     };
 
+    const onNaverLogin = () => {
+        window.location.href = "http://localhost:8090/oauth2/authorization/naver"
+    }
+    const onKakaoLogin = () => {
+        window.location.href = "http://localhost:8090/oauth2/authorization/kakao"
+    }
+
+    const onGithubLogin = () => {
+        window.location.href = "http://localhost:8090/oauth2/authorization/github"
+    }
+
+    const onGoogleLogin = () => {
+        window.location.href = "http://localhost:8090/oauth2/authorization/google"
+    }
+
+
     const isSubmitDisabled = !isTermsChecked.terms || !isTermsChecked.privacy;
 
     return (
@@ -324,10 +340,10 @@ const SignUpPage = () => {
             </div>
 
             <div className={styles.snsContainer}>
-                <div className={styles.snsKakaoBtn}></div>
-                <div className={styles.snsNaverBtn}></div>
-                <div className={styles.snsGithubBtn}></div>
-                <div className={styles.snsGoogleBtn}></div>
+                <div className={styles.snsKakaoBtn}  onClick={onKakaoLogin}></div>
+                <div className={styles.snsNaverBtn}  onClick={onNaverLogin}></div>
+                <div className={styles.snsGithubBtn} onClick={onGithubLogin}></div>
+                <div className={styles.snsGoogleBtn} onClick={onGoogleLogin}></div>
             </div>
 
             <div className={styles.lineContainer}>
