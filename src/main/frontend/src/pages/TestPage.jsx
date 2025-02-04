@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import BigBtn from "../components/common/BigBtnComponents";
 import SmallBtn from "../components/common/SmallBtnComponents";
 import Input from "../components/common/InputComponents";
@@ -7,10 +7,15 @@ import Search from "../components/common/SearchComponents";
 import Filter from "../components/common/FilterComponents";
 import Confirm from "../components/common/ConfirmComponents";
 import Alert from "../components/common/AlertComponents";
+import fetchAuthorizedPage from "../services/common/fetchAuthorizedPage";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const TestPage = () => {
 
     const [isConfirmVisible, setIsConfirmVisible] = useState(false);
+    const [data, setData] = useState("");
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const handleConfirm = () => {
         alert("확인되었습니다.");
@@ -38,10 +43,20 @@ const TestPage = () => {
 
         window.location.href = "http://localhost:8090/oauth2/authorization/naver"
     }
+    useEffect(() => {
+        const fetchData = async () => {
+            const result = await fetchAuthorizedPage("http://localhost:8090/api/test/admin", navigate, location);
+            if (result) setData(result); // ✅ 데이터가 있을 때만 상태 업데이트
+        };
+
+        fetchData();
+    }, [navigate, location]);
+
     return (
 
         <>
             <BigBtn onClick={alert2}/>
+            <div>{data}</div>
 
             <SmallBtn onClick={alert2}/>
 

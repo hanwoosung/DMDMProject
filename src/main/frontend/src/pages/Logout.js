@@ -23,6 +23,7 @@ const Logout = () => {
             navigate("/", { replace: true });
         } catch (error) {
             console.log("error: ", error);
+            navigate("/", { replace: true });
         }
     }
     fetchLogout();

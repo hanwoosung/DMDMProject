@@ -7,7 +7,7 @@ import java.util.Map;
 
 /**
  * packageName    : kr.co.dmdm.dto.user.sns
- * fileName       : GoogleResponse
+ * fileName       : GithubResponse
  * author         : 한우성
  * date           : 2025-02-04
  * description    :
@@ -17,43 +17,37 @@ import java.util.Map;
  * 2025-02-04        한우성       최초 생성
  */
 @RequiredArgsConstructor
-public class GoogleResponse implements OAuth2Response {
+public class GithubResponse implements OAuth2Response {
     private final Map<String, Object> attribute;
-    private String birthyear; // 🔹 수정: 값을 저장할 수 있도록 필드 유지
-    private String birthday;
 
     @Override
     public String getProvider() {
-        return "GOOGLE";
+        return "GITHUB";
     }
 
     @Override
     public String getProviderId() {
-        return attribute.get("sub").toString();
+        return attribute.get("id").toString();
     }
+
 
     @Override
     public String getEmail() {
-        return attribute.get("email").toString();
+        return  attribute.get("email") != null ? attribute.get("email").toString() : null;
     }
 
     @Override
     public String getNickname() {
-        return attribute.get("family_name").toString() + attribute.get("given_name").toString();
+        return attribute.get("login").toString();
     }
 
     @Override
     public String getBirthday() {
-        return this.birthday;
+        return null;
     }
 
     @Override
     public String getBirthyear() {
-        return this.birthyear;
-    }
-
-    public void setBirthDate(String birthyear, String birthday) {
-        this.birthyear = birthyear;
-        this.birthday = birthday;
+        return null;
     }
 }
