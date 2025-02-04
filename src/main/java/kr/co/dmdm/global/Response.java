@@ -28,13 +28,13 @@ public class Response<T> {
     private final T data;
     private final LocalDateTime timestamp;
 
-    public Response(HttpStatus status, Result result, String message) {
+    public Response(HttpStatus status, Result result, String message , T data,LocalDateTime time) {
         this.status = status;
         this.statusCode = status.value();
         this.result = result;
         this.message = message;
-        this.data = null;
-        this.timestamp = null;
+        this.data = data;
+        this.timestamp = time;
     }
 
 
@@ -61,8 +61,8 @@ public class Response<T> {
     /**
      * 시간없는걸로 할거임
      */
-    public static <T> Response<T> successNoTime(String message) {
-        return new Response<>(HttpStatus.OK, Result.SUCCESS, message);
+    public static <T> Response<T> successNoTime(String message,T data) {
+        return new Response<>(HttpStatus.OK, Result.SUCCESS, message,data,null);
     }
 
 
@@ -79,7 +79,7 @@ public class Response<T> {
 
 
     public static Response<Void> failureNoTime(HttpStatus status, String message) {
-        return new Response<>(status, Result.FAILURE, message);
+        return new Response<>(status, Result.FAILURE, message,null,null);
     }
 
 }
