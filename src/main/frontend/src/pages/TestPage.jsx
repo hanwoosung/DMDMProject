@@ -46,7 +46,7 @@ const TestPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             const result = await fetchAuthorizedPage("http://localhost:8090/api/test/admin", navigate, location);
-            if (result) setData(result); // ✅ 데이터가 있을 때만 상태 업데이트
+            if (result) setData(result);
         };
 
         fetchData();
@@ -56,7 +56,6 @@ const TestPage = () => {
 
         <>
             <BigBtn onClick={alert2}/>
-            <div>{data}</div>
 
             <SmallBtn onClick={alert2}/>
 

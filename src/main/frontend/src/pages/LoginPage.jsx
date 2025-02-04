@@ -22,7 +22,7 @@ const LoginPage = () => {
     // 로그인 상태 확인 후 리다이렉트
     useEffect(() => {
         if (isLoggedIn) {
-           // navigate("/", { replace: true });
+            navigate("/", { replace: true });
         }
     }, [isLoggedIn, navigate]);
 
