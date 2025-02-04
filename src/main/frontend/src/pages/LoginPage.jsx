@@ -44,6 +44,10 @@ const LoginPage = () => {
         navigate("/sign-up");
     };
 
+    const onNaverLogin = () => {
+        window.location.href = "http://localhost:8090/oauth2/authorization/naver"
+    }
+
     const handleLoginClick = async () => {
         try {
             const response = await axios.post("http://localhost:8090/login", {
@@ -133,7 +137,7 @@ const LoginPage = () => {
 
             <div className={styles.snsContainer}>
                 <div className={styles.snsKakaoBtn}></div>
-                <div className={styles.snsNaverBtn}></div>
+                <div className={styles.snsNaverBtn} onClick={onNaverLogin}></div>
                 <div className={styles.snsGithubBtn}></div>
                 <div className={styles.snsGoogleBtn}></div>
             </div>
