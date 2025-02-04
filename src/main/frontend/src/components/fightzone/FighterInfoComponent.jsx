@@ -107,9 +107,9 @@ const FighterInfoComponent = forwardRef((props, ref) => {
                 {fightTimerComp()}
                 {fightPercentComp()}
 
-                <SmallBtn title={"(test)토론 시작 요청"} onClick={() => exampleTimer(fighterName, "start")}/>
-                <SmallBtn title={"(test)토론 마감 요청"} onClick={() => exampleTimer(fighterName, "stop")}/>
-                <SmallBtn title={"(test)토론 추가 요청"} onClick={() => exampleTimer(fighterName, "extend")}/>
+                <SmallBtn title={"(test)토론 시작 요청"} onClick={() => exampleTimer(fighterName, "START")}/>
+                <SmallBtn title={"(test)토론 마감 요청"} onClick={() => exampleTimer(fighterName, "END")}/>
+                <SmallBtn title={"(test)토론 추가 요청"} onClick={() => exampleTimer(fighterName, "EXTEND")}/>
             </div>
             <div className={styles.fighterInfo}>
                 <div className={styles.flexRow} style={{gap: 10}}>

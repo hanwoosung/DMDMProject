@@ -1,7 +1,9 @@
 package kr.co.dmdm.component;
 
 import kr.co.dmdm.dto.ChatMessageResponseDto;
+import kr.co.dmdm.service.chat.ChatRoomService;
 import kr.co.dmdm.type.FightNotice;
+import kr.co.dmdm.type.FightStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,108 +17,50 @@ import java.util.concurrent.ConcurrentHashMap;
  * fileName       : TimerScheduler
  * author         : 최기환
  * date           : 2025-01-27
- * description    : 채팅방 타이머 설정
+ * description    : 채팅방 타이머 요청 컨트롤
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
  * 2025-01-27        최기환       최초 생성
+ * 2025-02-04        황승현       타이머 설정 처리, 요청 분리
  */
 @Component
 @RequiredArgsConstructor
 public class TimerScheduler {
 
-    private final SimpMessagingTemplate messagingTemplate;
-    private final Map<Long, Integer> chatRoomTimers = new ConcurrentHashMap<>();
-    private final Map<Long, Map<String, String>> chatRoomRequest = new ConcurrentHashMap<>();
+    private final Map<Long, Map<String, FightStatus>> chatRoomRequest = new ConcurrentHashMap<>();
+    private final ChatRoomService chatRoomService;
 
-
-    // 채팅방 타이머 최신화 메서드
-    @Scheduled(fixedRate = 1000) // 1초마다 실행
-    public void updateTimers() {
-        // 타이머가 없으면 조기에 종료
-        if (chatRoomTimers.isEmpty()) {
-            return;
-        }
-
-        chatRoomTimers.forEach((chatRoomId, remainingTime) -> {
-            if (remainingTime <= 0) {
-                chatRoomTimers.remove(chatRoomId);
-            } else {
-                chatRoomTimers.put(chatRoomId, remainingTime - 1);
-                messagingTemplate.convertAndSend("/subscribe/timer." + chatRoomId, remainingTime - 1);
-            }
-        });
-    }
 
     //방의 요청목록 찾기, 없으면 생성
-    public Map<String, String> getRoomRequest(Long chatRoomId) {
+    public Map<String, FightStatus> getRoomRequest(Long chatRoomId) {
         return chatRoomRequest.computeIfAbsent(chatRoomId, id -> new ConcurrentHashMap<>());
     }
 
-        //fightStatus 에서 start, end ,extend와 같은 request가 있고, 이거를 fightNotice에서 받는다고?
-
     public ChatMessageResponseDto requestInsert(Long chatRoomId, String username, String request) {
-        Map<String, String> requestMap = getRoomRequest(chatRoomId);
+        Map<String, FightStatus> requestMap = getRoomRequest(chatRoomId);
 
-        if (request.equals(requestMap.get(username))) {
-            return requestMessage(username, request, false);
+        FightStatus fightStatus = FightStatus.getFightStatus(request);
+
+        if(fightStatus != null) {
+            boolean proceed = requestMap.containsValue(fightStatus);
+
+            if (fightStatus.equals(requestMap.get(username))) {
+                return null;
+            }
+
+            FightNotice fightNotice = FightNotice.getFightNotice(fightStatus, proceed);
+
+            requestMap.put(username, fightStatus);
+
+            if(proceed) {
+                requestMap.clear();
+                chatRoomService.handleRequest(chatRoomId, fightStatus);
+            }
+
+            return new ChatMessageResponseDto("NOTICE", (!proceed ? username + "님이 " : "") + fightNotice.getMessage());
         }
-
-        if (requestMap.containsValue(request)) {
-            requestMap.clear();
-            handleRequest(chatRoomId, request);
-            return requestMessage(username, request, true);
-        }
-
-        requestMap.put(username, request);
-        return requestMessage(username, request, false);
+        return null;
     }
 
-    private ChatMessageResponseDto requestMessage(String username, String request, boolean proceed) {
-        String noticeContent = switch (request) {
-            case "start" ->
-                    proceed ? FightNotice.START_PROCEED.getMessage() : FightNotice.START_REQUEST.getMessage();
-            case "stop" ->
-                    proceed ? FightNotice.END_PROCEED.getMessage() : FightNotice.END_REQUEST.getMessage();
-            case "extend" ->
-                    proceed ? FightNotice.EXTEND_PROCEED.getMessage() : FightNotice.EXTEND_REQUEST.getMessage();
-            default -> "unknown error!";
-        };
-
-        return new ChatMessageResponseDto("NOTICE", noticeContent);
-    }
-
-
-
-    private void handleRequest(Long chatRoomId, String request) {
-        switch (request) {
-            case "start":
-                startTimer(chatRoomId, 3600);
-                break;
-            case "stop":
-                stopTimer(chatRoomId);
-                break;
-            case "extend":
-                extendTimer(chatRoomId, 1800);
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void startTimer(Long chatRoomId, int durationInSeconds) {
-        System.out.println(chatRoomId + "번 방, 타이머 시작" + durationInSeconds);
-        chatRoomTimers.put(chatRoomId, durationInSeconds);
-    }
-
-    public void stopTimer(Long chatRoomId) {
-        System.out.println("토론 중지");
-        chatRoomTimers.remove(chatRoomId);
-        messagingTemplate.convertAndSend("/subscribe/timer." + chatRoomId, 0);
-    }
-
-    public void extendTimer(Long chatRoomId, int time) {
-        System.out.println("토론 연장");
-        chatRoomTimers.compute(chatRoomId, (k, remainingTime) -> (remainingTime == null ? 0 : remainingTime) + time);
-    }
 }
