@@ -10,8 +10,10 @@ import LoginPage from "./pages/LoginPage";
 import OAuth2Redirect from "./services/common/OAuth2Redirect";
 import Logout from "./pages/Logout";
 import {useLogin} from "./contexts/AuthContext";
+import EmoticonRegister from "./components/emoticon/EmoticonRegister";
+
 function App() {
-    const { isLoggedIn } = useLogin();
+    const {isLoggedIn} = useLogin();
     return (
         <main>
             <Routes>
@@ -19,11 +21,11 @@ function App() {
                     <Layout>
                         <div>메인페이지 입니다......</div>
                     </Layout>
-                } />
+                }/>
 
                 <Route path="/paging-test" element={
                     <Layout>
-                        <PagingTestPage />
+                        <PagingTestPage/>
                     </Layout>
                 }/>
 
@@ -32,31 +34,37 @@ function App() {
                     <AsideLayout>
                         <div>마이페이지 입니다.......</div>
                     </AsideLayout>
-                } />
+                }/>
 
                 <Route path="/test" element={
                     <AsideLayout>
                         <TestPage/>
                     </AsideLayout>
-                } />
+                }/>
 
                 <Route path="/boardWrite" element={
                     <Layout>
                         <BoardWrite/>
                     </Layout>
-                } />
+                }/>
 
 
                 <Route path="/sign-up" element={
-                        <SignUpPage/>
-                } />
+                    <SignUpPage/>
+                }/>
 
                 <Route path="/login" element={
-                    <LoginPage />
-                } />
-                <Route path="/oauth2-jwt-header" element={<OAuth2Redirect />} />
+                    <LoginPage/>
+                }/>
+                <Route path="/oauth2-jwt-header" element={<OAuth2Redirect/>}/>
 
-                {isLoggedIn && <Route path="/logout" element={<Logout />} />}
+                {isLoggedIn && <Route path="/logout" element={<Logout/>}/>}
+
+                <Route path="/emoticon-register" element={
+                    <Layout>
+                        <EmoticonRegister/>
+                    </Layout>
+                }/>
 
             </Routes>
         </main>
