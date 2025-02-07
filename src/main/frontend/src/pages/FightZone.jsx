@@ -1,29 +1,97 @@
 import React, {useEffect, useRef, useState} from 'react';
+import {useParams} from 'react-router-dom';
 import {Client} from '@stomp/stompjs';
-import {useParams} from "react-router-dom";
+import ObserverChat from '../components/fightzone/ObserverChatComponent';
+import ObserverUsers from '../components/fightzone/ObserverUserComponent';
+import FighterChat from '../components/fightzone/FighterChatComponent';
+import FighterInfo from '../components/fightzone/FighterInfoComponent';
+import styles from '../assets/css/FightZone.module.css';
 
 const FightZone = () => {
-    const { roomNo } = useParams();
-    const [connected, setConnected] = useState(false);
-    const [messages, setMessages] = useState([]);
-    const [username, setUsername] = useState('');
-    const [content, setContent] = useState('');
+    const {roomNo} = useParams();
     const stompClient = useRef(null);
-    const chatRoomId = useRef('');
+    const exUserName = 'user47282';
 
+    const leftUser = useRef("doge");
+    const rightUser = useRef("nose");
+
+    const isFirstRender = useRef(true); // 첫 렌더링 여부 추적
+
+    const fighterMessageEnd = useRef();
+    const observerMessageEnd = useRef();
+
+    const [fighterMessages, setFighterMessages] = useState([]);
+    const [fighterName, setFighterName] = useState('');
+    const [fighterContent, setFighterContent] = useState('');
+
+    const [observerMessages, setObserverMessages] = useState([]);
+    const [observerName, setObserverName] = useState('');
+    const [observerContent, setObserverContent] = useState('');
+    const [observerUsers, setObserverUsers] = useState([]);
+
+    const [selectedVote, setSelectedVote] = useState(null);
+
+    const [leftPercent, setLeftPercent] = useState(0);
+    const [rightPercent, setRightPercent] = useState(0);
+
+    const [timerStart, setTimerStart] = useState(false);
+    const [timerExtend, setTimerExtend] = useState(false);
+    const [timerEnd, setTimerEnd] = useState(false);
+
+    const [roomTimer, setRoomTimer] = useState(3600);
+
+    // 방 접속시 연결 및 구독설정
     useEffect(() => {
         stompClient.current = new Client({
             brokerURL: 'ws://localhost:8090/ws-connect',
             onConnect: (frame) => {
-                setConnected(true);
                 console.log('Connected: ' + frame);
-                stompClient.current.subscribe(`/subscribe/chat.${chatRoomId.current}`, (message) => {
+
+                // 토론자 채팅 구독
+                stompClient.current.subscribe(`/subscribe/fighter.${roomNo}`, (message) => {
                     const body = JSON.parse(message.body);
-                    const username = body.username;
-                    const content = body.content;
-                    console.log("응답..........."+body.content);
-                    setMessages((prevMessages) => [...prevMessages, `${username}: ${content}`]);
+                    setFighterMessages((prevMessages) => [...prevMessages, body]);
                 });
+
+                // 관전자 채팅 구독
+                stompClient.current.subscribe(`/subscribe/observer.${roomNo}`, (message) => {
+                    const body = JSON.parse(message.body);
+                    setObserverMessages((prevMessages) => [...prevMessages, body]);
+                });
+
+                //투표 구독
+                stompClient.current.subscribe(`/subscribe/vote.${roomNo}`, (message) => {
+                    const body = JSON.parse(message.body);
+                    console.log("투표 결과")
+                    console.log(body)
+                    setLeftPercent(body.leftVote);
+                    setRightPercent(body.rightVote);
+                });
+
+                // 관전자 유저 리스트 구독
+                stompClient.current.subscribe(`/subscribe/chatRoom.${roomNo}`, (message) => {
+                    const body = JSON.parse(message.body);
+                    console.log(body);
+                    setObserverUsers(body);
+                });
+
+                // 타이머 구독
+                stompClient.current.subscribe(`/subscribe/timer.${roomNo}`, (message) => {
+                    const body = JSON.parse(message.body);
+                    setRoomTimer(body);
+                })
+
+                // 연결 신호 보내기
+                stompClient.current.publish({
+                    destination: `/publish/chatRoom/join/${roomNo}`,
+                    body: JSON.stringify({username: `user${exUserName}`, nickname: "닉넴닉넴"}),
+                })
+
+                // 투표 현황 반환
+                stompClient.current.publish({
+                    destination: `/publish/vote.${roomNo}`,
+                    body: ""
+                })
             },
             onWebSocketError: (error) => {
                 console.error('Error with websocket', error);
@@ -31,130 +99,188 @@ const FightZone = () => {
             onStompError: (frame) => {
                 console.error('Broker reported error: ' + frame.headers['message']);
                 console.error('Additional details: ' + frame.body);
-            }
+            },
         });
+
+        stompClient.current.activate();
+        window.addEventListener('beforeunload', leaveUser);
 
         return () => {
             stompClient.current.deactivate();
+            window.removeEventListener('beforeunload', leaveUser);
         };
+        //불필요한 재렌더링 방지. 혹여나 오류 발생시 roomNo 집어넣기
     }, []);
 
-    const connect = () => {
-        stompClient.current.activate();
-    }
-
-    const disconnect = () => {
-        stompClient.current.deactivate();
-        setConnected(false);
-        console.log("Disconnected");
-    }
-
-    const sendChat = () => {
-        if (!stompClient.current || !stompClient.current.connected) {
-            console.log('연결 안됨요....');
+    useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
             return;
         }
 
-        if (chatRoomId.current && username && content) {
-            console.log(`요청 => 주소:/publish/chat.${chatRoomId.current}, 바디: ${JSON.stringify({username, content})}`);
+        sendVote(selectedVote)
+    }, [selectedVote]);
+
+    useEffect(() => {
+        if (roomTimer === 0) {
+            alert("토론이 종료되었습니다!");
+        }
+    }, [roomTimer])
+
+    useEffect(() => {
+        fighterMessageEnd.current.scrollIntoView();
+    }, [fighterMessages]);
+
+    const leaveUser = () => {
+        if (stompClient.current) {
             stompClient.current.publish({
-                destination: `/publish/chat.${chatRoomId.current}`,
-                body: JSON.stringify({username, content}),
+                destination: `/publish/chatRoom/leave/${roomNo}`,
+                body: JSON.stringify({username: `user${exUserName}`, nickname: "닉넴닉넴"}),
             });
-            setContent('');
+
+            stompClient.current.deactivate();
+        }
+    }
+
+    const sendVote = (vote) => {
+        if (observerName.length === 0) return;
+
+        stompClient.current.publish({
+            destination: `/publish/vote.${roomNo}`,
+            body: JSON.stringify({username: observerName, vote: vote}),
+        })
+    }
+
+    const sendFighterChat = () => {
+        if (fighterName && fighterContent) {
+            stompClient.current.publish({
+                destination: `/publish/fighter.${roomNo}`,
+                body: JSON.stringify({username: fighterName, content: fighterContent}),
+            });
+            setFighterContent('');
         }
     };
 
+    const sendObserverChat = () => {
+        if (observerName && observerContent) {
+            stompClient.current.publish({
+                destination: `/publish/observer.${roomNo}`,
+                body: JSON.stringify({username: observerName, content: observerContent}),
+            });
+            setObserverContent('');
+        }
+    };
+
+    const timeStarter = () => {
+        console.log('토론 시작됨')
+        stompClient.current.publish({
+            destination: `/publish/timer.${roomNo}/start`,
+        })
+    }
+
+
+    const timeStopper = () => {
+        console.log(`토론 중지`)
+        stompClient.current.publish({
+            destination: `/publish/timer.${roomNo}/stop`,
+        })
+    }
+
+    const timeExtend = () => {
+        console.log(`토론 연장`)
+        stompClient.current.publish({
+            destination: `/publish/timer.${roomNo}/extend`,
+        })
+    }
+
+    const timerToggleStarter = () => {
+        console.log('토론 시작됨')
+        stompClient.current.publish({
+            destination: `/publish/timer.${roomNo}/start`,
+            body: JSON.stringify({username: fighterName})
+        })
+    }
+
+    //timerStarter
+    const toggleBtnComp = (title, setState) => {
+        return (
+            <button className={timerStart ?
+                styles.inactiveBtn :
+                styles.activeBtn}
+                    onClick={() => setState(prevState => !prevState)}
+            >
+                {title}
+            </button>
+        )
+    }
+
+    //테스트) new 요청
+    const exampleTimer = (username,request) =>{
+        console.log(username)
+        if (!username) {
+            console.log("이름을 넣어줘야함.");
+            return;
+        }
+
+        console.log(`${username}가 ${request} 요청`);
+        stompClient.current.publish({
+            destination: `/publish/example/timer.${roomNo}`,
+            body: JSON.stringify({
+                username: username,
+                request: request
+            })
+        })
+    }
+
     return (
-        <div className="container">
-            <div className="row">
-                <div className="col-md-6">
-                    <div className="form-inline">
-                        <div className="form-group">
-                            <div>{roomNo}: 이거 나옴요</div>
-                            <label htmlFor="connect">WebSocket connection:</label>
-                            <button
-                                id="connect"
-                                className="btn btn-default"
-                                type="button"
-                                onClick={connect}
-                                disabled={connected}
-                            >
-                                Connect
-                            </button>
-                            <button
-                                id="disconnect"
-                                className="btn btn-default"
-                                type="button"
-                                onClick={disconnect}
-                                disabled={!connected}
-                            >
-                                Disconnect
-                            </button>
-                        </div>
-                    </div>
+        <div className={styles.fightBoard}>
+            <div className={styles.fightZone}>
+                {/* 토론자 채팅 공간 */}
+                <div className={styles.fighterSection}>
+                    <FighterInfo
+                        selectedVote = {selectedVote}
+                        setSelectedVote = {setSelectedVote}
+                        roomTimer = {roomTimer}
+                        fighterName = {fighterName}
+                        leftPercent = {leftPercent}
+                        rightPercent = {rightPercent}
+                        timeStarter = {timeStarter}
+                        timeStopper = {timeStopper}
+                        exampleTimer = {exampleTimer}
+                    />
+
+                    {/*토론자 채팅 섹션*/}
+                    <FighterChat
+                        rightUser={rightUser}
+                        leftUser={leftUser}
+                        fighterName={fighterName}
+                        setFighterName={setFighterName}
+                        fighterContent={fighterContent}
+                        setFighterContent={setFighterContent}
+                        fighterMessages={fighterMessages}
+                        sendFighterChat={sendFighterChat}
+                        timeExtend={timeExtend}
+                        refs={{fighterMessageEnd, leftUser, rightUser}}
+                    />
                 </div>
-                <div className="col-md-6">
-                    <div className="form-inline">
-                        <div className="form-group">
 
-
-                            <label htmlFor="chatRoomId">Chat Room ID</label>
-                            <input
-                                type="text"
-                                id="chatRoomId"
-                                className="form-control"
-                                value={chatRoomId.current}
-                                onChange={(e) => {
-                                    chatRoomId.current = e.target.value;
-                                }}
-                            />
-
-
-                            <label htmlFor="na">Name</label>
-                            <input
-                                type="text"
-                                id="na"
-                                className="form-control"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                            />
-                            <label htmlFor="name">Content</label>
-                            <input
-                                type="text"
-                                id="name"
-                                className="form-control"
-                                value={content}
-                                onChange={(e) => setContent(e.target.value)}
-                            />
-                        </div>
-                        <button
-                            id="send"
-                            className="btn btn-default"
-                            type="button"
-                            onClick={sendChat}
-                        >
-                            Send
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-md-12">
-                    <table id="conversation" className="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Chat messages</th>
-                        </tr>
-                        </thead>
-                        <tbody id="greetings">
-                        {messages.map((message, index) => (
-                            <tr key={index}>
-                                <td>{message}</td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
+                {/* 관전자 채팅 공간 */}
+                <div className={styles.observerSection}>
+                    {/* 관전자 목록 공간 */}
+                    <ObserverUsers
+                        observerUsers={observerUsers}
+                        roomNo={roomNo}
+                    />
+                    <ObserverChat
+                        ref={observerMessageEnd}
+                        observerMessageEnd={observerMessageEnd}
+                        observerMessages={observerMessages}
+                        observerName={observerName}
+                        setObserverName={setObserverName}
+                        observerContent={observerContent}
+                        setObserverContent={setObserverContent}
+                        sendObserverChat={sendObserverChat}
+                    />
                 </div>
             </div>
         </div>
