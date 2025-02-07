@@ -1,13 +1,19 @@
 package kr.co.dmdm.controller.board;
 
+import kr.co.dmdm.dto.board.BoardDto;
+import kr.co.dmdm.dto.board.BoardListDto;
 import kr.co.dmdm.dto.common.FileDto;
+import kr.co.dmdm.service.board.BoardServiceImpl;
 import kr.co.dmdm.service.common.FileServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.ast.Var;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 패키지명        : kr.co.dmdm.controller.board
@@ -28,19 +34,29 @@ import java.io.IOException;
 public class BoardController {
 
     private final FileServiceImpl fileService;
+    private final BoardServiceImpl boardService;
 
     @PostMapping("/file")
     public FileDto saveFiles(@RequestParam("image") MultipartFile file) throws IOException {
 
-        String fileType = "BOARD_TYPE";
+        String fileType = "BOARD";
         String userId = "yiok79";
 
 //        1차로 refId는 사용자 Id 넣음
         fileService.saveFile(file, fileType, userId, userId);
 
 //        이후 저장한거 넘김
-        return fileService.findFileByRefNoAndFileType("yiok79", "BOARD_TYPE");
+        return fileService.findFileByRefNoAndFileType(userId, fileType);
     }
 
+    @PostMapping
+    public void saveBoards(@RequestBody Map<String, Object> params) throws IOException {
+        boardService.saveBoard(params);
+    }
+
+    @GetMapping("/{boardType}")
+    public List<BoardListDto> getBoards(@PathVariable String boardType) throws IOException {
+        return boardService.getBoards(boardType, "ACTIVE");
+    }
 
 }

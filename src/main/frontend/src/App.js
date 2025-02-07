@@ -7,9 +7,14 @@ import PagingTestPage from "./pages/PagingTestPage";
 import BoardWrite from "./pages/board/BoardWrite";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
+import OAuth2Redirect from "./services/common/OAuth2Redirect";
+import Logout from "./pages/Logout";
+import {useLogin} from "./contexts/AuthContext";
+import BoardList from "./pages/board/BoardList";
 import FightZone from "./pages/FightZone";
 
 function App() {
+    const { isLoggedIn } = useLogin();
     return (
         <main>
             <Routes>
@@ -38,9 +43,15 @@ function App() {
                     </AsideLayout>
                 } />
 
-                <Route path="/boardWrite" element={
+                <Route path="/board-write/:boardType" element={
                     <Layout>
                         <BoardWrite/>
+                    </Layout>
+                } />
+
+                <Route path="/board-list/:boardType" element={
+                    <Layout>
+                        <BoardList/>
                     </Layout>
                 } />
 
@@ -52,6 +63,10 @@ function App() {
                 <Route path="/login" element={
                     <LoginPage />
                 } />
+                <Route path="/oauth2-jwt-header" element={<OAuth2Redirect />} />
+
+                <Route path="/logout" element={<Logout />} />
+
 
                 <Route path="/fight-zone/:roomNo" element={
                     <FightZone/>

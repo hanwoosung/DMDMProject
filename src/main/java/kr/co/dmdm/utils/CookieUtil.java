@@ -12,11 +12,11 @@ import jakarta.servlet.http.Cookie;
  * 2025-01-24        한우성       최초 생성
  */
 public class CookieUtil {
-    public static Cookie createCookie(String key, String value) {
+    public static Cookie createCookie(String key, String value , Integer expiredS) {
         Cookie cookie = new Cookie(key, value);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        cookie.setMaxAge(24*60*60);
+        cookie.setMaxAge(expiredS);
         return cookie;
     }
 }

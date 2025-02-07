@@ -8,35 +8,97 @@ import BoardWriteHandler from "../../services/board/BoardWriteHandler";
 import Select from "../../components/common/SelectComponents";
 import BigBtn from "../../components/common/BigBtnComponents";
 import Tiptap from "../../components/editor/TipTapEditor";
+import Alert from "../../components/common/AlertComponents";
+import Confirm from "../../components/common/ConfirmComponents";
 
 const BoardWrite = () => {
     const {
         handleRemoveHashTag,
         handleAddHashTag,
         handleSave,
+        title,
         hashTags,
         boardType,
-        editorRef
+        editorRef,
+        setBoardFiles,
+        boardData,
+        setBoardData,
+        alertMessage,
+        isAlert,
+        setIsAlert,
+        isConfirmVisible,
+        setIsConfirmVisible,
+        setConfirmMessage,
+        confirmMessage,
     } = BoardWriteHandler();
-
 
     return (
         <div className={BoardWriteStyles.boardWriteContainer}>
-            <Title title="게시글 작성" />
+            <Title title={title.label + " 작성"} />
 
             <SubTitle title="제목" />
-            <Input width={"100%"} maxLength={100} placeholder={"제목을 입력 해주세요"} />
+            <Input
+                width={"100%"}
+                maxLength={100}
+                placeholder={"제목을 입력 해주세요"}
+                onChange={(e) =>
+                    setBoardData((prevState) => ({
+                        ...prevState,
+                        boardTitle: e.target.value, // 제목 상태 업데이트
+                    }))
+                }
+            />
 
-            <Select options={boardType} />
+            <Select
+                display={"none"}
+                options={boardType}
+                onChange={(value) => {
+                    // setSelectedBoardType(e.target.value); // 선택된 값으로 상태 업데이트
+                    setBoardData((prevState) => ({
+                        ...prevState,
+                        boardType: value, // 게시판 유형 상태 업데이트
+                    }));
+                }}
+                value={boardData.boardType} // 초기값 설정
+            />
 
             <SubTitle title="내용" />
-
-            <Tiptap onEditorReady={(editor) => (editorRef.current = editor)} />
+            <Tiptap
+                onEditorReady={(editor) => (editorRef.current = editor)}
+                setFiles={setBoardFiles}
+            />
 
             <SubTitle title="해시태그 (5개)" />
-            <HashTag hashTags={hashTags} onAdd={handleAddHashTag} onRemove={handleRemoveHashTag} />
+            <HashTag
+                hashTags={hashTags}
+                onAdd={handleAddHashTag}
+                onRemove={handleRemoveHashTag}
+            />
 
-            <BigBtn title={"저장"} margin={"20px 0px 20px 0px"} onClick={handleSave} />
+            <BigBtn
+                title={"저장"}
+                margin={"20px 0px 20px 0px"}
+                onClick={() => {
+                    setConfirmMessage("저장 하시겠습니까?");
+                    setIsConfirmVisible(true);
+                }}
+            />
+
+            <Alert message={alertMessage}
+                   isVisible={isAlert}
+                   onAlert={() => {
+                       setIsAlert(false);
+                   }} />
+
+            <Confirm message={confirmMessage}
+                     isVisible={isConfirmVisible}
+                     onConfirm={() => {
+                         setIsConfirmVisible(false);
+                         handleSave();
+                     }}
+                     onCancel={() => {
+                         setIsConfirmVisible(false)
+                     }} />
         </div>
     );
 };

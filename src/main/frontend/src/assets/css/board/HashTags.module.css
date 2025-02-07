@@ -18,3 +18,17 @@
     font-weight: bold;
     cursor: pointer;
 }
+
+.listTag{
+    font-weight: bold;
+    margin-right: 7px;
+    padding: 2.5px 9px 2.5px 9px;
+    border: 1px solid black;
+    border-radius: 5px;
+    display: inline-block;
+    font-size: 0.7rem;
+}
+
+.listTag span{
+    font-size: 0.7rem;
+}
