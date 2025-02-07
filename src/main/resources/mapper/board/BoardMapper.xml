@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.dmdm.repository.dao.board.BoardDao">
+
+    <select id="getBoardList" resultType="kr.co.dmdm.dto.board.BoardListDto">
+        SELECT a.board_id,
+               a.board_type,
+               a.board_title,
+               a.board_content,
+               a.user_id,
+               fnc_timestamp(a.insert_dt) AS `insert`,
+               a.insert_dt,
+               a.update_dt,
+               a.`status`,
+               a.v_cnt,
+               b.user_name,
+               b.user_level,
+               IFNULL(c.file_path, '/') AS file_path,
+               GROUP_CONCAT(d.tag) AS tag
+        FROM tbl_board a
+        LEFT JOIN tbl_user b ON a.user_id = b.user_id
+        LEFT JOIN tbl_file c ON a.user_id = c.file_ref_no AND c.file_type = 'PROFILE'
+        LEFT JOIN tbl_board_tag d ON a.board_id = d.board_id
+        WHERE a.board_type = #{boardType}
+        AND a.status = #{status}
+        GROUP BY a.board_id
+    </select>
+
+</mapper>

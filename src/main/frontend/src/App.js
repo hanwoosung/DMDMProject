@@ -10,6 +10,8 @@ import LoginPage from "./pages/LoginPage";
 import OAuth2Redirect from "./services/common/OAuth2Redirect";
 import Logout from "./pages/Logout";
 import {useLogin} from "./contexts/AuthContext";
+import BoardList from "./pages/board/BoardList";
+
 function App() {
     const { isLoggedIn } = useLogin();
     return (
@@ -40,9 +42,15 @@ function App() {
                     </AsideLayout>
                 } />
 
-                <Route path="/boardWrite" element={
+                <Route path="/board-write/:boardType" element={
                     <Layout>
                         <BoardWrite/>
+                    </Layout>
+                } />
+
+                <Route path="/board-list/:boardType" element={
+                    <Layout>
+                        <BoardList/>
                     </Layout>
                 } />
 

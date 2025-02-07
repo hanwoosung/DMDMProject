@@ -12,13 +12,15 @@ import java.io.IOException;
  */
 public interface FileService {
 
-     void saveFile(MultipartFile file,
-                         String fileType,
-                         String fileRefId,
-                         String userId) throws IOException;
+    void saveFile(MultipartFile file,
+                  String fileType,
+                  String fileRefId,
+                  String userId) throws IOException;
 
     void deleteFileById(Integer fileId);
 
     FileDto findFileByRefNoAndFileType(String fileRefId, String fileType);
+
+    void deleteFileByRefNoAndFileType(String fileRefId, String fileType);
 
 }
