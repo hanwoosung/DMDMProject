@@ -84,7 +84,7 @@ const FighterChatComponent = forwardRef((props, ref) => {
                     className={styles.input}
                     style={{flex: 1}}
                 />
-                <SmallBtn title={"시간연장"} onClick={() => timeExtend()}/>
+                {/*<SmallBtn title={"시간연장"} onClick={() => timeExtend()}/>*/}
             </div>
         </div>
     )

@@ -216,6 +216,12 @@ const FightZone = () => {
 
     //테스트) new 요청
     const exampleTimer = (username,request) =>{
+        console.log(username)
+        if (!username) {
+            console.log("이름을 넣어줘야함.");
+            return;
+        }
+
         console.log(`${username}가 ${request} 요청`);
         stompClient.current.publish({
             destination: `/publish/example/timer.${roomNo}`,

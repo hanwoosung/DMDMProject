@@ -101,15 +101,17 @@ const FighterInfoComponent = forwardRef((props, ref) => {
             <div className={styles.fightStatus}>
                 <div className={styles.fightTitle}>HTML이 프로그래밍 언어겠냐?</div>
 
-                <SmallBtn title={"토론 시작"} style={{fontSize: 18, width: 150}}
-                          onClick={() => timeStarter()}/>
-                <SmallBtn width={100} title={"마감"} onClick={() => timeStopper()}/>
+                <div style={{display: "flex", flexDirection: "row", gap: "10px"}}>
+                    <SmallBtn title={"(test)토론 시작 요청"} onClick={() => exampleTimer(fighterName, "START")}/>
+                    <SmallBtn title={"(test)토론 마감 요청"} onClick={() => exampleTimer(fighterName, "END")}/>
+                    <SmallBtn title={"(test)토론 추가 요청"} onClick={() => exampleTimer(fighterName, "EXTEND")}/>
+                </div>
+
+                {/*<SmallBtn title={"토론 시작"} style={{fontSize: 18, width: 150}}*/}
+                {/*          onClick={() => timeStarter()}/>*/}
+                {/*<SmallBtn width={100} title={"마감"} onClick={() => timeStopper()}/>*/}
                 {fightTimerComp()}
                 {fightPercentComp()}
-
-                <SmallBtn title={"(test)토론 시작 요청"} onClick={() => exampleTimer(fighterName, "START")}/>
-                <SmallBtn title={"(test)토론 마감 요청"} onClick={() => exampleTimer(fighterName, "END")}/>
-                <SmallBtn title={"(test)토론 추가 요청"} onClick={() => exampleTimer(fighterName, "EXTEND")}/>
             </div>
             <div className={styles.fighterInfo}>
                 <div className={styles.flexRow} style={{gap: 10}}>
