@@ -2,7 +2,6 @@ package kr.co.dmdm.controller;
 
 import kr.co.dmdm.dto.Alarm.request.AlarmRequestDto;
 import kr.co.dmdm.dto.TestDto;
-import kr.co.dmdm.entity.Alarm;
 import kr.co.dmdm.global.exception.CustomException;
 import kr.co.dmdm.global.exception.ExceptionEnum;
 import kr.co.dmdm.kafka.KafkaProducer;
@@ -10,6 +9,7 @@ import kr.co.dmdm.repository.jpa.AlarmRepository;
 import kr.co.dmdm.utils.PagingUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,11 +25,13 @@ public class TestController {
     private final KafkaProducer kafkaProducer;
     private final AlarmRepository alarmRepository;
     private final ModelMapper modelMapper;
+    private final StringRedisTemplate redisTemplate;
 
-    public TestController(KafkaProducer kafkaProducer, AlarmRepository alarmRepository, ModelMapper modelMapper) {
+    public TestController(KafkaProducer kafkaProducer, AlarmRepository alarmRepository, ModelMapper modelMapper, StringRedisTemplate redisTemplate) {
         this.kafkaProducer = kafkaProducer;
         this.alarmRepository = alarmRepository;
         this.modelMapper = modelMapper;
+        this.redisTemplate = redisTemplate;
     }
 
     // 더미 데이터 생성
@@ -86,6 +88,22 @@ public class TestController {
     public TestDto test2(@RequestBody TestDto testDto) {
         System.out.println(testDto);
         return testDto;
+    }
+
+
+    @GetMapping("/set")
+    public String setKey() {
+        redisTemplate.opsForValue().set("testKey", "testValue");
+        return "Key Set!!!";
+    }
+
+    @GetMapping("/get")
+    public String getKey() {
+        return redisTemplate.opsForValue().get("testKey");
+    }
+    @PostMapping("/admin")
+    public String adminP(){
+        return "Admin Page";
     }
 
     @PostMapping("/alarm")

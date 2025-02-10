@@ -5,6 +5,8 @@ import kr.co.dmdm.entity.File;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 /**
  * packageName    : kr.co.dmdm.repository.jpa.common
  * fileName       : FileRepository
@@ -19,5 +21,9 @@ import org.springframework.data.jpa.repository.Query;
 public interface FileRepository extends JpaRepository<File, Integer> {
 
     File findFirstByFileRefNoAndFileTypeOrderByInsertDtDesc(String fileRefNo, String fileType);
+
+    void deleteByFileRefNoAndFileType(String fileRefNo, String fileType);
+
+    List<File> findAllByFileRefNoAndFileType(String fileRefNo, String fileType);
 
 }

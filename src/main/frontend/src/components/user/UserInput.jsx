@@ -11,19 +11,21 @@ const UserInput = ({
                        errorMessage,
                        type,
                        disabled,
+                       inputStyle,
+                       containerStyle,
                    }) => {
     const handleInputChange = (e) => {
-        // 입력값 변경 시 에러 메시지 초기화
         onChange(e);
     };
 
     return (
-        <div className={styles.inputContainer}>
+        <div className={styles.inputContainer} style={containerStyle}>
             <label className={styles.label}>{label}</label>
             <div className={styles.inputGroup}>
                 <input
                     type={type}
                     className={styles.input}
+                    style={inputStyle}
                     placeholder={placeholder}
                     value={value}
                     maxLength={maxLength}
@@ -31,7 +33,11 @@ const UserInput = ({
                     disabled={disabled}
                 />
                 {buttonText && (
-                    <button className={styles.checkButton} onClick={onButtonClick} disabled={disabled}>
+                    <button
+                        className={styles.checkButton}
+                        onClick={onButtonClick}
+                        disabled={disabled}
+                    >
                         {buttonText}
                     </button>
                 )}

@@ -28,6 +28,16 @@ public class Response<T> {
     private final T data;
     private final LocalDateTime timestamp;
 
+    public Response(HttpStatus status, Result result, String message , T data,LocalDateTime time) {
+        this.status = status;
+        this.statusCode = status.value();
+        this.result = result;
+        this.message = message;
+        this.data = data;
+        this.timestamp = time;
+    }
+
+
     public Response(HttpStatus status, Result result, String message, T data) {
         this.status = status;
         this.statusCode = status.value();
@@ -49,6 +59,14 @@ public class Response<T> {
     }
 
     /**
+     * 시간없는걸로 할거임
+     */
+    public static <T> Response<T> successNoTime(String message,T data) {
+        return new Response<>(HttpStatus.OK, Result.SUCCESS, message,data,null);
+    }
+
+
+    /**
      * 실패 응답을 생성합니다.
      *
      * @param status HTTP 상태 코드
@@ -57,6 +75,11 @@ public class Response<T> {
      */
     public static Response<Void> failure(HttpStatus status, String message) {
         return new Response<>(status, Result.FAILURE, message, null);
+    }
+
+
+    public static Response<Void> failureNoTime(HttpStatus status, String message) {
+        return new Response<>(status, Result.FAILURE, message,null,null);
     }
 
 }
