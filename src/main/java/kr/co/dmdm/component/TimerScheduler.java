@@ -43,21 +43,28 @@ public class TimerScheduler {
         FightStatus fightStatus = FightStatus.getFightStatus(request);
 
         if(fightStatus != null) {
+            //fightStatus 값이 있는지 확인
             boolean proceed = requestMap.containsValue(fightStatus);
 
+            //동일 K, V면 null 반환
             if (fightStatus.equals(requestMap.get(username))) {
                 return null;
             }
 
+            //두 변수와 값이 일치하는 enum 선언
             FightNotice fightNotice = FightNotice.getFightNotice(fightStatus, proceed);
 
+            //요청 Map 에 요청 추가
             requestMap.put(username, fightStatus);
 
+            //동일 K, V를 넣어도 작동함 이에 유의 바람(이점은 위에서 해결)
+            //값이 있으면 요청 Map clear 및 요청 실행
             if(proceed) {
                 requestMap.clear();
                 chatRoomService.handleRequest(chatRoomId, fightStatus);
             }
 
+            //요청 처리 후 메시지 반환
             return new ChatMessageResponseDto("NOTICE", (!proceed ? username + "님이 " : "") + fightNotice.getMessage());
         }
         return null;

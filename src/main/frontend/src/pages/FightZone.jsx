@@ -34,15 +34,17 @@ const FightZone = () => {
     const [leftPercent, setLeftPercent] = useState(0);
     const [rightPercent, setRightPercent] = useState(0);
 
-    const [timerStart, setTimerStart] = useState(false);
-    const [timerExtend, setTimerExtend] = useState(false);
-    const [timerEnd, setTimerEnd] = useState(false);
-
     const [roomTimer, setRoomTimer] = useState(3600);
 
     // 방 접속시 연결 및 구독설정
     useEffect(() => {
+
+        //첫 렌더링 시 유저 정보를 반환하는 api 만들기
+
         stompClient.current = new Client({
+            connectHeaders: {
+                access: localStorage.getItem("access")
+            },
             brokerURL: 'ws://localhost:8090/ws-connect',
             onConnect: (frame) => {
                 console.log('Connected: ' + frame);
@@ -171,50 +173,6 @@ const FightZone = () => {
         }
     };
 
-    const timeStarter = () => {
-        console.log('토론 시작됨')
-        stompClient.current.publish({
-            destination: `/publish/timer.${roomNo}/start`,
-        })
-    }
-
-
-    const timeStopper = () => {
-        console.log(`토론 중지`)
-        stompClient.current.publish({
-            destination: `/publish/timer.${roomNo}/stop`,
-        })
-    }
-
-    const timeExtend = () => {
-        console.log(`토론 연장`)
-        stompClient.current.publish({
-            destination: `/publish/timer.${roomNo}/extend`,
-        })
-    }
-
-    const timerToggleStarter = () => {
-        console.log('토론 시작됨')
-        stompClient.current.publish({
-            destination: `/publish/timer.${roomNo}/start`,
-            body: JSON.stringify({username: fighterName})
-        })
-    }
-
-    //timerStarter
-    const toggleBtnComp = (title, setState) => {
-        return (
-            <button className={timerStart ?
-                styles.inactiveBtn :
-                styles.activeBtn}
-                    onClick={() => setState(prevState => !prevState)}
-            >
-                {title}
-            </button>
-        )
-    }
-
-    //테스트) new 요청
     const exampleTimer = (username,request) =>{
         console.log(username)
         if (!username) {
@@ -244,8 +202,6 @@ const FightZone = () => {
                         fighterName = {fighterName}
                         leftPercent = {leftPercent}
                         rightPercent = {rightPercent}
-                        timeStarter = {timeStarter}
-                        timeStopper = {timeStopper}
                         exampleTimer = {exampleTimer}
                     />
 
@@ -259,7 +215,6 @@ const FightZone = () => {
                         setFighterContent={setFighterContent}
                         fighterMessages={fighterMessages}
                         sendFighterChat={sendFighterChat}
-                        timeExtend={timeExtend}
                         refs={{fighterMessageEnd, leftUser, rightUser}}
                     />
                 </div>

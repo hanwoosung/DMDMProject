@@ -27,21 +27,6 @@ public class TimerSocketController extends BaseWebSocketController {
 
     private final TimerScheduler timerScheduler;
 
-//    @MessageMapping("/timer.{chatRoomId}/start")
-//    public void startTimer(@DestinationVariable Long chatRoomId) {
-//        timerScheduler.startTimer(chatRoomId, 3600);
-//    }
-//
-//    @MessageMapping("/timer.{chatRoomId}/stop")
-//    public void stopTimer(@DestinationVariable Long chatRoomId) {
-//        timerScheduler.stopTimer(chatRoomId);
-//    }
-//
-//    @MessageMapping("/timer.{chatRoomId}/extend")
-//    public void extendTimer(@DestinationVariable Long chatRoomId) {
-//        timerScheduler.extendTimer(chatRoomId, 1800);
-//    }
-
     @MessageMapping("/example/timer.{chatRoomId}")
     @SendTo("/subscribe/fighter.{chatRoomId}")
     public ChatMessageResponseDto startExampleTimer(@DestinationVariable Long chatRoomId, TimerRequestDto requestDto) {

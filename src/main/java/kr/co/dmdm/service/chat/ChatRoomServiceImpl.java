@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * fileName       : ChatRoomServiceImpl
  * author         : 최기환
  * date           : 2025-02-04
- * description    :
+ * description    : 채팅방 시간 관리 및 요청 처리 서비스
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------

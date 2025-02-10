@@ -20,7 +20,6 @@ public class JWTFilter extends OncePerRequestFilter {
     private final JWTUtil jwtUtil;
 
     public JWTFilter(JWTUtil jwtUtil) {
-
         this.jwtUtil = jwtUtil;
     }
 
@@ -30,6 +29,8 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 헤더에서 access키에 담긴 토큰을 꺼냄
         String accessToken = request.getHeader("access");
+
+        System.out.println("jwt필터 작동");
 
         // 🔹 토큰이 없으면 그냥 다음 필터로 넘김 (예외 발생 방지)
         if (accessToken == null || accessToken.trim().isEmpty()) {

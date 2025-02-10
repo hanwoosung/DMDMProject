@@ -1,5 +1,6 @@
 package kr.co.dmdm.config;
 
+import kr.co.dmdm.interceptor.JwtWebSocketInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
@@ -25,6 +26,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private final WebSocketInterceptor webSocketInterceptor;
+    private final JwtWebSocketInterceptor jwtWebSocketInterceptor;
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
@@ -40,6 +42,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-connect")
+                .addInterceptors(jwtWebSocketInterceptor)
 //               todo 배포 시 cors설정 추가해야함
                 .setAllowedOrigins("*");
     }
