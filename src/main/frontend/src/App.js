@@ -7,6 +7,7 @@ import PagingTestPage from "./pages/PagingTestPage";
 import BoardWrite from "./pages/board/BoardWrite";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
+import AlarmTestPage from "./pages/AlarmTestPage";
 import OAuth2Redirect from "./services/common/OAuth2Redirect";
 import Logout from "./pages/Logout";
 import {useLogin} from "./contexts/AuthContext";
@@ -40,6 +41,12 @@ function App() {
                 <Route path="/test" element={
                     <AsideLayout>
                         <TestPage/>
+                    </AsideLayout>
+                } />
+
+                <Route path="/test-alarm" element={
+                    <AsideLayout>
+                        <AlarmTestPage/>
                     </AsideLayout>
                 } />
 

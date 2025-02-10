@@ -1,6 +1,8 @@
 package kr.co.dmdm.global;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.dmdm.global.exception.CustomException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -26,7 +28,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  * 2025-01-21        황승현       최초 생성
  */
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
+
+    private final ObjectMapper objectMapper;
 
     @ExceptionHandler(CustomException.class)
     public Response<Void> handleCustomException(CustomException ex) {
@@ -57,6 +62,15 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
 
         if (body instanceof Response || body instanceof Resource) {
             return body;
+        }
+
+        if (body instanceof String) {
+            try {
+                response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+                return objectMapper.writeValueAsString(Response.success(body));
+            } catch (Exception e) {
+                throw new RuntimeException("Error serializing String response", e);
+            }
         }
 
         return Response.success(body);
