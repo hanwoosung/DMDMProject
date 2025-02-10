@@ -1,0 +1,10 @@
+.zero{
+    font-size: 0.7rem;
+    font-weight: bold;
+    display: inline-block;
+    background-color: whitesmoke;
+    border: 1px solid #dadada;
+    padding: 4px 8px 4px 8px;
+    margin-right: 4px;
+    border-radius: 4px;
+}

@@ -22,6 +22,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Collections;
+
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -54,6 +56,7 @@ public class SecurityConfig {
         configuration.addAllowedHeader("*");
         configuration.addExposedHeader("access");
         configuration.addExposedHeader("refresh");
+        configuration.setExposedHeaders(Collections.singletonList("access"));
         configuration.addExposedHeader("Authorization");
         configuration.setAllowCredentials(true);
 
@@ -83,7 +86,8 @@ public class SecurityConfig {
         http
                 .cors(withDefaults())
                 .authorizeHttpRequests((auth) ->
-                        auth.anyRequest().permitAll()
+                        auth.requestMatchers("/api/test/admin").hasRole("ADMIN")
+                        .anyRequest().permitAll()
                 );
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);

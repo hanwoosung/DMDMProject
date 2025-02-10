@@ -7,9 +7,13 @@ import PagingTestPage from "./pages/PagingTestPage";
 import BoardWrite from "./pages/board/BoardWrite";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
+import AlarmTestPage from "./pages/AlarmTestPage";
 import OAuth2Redirect from "./services/common/OAuth2Redirect";
 import Logout from "./pages/Logout";
 import {useLogin} from "./contexts/AuthContext";
+import BoardList from "./pages/board/BoardList";
+import FightZone from "./pages/FightZone";
+
 import EmoticonRegister from "./components/emoticon/EmoticonRegister";
 
 function App() {
@@ -42,12 +46,23 @@ function App() {
                     </AsideLayout>
                 }/>
 
-                <Route path="/boardWrite" element={
+                <Route path="/test-alarm" element={
+                    <AsideLayout>
+                        <AlarmTestPage/>
+                    </AsideLayout>
+                } />
+
+                <Route path="/board-write/:boardType" element={
                     <Layout>
                         <BoardWrite/>
                     </Layout>
-                }/>
+                } />
 
+                <Route path="/board-list/:boardType" element={
+                    <Layout>
+                        <BoardList/>
+                    </Layout>
+                } />
 
                 <Route path="/sign-up" element={
                     <SignUpPage/>
@@ -58,8 +73,11 @@ function App() {
                 }/>
                 <Route path="/oauth2-jwt-header" element={<OAuth2Redirect/>}/>
 
-                {isLoggedIn && <Route path="/logout" element={<Logout/>}/>}
+                <Route path="/logout" element={<Logout />} />
 
+                <Route path="/fight-zone/:roomNo" element={
+                    <FightZone/>
+                }/>
                 <Route path="/emoticon-register" element={
                     <Layout>
                         <EmoticonRegister/>

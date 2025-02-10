@@ -19,17 +19,18 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class GoogleResponse implements OAuth2Response {
     private final Map<String, Object> attribute;
+    private String birthyear; // 🔹 수정: 값을 저장할 수 있도록 필드 유지
+    private String birthday;
+
     @Override
     public String getProvider() {
-        return "google";
+        return "GOOGLE";
     }
-
 
     @Override
     public String getProviderId() {
         return attribute.get("sub").toString();
     }
-
 
     @Override
     public String getEmail() {
@@ -43,11 +44,16 @@ public class GoogleResponse implements OAuth2Response {
 
     @Override
     public String getBirthday() {
-        return "";
+        return this.birthday;
     }
 
     @Override
     public String getBirthyear() {
-        return "";
+        return this.birthyear;
+    }
+
+    public void setBirthDate(String birthyear, String birthday) {
+        this.birthyear = birthyear;
+        this.birthday = birthday;
     }
 }

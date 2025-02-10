@@ -62,7 +62,7 @@ public class FileServiceImpl implements FileService {
      */
     @Transactional
     @Override
-    public void  saveFile(MultipartFile file, String fileType, String fileRefId, String userId) throws IOException {
+    public void saveFile(MultipartFile file, String fileType, String fileRefId, String userId) throws IOException {
         log.info("파일 저장 시작: 파일명={}, 사용자={}", file.getOriginalFilename(), userId);
         validateFile(file);
 
@@ -111,5 +111,24 @@ public class FileServiceImpl implements FileService {
     public FileDto findFileByRefNoAndFileType(String fileRefNo, String fileType) {
         File fileEntity = fileRepository.findFirstByFileRefNoAndFileTypeOrderByInsertDtDesc(fileRefNo, fileType);
         return modelMapper.map(fileEntity, FileDto.class);
+    }
+
+    @Override
+    public void deleteFileByRefNoAndFileType(String fileRefId, String fileType) {
+        List<File> files = fileRepository.findAllByFileRefNoAndFileType(fileRefId, fileType);
+
+        if (!files.isEmpty()) {
+            files.forEach(file -> {
+                try {
+                    fileUploadUtil.deleteFile(file.getFilePath());
+                    fileRepository.deleteById(file.getFileNo());
+                    log.info("파일 삭제 성공: 파일 ID={}", file.getFileNo());
+                } catch (Exception e) {
+                    log.error("파일 삭제 실패: {}", e.getMessage(), e);
+                    throw new RuntimeException("파일 삭제 실패: " + e.getMessage(), e);
+                }
+            });
+        }
+
     }
 }
