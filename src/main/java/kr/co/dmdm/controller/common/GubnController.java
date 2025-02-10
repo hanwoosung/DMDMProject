@@ -28,6 +28,8 @@ public class GubnController {
 
     @PostMapping("/gubn")
     public List<GubnDto> findGubnList(@RequestBody GubnDto gubnDto) {
+        System.out.println("반가워~~~~~~~~~~~~~" + gubnDto.toString());
+        System.out.println("asd;kalsda;sld@@@@@@@@@@@@@@@@@@@@2222222222" + gubnService.findAllByIdParentCode(gubnDto.getParentCode()).toString());
         return gubnService.findAllByIdParentCode(gubnDto.getParentCode());
     }
 

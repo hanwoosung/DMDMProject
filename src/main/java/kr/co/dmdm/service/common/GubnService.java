@@ -22,4 +22,5 @@ public interface GubnService {
     List<GubnDto> findAllByIdParentCode(String parentCode);
 
     GubnDto findByParentCodeAndCode(String parentCode, String code);
+
 }

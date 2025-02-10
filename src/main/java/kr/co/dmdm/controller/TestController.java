@@ -4,10 +4,11 @@ import kr.co.dmdm.dto.Alarm.request.AlarmRequestDto;
 import kr.co.dmdm.dto.TestDto;
 import kr.co.dmdm.global.exception.CustomException;
 import kr.co.dmdm.global.exception.ExceptionEnum;
-import kr.co.dmdm.kafka.KafkaProducer;
+//import kr.co.dmdm.kafka.KafkaProducer;
 import kr.co.dmdm.repository.jpa.AlarmRepository;
 import kr.co.dmdm.utils.PagingUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -22,13 +23,23 @@ import java.util.stream.IntStream;
 @Slf4j
 public class TestController {
 
-    private final KafkaProducer kafkaProducer;
+//    private final KafkaProducer kafkaProducer;
+//    private final AlarmRepository alarmRepository;
+//    private final ModelMapper modelMapper;
+//    private final StringRedisTemplate redisTemplate;
+//
+//    public TestController(KafkaProducer kafkaProducer, AlarmRepository alarmRepository, ModelMapper modelMapper, StringRedisTemplate redisTemplate) {
+//        this.kafkaProducer = kafkaProducer;
+//        this.alarmRepository = alarmRepository;
+//        this.modelMapper = modelMapper;
+//        this.redisTemplate = redisTemplate;
+//    }
+
     private final AlarmRepository alarmRepository;
     private final ModelMapper modelMapper;
     private final StringRedisTemplate redisTemplate;
 
-    public TestController(KafkaProducer kafkaProducer, AlarmRepository alarmRepository, ModelMapper modelMapper, StringRedisTemplate redisTemplate) {
-        this.kafkaProducer = kafkaProducer;
+    public TestController(AlarmRepository alarmRepository, ModelMapper modelMapper, StringRedisTemplate redisTemplate) {
         this.alarmRepository = alarmRepository;
         this.modelMapper = modelMapper;
         this.redisTemplate = redisTemplate;
@@ -106,8 +117,8 @@ public class TestController {
         return "Admin Page";
     }
 
-    @PostMapping("/alarm")
-    public void alarm(@RequestBody AlarmRequestDto alarmDto) {
-        kafkaProducer.sendMessage(alarmDto);
-    }
+//    @PostMapping("/alarm")
+//    public void alarm(@RequestBody AlarmRequestDto alarmDto) {
+//        kafkaProducer.sendMessage(alarmDto);
+//    }
 }
