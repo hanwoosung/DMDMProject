@@ -71,12 +71,17 @@ const LoginPage = () => {
             });
             if (response.data.result === Response.SUCCESS) {
 
-                const  name =  response.data.data;
+                const  name =  response.data.data.userName;
+                const  role =  response.data.data.userRole;
+                const  userId =  response.data.data.userId;
+
                 setAlertMessage("로그인 성공");
                 setIsAlert(true);
 
                 window.localStorage.setItem("access", response.headers.get("access"));
                 window.localStorage.setItem("name", name);
+                window.localStorage.setItem("role", role);
+                window.localStorage.setItem("userId", userId);
 
                 setIsLoggedIn(true);
                 setLoginUser(name);

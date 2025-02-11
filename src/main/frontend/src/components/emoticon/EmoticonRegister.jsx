@@ -94,8 +94,8 @@ export default function EmoticonRegister() {
             </div>
 
 
-            <div className={styles.formGroup}>
-                <label className={styles.label}>이미지 일괄 업로드 <br/>(100x100, 5~20개)</label>
+            <div className={styles.imageFormGroup}>
+                <label className={styles.imageLabel}>100x100, 5~20개</label>
                 <input
                     type="file"
                     accept="image/*"
@@ -116,7 +116,7 @@ export default function EmoticonRegister() {
                                 className={styles.removeButton}
                                 onClick={() => handleImageRemove(index)}
                             >
-                                삭제
+                                X
                             </button>
                         </div>
                     ))}

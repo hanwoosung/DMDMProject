@@ -1,3 +1,4 @@
+/*
 package kr.co.dmdm.controller;
 
 import kr.co.dmdm.dto.Alarm.request.AlarmRequestDto;
@@ -7,8 +8,6 @@ import kr.co.dmdm.global.exception.ExceptionEnum;
 import kr.co.dmdm.kafka.KafkaProducer;
 import kr.co.dmdm.repository.jpa.AlarmRepository;
 import kr.co.dmdm.utils.PagingUtil;
-import kr.co.dmdm.utils.SecurityUtil;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -22,14 +21,19 @@ import java.util.stream.IntStream;
 @RestController
 @RequestMapping("/api/test")
 @Slf4j
-@RequiredArgsConstructor
 public class TestController {
 
     private final KafkaProducer kafkaProducer;
     private final AlarmRepository alarmRepository;
     private final ModelMapper modelMapper;
     private final StringRedisTemplate redisTemplate;
-    private final SecurityUtil securityUtil;
+
+    public TestController(KafkaProducer kafkaProducer, AlarmRepository alarmRepository, ModelMapper modelMapper, StringRedisTemplate redisTemplate) {
+        this.kafkaProducer = kafkaProducer;
+        this.alarmRepository = alarmRepository;
+        this.modelMapper = modelMapper;
+        this.redisTemplate = redisTemplate;
+    }
 
     // 더미 데이터 생성
     private List<String> generateDummyData(int totalCount) {
@@ -103,13 +107,13 @@ public class TestController {
         return "Admin Page";
     }
 
-    @GetMapping("/secu-util")
-    public String secuUtil() {
-        return (String)securityUtil.getCurrentUserInfo().get("id");
+    @PostMapping("/alarm")
+*/
+/*
+    public void alarm(@RequestBody AlarmRequestDto alarmDto) {
+        kafkaProducer.sendMessage(alarmDto);
     }
+*//*
 
-//    @PostMapping("/alarm")
-//    public void alarm(@RequestBody AlarmRequestDto alarmDto) {
-//        kafkaProducer.sendMessage(alarmDto);
-//    }
 }
+*/
