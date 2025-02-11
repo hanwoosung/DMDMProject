@@ -31,8 +31,8 @@ public class GubnController {
         return gubnService.findAllByIdParentCode(gubnDto.getParentCode());
     }
 
-    @PostMapping("/gubn/{code}/{parentCode}")
+    @PostMapping("/gubn/{parentCode}/{code}")
     public GubnDto findGubnById(@PathVariable String code, @PathVariable String parentCode) {
-        return gubnService.findByParentCodeAndCode(code, parentCode);
+        return gubnService.findByParentCodeAndCode(parentCode, code);
     }
 }

@@ -10,7 +10,7 @@ const NoticeList = () => {
     useEffect(() => {
         // fetchedEvents 로드 후 기본 화면 설정
         if (fetchedEvents?.statusCode === 200) {
-            setNotices(fetchedEvents.data);
+            setNotices(fetchedEvents.data.list);
         }
     }, [fetchedEvents]);
 

@@ -17,14 +17,76 @@
                b.user_name,
                b.user_level,
                IFNULL(c.file_path, '/') AS file_path,
-               GROUP_CONCAT(d.tag) AS tag
-        FROM tbl_board a
+               GROUP_CONCAT(d.tag) AS tag,
+               COUNT(f.like_target) AS likeCnt,
+               COUNT(g.comment_id) AS commentCnt
+        FROM tbl_board a FORCE INDEX(idx_tbl_board_01)
         LEFT JOIN tbl_user b ON a.user_id = b.user_id
-        LEFT JOIN tbl_file c ON a.user_id = c.file_ref_no AND c.file_type = 'PROFILE'
+        LEFT JOIN tbl_file c FORCE INDEX (idx_tbl_file_01) ON a.user_id = c.file_ref_no AND c.file_type = 'PROFILE'
         LEFT JOIN tbl_board_tag d ON a.board_id = d.board_id
+        LEFT JOIN tbl_black_list e ON a.user_id = e.receive_user_id AND e.send_user_id = '로그인한 아이디'
+        LEFT JOIN tbl_likes f ON f.like_target_type = 'BOARD' AND f.like_target = a.board_id AND f.like_type = 'LIKE'
+        LEFT JOIN tbl_comment g ON g.board_id = a.board_id AND g.`status` = 'ACTIVE'
         WHERE a.board_type = #{boardType}
         AND a.status = #{status}
+        AND e.send_user_id IS NULL
+        <trim prefix="AND (" suffix=")" prefixOverrides="AND">
+            <if test="searchType == 'title'">
+                a.board_title LIKE CONCAT('%', #{searchData}, '%')
+            </if>
+            <if test="searchType == 'content'">
+                a.board_content LIKE CONCAT('%', #{searchData}, '%')
+            </if>
+            <if test="searchType == 'writer'">
+                b.user_name LIKE CONCAT('%', #{searchData}, '%')
+            </if>
+            <if test="searchType == 'all'">
+                (a.board_title LIKE CONCAT('%', #{searchData}, '%')
+                OR a.board_content LIKE CONCAT('%', #{searchData}, '%')
+                OR b.user_name LIKE CONCAT('%', #{searchData}, '%'))
+            </if>
+        </trim>
         GROUP BY a.board_id
+        ORDER BY
+        <choose>
+            <when test="sortType == 'pop'">
+                a.v_cnt DESC, a.board_id
+            </when>
+            <otherwise>
+                a.board_id DESC
+            </otherwise>
+        </choose>
+        LIMIT #{page}, #{size}
+    </select>
+
+
+
+
+
+    <select id="getBoardCnt">
+
+        SELECT COUNT(*)
+        FROM tbl_board a
+        LEFT JOIN tbl_user b ON a.user_id = b.user_id
+        WHERE a.board_type = #{boardType}
+        AND a.status = #{status}
+        <trim prefix="AND (" suffix=")" prefixOverrides="AND">
+            <if test="searchType == 'title'">
+                a.board_title LIKE CONCAT('%', #{searchData}, '%')
+            </if>
+            <if test="searchType == 'content'">
+                a.board_content LIKE CONCAT('%', #{searchData}, '%')
+            </if>
+            <if test="searchType == 'writer'">
+                b.user_name LIKE CONCAT('%', #{searchData}, '%')
+            </if>
+            <if test="searchType == 'all'">
+                (a.board_title LIKE CONCAT('%', #{searchData}, '%')
+                OR a.board_content LIKE CONCAT('%', #{searchData}, '%')
+                OR b.user_name LIKE CONCAT('%', #{searchData}, '%'))
+            </if>
+        </trim>
+
     </select>
 
 </mapper>
