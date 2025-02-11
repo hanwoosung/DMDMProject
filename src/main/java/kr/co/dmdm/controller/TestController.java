@@ -1,3 +1,4 @@
+/*
 package kr.co.dmdm.controller;
 
 import kr.co.dmdm.dto.Alarm.request.AlarmRequestDto;
@@ -107,7 +108,12 @@ public class TestController {
     }
 
     @PostMapping("/alarm")
+*/
+/*
     public void alarm(@RequestBody AlarmRequestDto alarmDto) {
         kafkaProducer.sendMessage(alarmDto);
     }
+*//*
+
 }
+*/

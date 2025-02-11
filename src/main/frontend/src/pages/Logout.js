@@ -15,6 +15,8 @@ const Logout = () => {
             if (response.ok) {
                 window.localStorage.removeItem("access");
                 window.localStorage.removeItem("name");
+                window.localStorage.removeItem("role");
+                window.localStorage.removeItem("userId");
 
                 setIsLoggedIn(false);
                 setLoginUser(null);
