@@ -43,7 +43,7 @@ const FightZone = () => {
 
         stompClient.current = new Client({
             connectHeaders: {
-                access: localStorage.getItem("access")
+                access: window.localStorage.getItem("access")
             },
             brokerURL: 'ws://localhost:8090/ws-connect',
             onConnect: (frame) => {
