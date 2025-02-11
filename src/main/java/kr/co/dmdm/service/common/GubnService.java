@@ -1,6 +1,8 @@
 package kr.co.dmdm.service.common;
 
 import kr.co.dmdm.dto.common.GubnDto;
+import kr.co.dmdm.entity.Gubn;
+import kr.co.dmdm.entity.GubnCompositeKey;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,4 +25,10 @@ public interface GubnService {
 
     GubnDto findByParentCodeAndCode(String parentCode, String code);
 
+
+    GubnDto saveGubn(GubnDto gubnDto);
+
+    void updateStatus(List<GubnCompositeKey> gubnKeys, String status);
+
+    List<GubnDto> findAllByIdChildCode(String parentCode);
 }

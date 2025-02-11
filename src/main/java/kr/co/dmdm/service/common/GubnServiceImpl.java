@@ -10,9 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * packageName    : kr.co.dmdm.service.common
@@ -62,5 +65,24 @@ public class GubnServiceImpl implements GubnService {
         }
 
         throw new CustomException(ExceptionEnum.DATABASE_ERROR);
+    }
+
+    @Transactional
+    public GubnDto saveGubn(GubnDto gubnDto) {
+        Gubn gubn = modelMapper.map(gubnDto, Gubn.class);
+        Gubn savedEntity = gubnRepository.save(gubn);
+        return modelMapper.map(savedEntity, GubnDto.class);
+    }
+
+    @Transactional
+    public void updateStatus(List<GubnCompositeKey> gubnKeys, String status) {
+        List<String> codes = gubnKeys.stream().map(GubnCompositeKey::getCode).toList();
+        List<String> parentCodes = gubnKeys.stream().map(GubnCompositeKey::getParentCode).toList();
+        gubnRepository.updateStatusByCodesAndParentCodes(codes, parentCodes, status);
+    }
+
+    @Override
+    public List<GubnDto> findAllByIdChildCode(String parentCode) {
+        return gubnRepository.findChildCodeByParentCode(parentCode);
     }
 }

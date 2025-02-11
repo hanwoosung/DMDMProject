@@ -33,3 +33,15 @@
 .table {
     text-align: center;
 }
+
+.tableRow {
+    transition: background-color 0.2s ease-in-out;
+}
+
+.tableRow:hover {
+    background-color: #f5d59a;
+}
+
+.deActive {
+    background-color: #f5f5f5;
+}
