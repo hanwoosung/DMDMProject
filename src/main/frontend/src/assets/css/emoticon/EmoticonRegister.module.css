@@ -28,10 +28,23 @@
     margin-bottom: 1rem;
 }
 
+.imageFormGroup {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
 .label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
+}
+
+.imageLabel {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    text-align: end;
 }
 
 /*.input {*/
@@ -57,6 +70,7 @@
     border: 1px solid #ccc;
     border-radius: 0.25rem;
     margin-bottom: 1rem;
+    object-fit: cover;
 }
 
 .mainImagePreview {
@@ -112,8 +126,8 @@
     color: white;
     border: none;
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
