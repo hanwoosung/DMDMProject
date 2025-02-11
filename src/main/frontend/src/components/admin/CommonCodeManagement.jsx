@@ -74,6 +74,10 @@ const CommonCodeManagement = () => {
         }, []);
 
         const handleSave = async () => {
+            if(code === '') {
+                onAlert("코드를 입력해주세요.");
+                return;
+            }
             const newCode = {
                 parentCode: topCode,
                 code,
@@ -225,47 +229,46 @@ const CommonCodeManagement = () => {
                         </div>
                         <SmallBtn title={"저장"} onClick={handleSave}/>
                     </div>
-                    <table className={styles.table}>
-                        <thead>
-                        <tr>
-                            <th>
-                                <input type="checkbox" checked={selectAll} onChange={handleSelectAll}/>
-                            </th>
-                            <th>코드</th>
-                            <th>명</th>
-                            <th>특수필드1 설명</th>
-                            <th>특수필드1</th>
-                            <th>특수필드2 설명</th>
-                            <th>특수필드2</th>
-                            <th>특수필드3 설명</th>
-                            <th>특수필드3</th>
-                            <th>상태</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {codes?.map((item, index) => (
-                            <tr key={index}
-                                className={`${styles.tableRow} ${item.status === 'DEACTIVE' && styles.deActive}`}
-                                onClick={() => handleRowClick(item)}>
-                                <td>
-                                    <input type="checkbox"
-                                           checked={selectedCodes.includes(item.code)}
-                                           onClick={(e) => e.stopPropagation()}
-                                           onChange={(e) => handleCheckboxChange(item.code, e)}/>
-                                </td>
-                                <td>{item.code}</td>
-                                <td>{item.name}</td>
-                                <td>{item.firstSpecialDescription}</td>
-                                <td>{item.firstSpecial}</td>
-                                <td>{item.secondSpecialDescription}</td>
-                                <td>{item.secondSpecial}</td>
-                                <td>{item.thirdSpecialDescription}</td>
-                                <td>{item.thirdSpecial}</td>
-                                <td>{item.status}</td>
+                    <div className="table-container">
+                        <table className={styles.table}>
+                            <thead>
+                            <tr>
+                                <th><input type="checkbox" checked={selectAll} onChange={handleSelectAll}/></th>
+                                <th>코드</th>
+                                <th>명</th>
+                                <th>특수필드1 설명</th>
+                                <th>특수필드1</th>
+                                <th>특수필드2 설명</th>
+                                <th>특수필드2</th>
+                                <th>특수필드3 설명</th>
+                                <th>특수필드3</th>
+                                <th>상태</th>
                             </tr>
-                        ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            {codes?.map((item, index) => (
+                                <tr key={index}
+                                    className={`${styles.tableRow} ${item.status === 'DEACTIVE' && styles.deActive}`}
+                                    onClick={() => handleRowClick(item)}>
+                                    <td>
+                                        <input type="checkbox" checked={selectedCodes.includes(item.code)}
+                                               onClick={(e) => e.stopPropagation()}
+                                               onChange={() => handleCheckboxChange(item.code)}/>
+                                    </td>
+                                    <td>{item.code}</td>
+                                    <td>{item.name}</td>
+                                    <td>{item.firstSpecialDescription}</td>
+                                    <td>{item.firstSpecial}</td>
+                                    <td>{item.secondSpecialDescription}</td>
+                                    <td>{item.secondSpecial}</td>
+                                    <td>{item.thirdSpecialDescription}</td>
+                                    <td>{item.thirdSpecial}</td>
+                                    <td>{item.status}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </>
         );
