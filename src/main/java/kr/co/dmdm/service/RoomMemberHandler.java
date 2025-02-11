@@ -30,6 +30,14 @@ public class RoomMemberHandler {
     }
 
     public List<ChatUserDto> joinUser(ChatUserDto request, Long chatRoomId) {
+        for(ChatUserDto element : getChatUsers(chatRoomId)){
+            if( element.getUsername().equals(request.getUsername()) &&
+                element.getNickname().equals(request.getNickname())
+            ) {
+                return getChatUsers(chatRoomId);
+            }
+        }
+
         getChatUsers(chatRoomId).add(request);
         return getChatUsers(chatRoomId);
     }

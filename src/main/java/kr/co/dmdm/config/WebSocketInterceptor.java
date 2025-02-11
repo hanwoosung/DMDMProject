@@ -50,20 +50,8 @@ public class WebSocketInterceptor implements ChannelInterceptor {
 
             try {
                 jwtUtil.isExpired(accessToken);
-
-                String userId = jwtUtil.getUsername(accessToken);
-                String role = jwtUtil.getRole(accessToken);
-
-                User userEntity = new User();
-                userEntity.setUserId(userId);
-                userEntity.setUserRole(role);
-                CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
-
-                Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-
-                accessor.setUser(authToken);
                 log.info("✅ jwt 허용 {}", destination);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

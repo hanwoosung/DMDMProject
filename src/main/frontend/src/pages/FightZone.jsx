@@ -10,11 +10,12 @@ import styles from '../assets/css/FightZone.module.css';
 const FightZone = () => {
     const {roomNo} = useParams();
     const stompClient = useRef(null);
-    const exUserName = 'user47282';
+    const chatUserId = useRef(window.localStorage.getItem("userId"));
+    const chatUserName = useRef(window.localStorage.getItem("name"));
     const accessToken = useRef(window.localStorage.getItem("access"));
 
-    const leftUser = useRef("doge");
-    const rightUser = useRef("nose");
+    const leftUser = useRef("cgh9694");
+    const rightUser = useRef("asdf");
 
     const isFirstRender = useRef(true); // 첫 렌더링 여부 추적
 
@@ -26,7 +27,6 @@ const FightZone = () => {
     const [fighterContent, setFighterContent] = useState('');
 
     const [observerMessages, setObserverMessages] = useState([]);
-    const [observerName, setObserverName] = useState('');
     const [observerContent, setObserverContent] = useState('');
     const [observerUsers, setObserverUsers] = useState([]);
 
@@ -97,15 +97,15 @@ const FightZone = () => {
                 // 연결 신호 보내기
                 stompClient.current.publish({
                     destination: `/publish/chatRoom/join/${roomNo}`,
-                    body: JSON.stringify({username: `user${exUserName}`, nickname: "닉넴닉넴"}),
-                    headers: { access: accessToken.current },
+                    body: JSON.stringify({username: chatUserId.current, nickname: chatUserName.current}),
+                    headers: {access: accessToken.current},
                 })
 
                 // 투표 현황 반환
                 stompClient.current.publish({
                     destination: `/publish/vote.${roomNo}`,
                     body: "",
-                    headers: { access: accessToken.current },
+                    headers: {access: accessToken.current},
                 })
             },
             onWebSocketError: (error) => {
@@ -142,16 +142,12 @@ const FightZone = () => {
         }
     }, [roomTimer])
 
-    useEffect(() => {
-        fighterMessageEnd.current.scrollIntoView();
-    }, [fighterMessages]);
-
     const leaveUser = () => {
         if (stompClient.current) {
             stompClient.current.publish({
                 destination: `/publish/chatRoom/leave/${roomNo}`,
-                body: JSON.stringify({username: `user${exUserName}`, nickname: "닉넴닉넴"}),
-                headers: { access: accessToken.current },
+                body: JSON.stringify({username: chatUserId.current, nickname: chatUserName.current}),
+                headers: {access: accessToken.current},
             });
 
             stompClient.current.deactivate();
@@ -159,32 +155,30 @@ const FightZone = () => {
     }
 
     const sendVote = (vote) => {
-        if (observerName.length === 0) return;
-
         stompClient.current.publish({
             destination: `/publish/vote.${roomNo}`,
-            body: JSON.stringify({username: observerName, vote: vote}),
-            headers: { access: accessToken.current },
+            body: JSON.stringify({username: chatUserId.current, vote: vote}),
+            headers: {access: accessToken.current},
         })
     }
 
     const sendFighterChat = () => {
-        if (fighterName && fighterContent) {
+        if (fighterContent) {
             stompClient.current.publish({
                 destination: `/publish/fighter.${roomNo}`,
-                body: JSON.stringify({username: fighterName, content: fighterContent}),
-                headers: { access: accessToken.current },
+                body: JSON.stringify({username: chatUserId.current, content: fighterContent}),
+                headers: {access: accessToken.current},
             });
             setFighterContent('');
         }
     };
 
     const sendObserverChat = () => {
-        if (observerName && observerContent) {
+        if (observerContent) {
             stompClient.current.publish({
                 destination: `/publish/observer.${roomNo}`,
-                body: JSON.stringify({username: observerName, content: observerContent}),
-                headers: { access: accessToken.current },
+                body: JSON.stringify({username: chatUserId.current, content: observerContent}),
+                headers: {access: accessToken.current},
             });
             setObserverContent('');
         }
@@ -203,23 +197,27 @@ const FightZone = () => {
                 username: username,
                 request: request
             }),
-            headers: { access: accessToken.current },
+            headers: {access: accessToken.current},
         })
     }
 
+    //추후 리팩토링용 함수
     const publishMsg = (destination, body) => {
         stompClient.current.publish({
             destination: destination,
             body: JSON.stringify(body),
-            headers: { access: accessToken.current },
+            headers: {access: accessToken.current},
         })
     }
 
     const subscribeMsg = (destination, callback) => {
-        stompClient.current.subscribe(destination, (message) => {
-            const body = JSON.parse(message.body);
-            callback(body);
-        });
+        stompClient.current.subscribe(
+            destination, (message) => {
+                const body = JSON.parse(message.body);
+                callback(body);
+            },
+            {access: accessToken.current}
+        );
     }
 
     return (
@@ -231,23 +229,20 @@ const FightZone = () => {
                         selectedVote={selectedVote}
                         setSelectedVote={setSelectedVote}
                         roomTimer={roomTimer}
-                        fighterName={fighterName}
                         leftPercent={leftPercent}
                         rightPercent={rightPercent}
+                        chatUserId={chatUserId}
                         exampleTimer={exampleTimer}
+                        refs={{leftUser, rightUser, chatUserId}}
                     />
 
                     {/*토론자 채팅 섹션*/}
                     <FighterChat
-                        rightUser={rightUser}
-                        leftUser={leftUser}
-                        fighterName={fighterName}
-                        setFighterName={setFighterName}
                         fighterContent={fighterContent}
                         setFighterContent={setFighterContent}
                         fighterMessages={fighterMessages}
                         sendFighterChat={sendFighterChat}
-                        refs={{fighterMessageEnd, leftUser, rightUser}}
+                        refs={{fighterMessageEnd, leftUser, rightUser, chatUserId}}
                     />
                 </div>
 
@@ -259,14 +254,11 @@ const FightZone = () => {
                         roomNo={roomNo}
                     />
                     <ObserverChat
-                        ref={observerMessageEnd}
-                        observerMessageEnd={observerMessageEnd}
                         observerMessages={observerMessages}
-                        observerName={observerName}
-                        setObserverName={setObserverName}
                         observerContent={observerContent}
                         setObserverContent={setObserverContent}
                         sendObserverChat={sendObserverChat}
+                        refs={{observerMessageEnd, leftUser, rightUser, chatUserId}}
                     />
                 </div>
             </div>

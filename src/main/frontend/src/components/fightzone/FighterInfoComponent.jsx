@@ -12,11 +12,11 @@ const FighterInfoComponent = forwardRef((props, ref) => {
         roomTimer,
         rightPercent,
         leftPercent,
-        timeStopper,
-        timeStarter,
         exampleTimer,
-        fighterName
+        refs
     } = props
+
+    const {leftUser, rightUser, chatUserId} = refs
 
     //투표 버튼 이벤트
     const handleVote = (candidate) => {
@@ -101,11 +101,13 @@ const FighterInfoComponent = forwardRef((props, ref) => {
             <div className={styles.fightStatus}>
                 <div className={styles.fightTitle}>HTML이 프로그래밍 언어겠냐?</div>
 
-                <div style={{display: "flex", flexDirection: "row", gap: "10px"}}>
-                    <SmallBtn title={"(test)토론 시작 요청"} onClick={() => exampleTimer(fighterName, "START")}/>
-                    <SmallBtn title={"(test)토론 마감 요청"} onClick={() => exampleTimer(fighterName, "END")}/>
-                    <SmallBtn title={"(test)토론 추가 요청"} onClick={() => exampleTimer(fighterName, "EXTEND")}/>
-                </div>
+                {(chatUserId.current === leftUser.current || chatUserId.current === rightUser.current) && (
+                    <div style={{display: "flex", flexDirection: "row", gap: "10px"}}>
+                        <SmallBtn title={"토론 시작"} onClick={() => exampleTimer(chatUserId.current, "START")}/>
+                        <SmallBtn title={"마감"} onClick={() => exampleTimer(chatUserId.current, "END")}/>
+                        <SmallBtn title={"시간 추가"} onClick={() => exampleTimer(chatUserId.current, "EXTEND")}/>
+                    </div>
+                )}
                 {fightTimerComp()}
                 {fightPercentComp()}
             </div>

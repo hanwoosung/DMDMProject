@@ -1,12 +1,21 @@
 import styles from "../../assets/css/FightZone.module.css";
 import leftFighterImg from "../../assets/image/ex_profile.png";
 import rightFighterImg from "../../assets/image/ex_chiwawa.jpg";
-import SmallBtn from "../common/SmallBtnComponents";
-import React, {forwardRef} from "react";
+import React, {forwardRef, useEffect} from "react";
 
 const FighterChatComponent = forwardRef((props, ref) => {
-    const { fighterMessages, fighterName, setFighterName, fighterContent, setFighterContent, sendFighterChat, timeExtend, refs } = props;
-    const { fighterMessageEnd, leftUser, rightUser } = refs;
+    const {
+        fighterMessages,
+        fighterContent,
+        setFighterContent,
+        sendFighterChat,
+        refs
+    } = props;
+    const {fighterMessageEnd, leftUser, rightUser, chatUserId} = refs;
+
+    useEffect(() => {
+        fighterMessageEnd.current.scrollIntoView();
+    }, [fighterMessages]);
 
     return (
         <div className={styles.chatSection}>
@@ -46,11 +55,11 @@ const FighterChatComponent = forwardRef((props, ref) => {
                         );
                     }
 
-                    if (message.username === "NOTICE"){
+                    if (message.username === "NOTICE") {
                         return (
                             <div key={index}
-                                    className={styles.chatMessage}
-                                    style={{alignSelf: "center"}}
+                                 className={styles.chatMessage}
+                                 style={{alignSelf: "center"}}
                             >
                                 <span className={styles.fightNoticeContent}>{message.content}</span>
                             </div>
@@ -62,14 +71,8 @@ const FighterChatComponent = forwardRef((props, ref) => {
                 <div ref={fighterMessageEnd}></div>
             </div>
 
+            {(chatUserId.current === leftUser.current || chatUserId.current === rightUser.current) && (
             <div className={styles.chatInputContainer}>
-                <input
-                    type="text"
-                    placeholder="사용자 이름"
-                    value={fighterName}
-                    onChange={(e) => setFighterName(e.target.value)}
-                    className={styles.input}
-                />
                 <input
                     type="text"
                     placeholder="메시지를 입력하세요"
@@ -85,6 +88,7 @@ const FighterChatComponent = forwardRef((props, ref) => {
                     style={{flex: 1}}
                 />
             </div>
+            )}
         </div>
     )
 });

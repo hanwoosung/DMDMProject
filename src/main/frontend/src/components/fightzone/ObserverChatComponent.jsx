@@ -3,44 +3,46 @@ import React, {forwardRef, useEffect} from "react";
 
 const ObserverChatComponent = forwardRef((props, ref) => {
 
-    useEffect(() => {
-        ref.current.scrollIntoView();
-    }, [props.observerMessages]);
+    const {observerMessages, observerContent, setObserverContent, sendObserverChat, refs} = props;
+    const {observerMessageEnd, leftUser, rightUser, chatUserId} = refs;
 
-    return(
+    useEffect(() => {
+        observerMessageEnd.current.scrollIntoView();
+    }, [observerMessages]);
+
+    return (
         <div className={styles.observerChatSection}>
             <div className={styles.chatMessages}>
-                {props.observerMessages.map((message, index) => (
+                {observerMessages.map((message, index) => (
                     <div key={index} className={styles.chatMessage}>
                         <span className={styles.username}>{message.username}:</span>
                         <span className={styles.userContent}>{message.content}</span>
                     </div>
                 ))}
-                <div ref={ref}></div>
+                <div ref={observerMessageEnd}></div>
             </div>
-            <div className={styles.chatInputContainer}>
-                <input
-                    type="text"
-                    placeholder="사용자 이름"
-                    value={props.observerName}
-                    onChange={(e) => props.setObserverName(e.target.value)}
-                    className={styles.input}
-                />
-                <input
-                    type="text"
-                    placeholder="메시지를 입력하세요"
-                    value={props.observerContent}
-                    onChange={(e) => props.setObserverContent(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                            props.sendObserverChat();
-                        }
-                    }}
-                    style={{flex: 1}}
-                    maxLength={200}
-                    className={styles.input}
-                />
-            </div>
+
+            {!(chatUserId.current === leftUser.current || chatUserId.current === rightUser.current) && (
+                <div className={styles.chatInputContainer}>
+                    <div>
+                        {chatUserId.current}
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="메시지를 입력하세요"
+                        value={observerContent}
+                        onChange={(e) => setObserverContent(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                sendObserverChat();
+                            }
+                        }}
+                        style={{flex: 1}}
+                        maxLength={200}
+                        className={styles.input}
+                    />
+                </div>
+            )}
         </div>
     )
 });
