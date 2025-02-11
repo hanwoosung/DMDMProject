@@ -1,3 +1,4 @@
+/*
 package kr.co.dmdm.kafka;
 
 import kr.co.dmdm.dto.Alarm.request.AlarmRequestDto;
@@ -26,3 +27,4 @@ public class KafkaConsumer {
         sseServiceImpl.sendAlarmToUser(alarmDto.getReceiveUserId(), alarmDto.getAlarmType());
     }
 }
+*/
