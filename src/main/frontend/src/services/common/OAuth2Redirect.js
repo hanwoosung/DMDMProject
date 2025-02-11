@@ -15,8 +15,14 @@ const OAuth2Redirect = () => {
 
             if (response.ok) {
                 window.localStorage.setItem("access", response.headers.get("access"));
-                const name = queryParams.get('name');
+
+                const name = queryParams.get("name");
+                const role = queryParams.get("role");
+                const userId = queryParams.get("userId");
+
                 window.localStorage.setItem("name", name);
+                window.localStorage.setItem("role", role);
+                window.localStorage.setItem("userId", userId);
                 setIsLoggedIn(true);
                 setLoginUser(name);
             }

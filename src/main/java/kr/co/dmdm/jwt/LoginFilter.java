@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.dmdm.dto.user.request.LoginRequestDto;
+import kr.co.dmdm.dto.user.response.UserDto;
 import kr.co.dmdm.global.Response;
 import kr.co.dmdm.global.exception.CustomException;
 import kr.co.dmdm.security.CustomUserDetails;
@@ -80,7 +81,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String refresh = jwtUtil.createJwt("refresh",userId, role, 86400000L);
         tokenService.saveRefreshToken(userId, refresh);
 
-        Response<String> successResponse = Response.successNoTime("로그인 성공",userNickName);
+        UserDto user = new UserDto();
+        user.setUserName(userNickName);
+        user.setUserId(userId);
+        user.setUserRole(role);
+
+        Response<UserDto> successResponse = Response.successNoTime("로그인 성공",user);
 
         try {
             response.setHeader("access", access);

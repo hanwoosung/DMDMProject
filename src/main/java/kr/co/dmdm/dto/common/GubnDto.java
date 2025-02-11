@@ -2,6 +2,7 @@ package kr.co.dmdm.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * packageName    : kr.co.dmdm.dto.common
@@ -13,9 +14,11 @@ import lombok.Getter;
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
  * 2025-01-21        한우성       최초 생성
+ * 2025-02-10        황승현       ToString 추가
  */
 @Getter
 @AllArgsConstructor
+@ToString
 public class GubnDto {
     private String parentCode;
     private String code;
