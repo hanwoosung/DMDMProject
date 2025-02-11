@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.dmdm.jwt.JWTUtil;
 import kr.co.dmdm.service.common.TokenService;
-import kr.co.dmdm.utils.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -33,16 +32,18 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String userId = customOAuth2User.getUsername();
         String role = authentication.getAuthorities().iterator().next().getAuthority();
 
-        String access = jwtUtil.createJwt("access",userId, role, 600000L);
-        String refresh = jwtUtil.createJwt("refresh",userId, role, 86400000L);
+        String access = jwtUtil.createJwt("access", userId, role, 600000L);
+        String refresh = jwtUtil.createJwt("refresh", userId, role, 86400000L);
 
         tokenService.saveRefreshToken(userId, refresh);
 
-        response.addCookie(createCookie("access", access,24*60*60));
-        response.addCookie(createCookie("refresh", refresh,24*60*60));
+        response.addCookie(createCookie("access", access, 24 * 60 * 60));
+        response.addCookie(createCookie("refresh", refresh, 24 * 60 * 60));
 
         String encodedName = URLEncoder.encode(name, "UTF-8");
-        response.sendRedirect("http://localhost:3000/oauth2-jwt-header?name=" + encodedName);
+        String encodedRole = URLEncoder.encode(role, "UTF-8");
+        String encodedUserId = URLEncoder.encode(userId, "UTF-8");
+        response.sendRedirect("http://localhost:3000/oauth2-jwt-header?name=" + encodedName + "&role=" + encodedRole + "&userId=" + encodedUserId);
     }
 
 }
