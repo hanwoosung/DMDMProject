@@ -16,6 +16,7 @@ import FightZone from "./pages/FightZone";
 
 import EmoticonRegister from "./components/emoticon/EmoticonRegister";
 import CommonCodeManagement from "./components/admin/CommonCodeManagement";
+import PostManagement from "./components/admin/PostManagement";
 
 function App() {
     const {isLoggedIn} = useLogin();
@@ -44,6 +45,12 @@ function App() {
                 <Route path="/adminpage" element={
                     <AsideLayout title={"공통코드 관리"}>
                         <CommonCodeManagement/>
+                    </AsideLayout>
+                }/>
+
+                <Route path="/adminpage/board" element={
+                    <AsideLayout title={"게시물 관리"}>
+                        <PostManagement/>
                     </AsideLayout>
                 }/>
 

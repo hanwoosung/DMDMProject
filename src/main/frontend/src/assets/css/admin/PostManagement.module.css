@@ -1,0 +1,116 @@
+.container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.activeBtn, .inactiveBtn, .searchBtn {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.activeBtn {
+    background-color: #ffcc00;
+}
+
+.inactiveBtn {
+    background-color: #dddddd;
+}
+
+.searchBtn {
+    background-color: #ffcc00;
+}
+
+.categorySelect, .searchInput {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.tableContainer {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    padding: 12px;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+}
+
+.table td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.table tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+.table tbody tr:hover {
+    background-color: #eaeaea;
+    cursor: pointer;
+}
+
+.statusBtns {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}
+
+.activateBtn, .deactivateBtn, .deleteBtn {
+    padding: 5px 8px;
+    border-radius: 5px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.activateBtn {
+    background-color: #4caf50;
+    color: white;
+}
+
+.deactivateBtn {
+    background-color: #808080;
+    color: white;
+}
+
+.deleteBtn {
+    background-color: #e53935;
+    color: white;
+}
+
+.commentContainer {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #999;
+}
