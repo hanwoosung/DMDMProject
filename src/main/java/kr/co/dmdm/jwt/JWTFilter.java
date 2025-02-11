@@ -27,6 +27,12 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        if (request.getRequestURI().equals("/ws-connect")) {
+            System.out.println("✅ WebSocket 핸드셰이크 요청, JWTFilter 제외됨");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         // 헤더에서 access키에 담긴 토큰을 꺼냄
         String accessToken = request.getHeader("access");
 

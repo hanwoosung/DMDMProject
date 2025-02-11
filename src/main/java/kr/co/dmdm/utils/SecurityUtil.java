@@ -1,6 +1,7 @@
 package kr.co.dmdm.utils;
 
 import kr.co.dmdm.security.CustomUserDetails;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -20,10 +21,13 @@ import java.util.Map;
  * 2025-02-10        최기환       최초 생성
  */
 @Component
+@Slf4j
 public class SecurityUtil {
 
     public Map<String, Object> getCurrentUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        System.out.println("시큐리티 유틸 결과: " + authentication);
 
         // 인증되지 않은 사용자
         if (authentication == null || authentication.getPrincipal() == null ||

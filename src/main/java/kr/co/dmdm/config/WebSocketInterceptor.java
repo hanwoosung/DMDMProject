@@ -10,6 +10,7 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,22 +36,23 @@ public class WebSocketInterceptor implements ChannelInterceptor {
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
-        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
         StompCommand command = accessor.getCommand();
 
-        if (command == StompCommand.SUBSCRIBE) {
+        if (command == StompCommand.SUBSCRIBE || command == StompCommand.CONNECT || command == StompCommand.SEND) {
             String destination = accessor.getDestination();
-            String token = accessor.getFirstNativeHeader("access");
+            String accessToken = accessor.getFirstNativeHeader("access");
 
-            if (token == null || token.trim().isEmpty()) {
-                throw new IllegalArgumentException("❌ 구독 실패: JWT 없음");
+            if (accessToken == null || accessToken.trim().isEmpty()) {
+                log.info("❌ 실패: JWT 없음");
+                throw new IllegalArgumentException("❌ 실패: JWT 없음");
             }
 
             try {
-                jwtUtil.isExpired(token);
+                jwtUtil.isExpired(accessToken);
 
-                String userId = jwtUtil.getUsername(token);
-                String role = jwtUtil.getRole(token);
+                String userId = jwtUtil.getUsername(accessToken);
+                String role = jwtUtil.getRole(accessToken);
 
                 User userEntity = new User();
                 userEntity.setUserId(userId);
@@ -60,9 +62,10 @@ public class WebSocketInterceptor implements ChannelInterceptor {
                 Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authToken);
 
-                log.info("✅ 구독 허용: " + destination);
+                accessor.setUser(authToken);
+                log.info("✅ jwt 허용 {}", destination);
             } catch (Exception e) {
-                throw new IllegalArgumentException("❌ 구독 실패: JWT 유효하지 않음");
+                e.printStackTrace();
             }
         }
 
