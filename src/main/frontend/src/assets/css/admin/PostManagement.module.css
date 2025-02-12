@@ -4,12 +4,12 @@
     flex-direction: column;
 }
 
-.title {
+.mainTitle {
     font-size: 24px;
     font-weight: bold;
 }
 
-.toolbar {
+.filterContainer {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
@@ -45,9 +45,6 @@
     width: 100%;
     overflow-x: auto;
     margin-top: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
 }
 
 .table {
@@ -113,4 +110,19 @@
     font-size: 18px;
     font-weight: bold;
     color: #999;
+}
+
+.subtitle {
+    color: #AAAAAA;
+    cursor: pointer;
+}
+.tableHeaders {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+.selectHeader {
+    color: #000000;
 }

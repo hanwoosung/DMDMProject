@@ -1,8 +1,17 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import styles from "../../assets/css/admin/PostManagement.module.css";
+import SmallBtn from "../common/SmallBtnComponents";
+import useApi from "../../hooks/common/useApi";
+import Select from "../common/SelectComponents";
+import Input from "../common/InputComponents";
 
 const PostManagement = () => {
+    const {post} = useApi();
+
     const [searchTerm, setSearchTerm] = useState("");
+    const [selectedTitle, setSelectedTitle] = useState("게시글 관리");
+    const [categorys, setCategorys] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState("");
     const [posts, setPosts] = useState([
         {
             id: 1,
@@ -14,26 +23,53 @@ const PostManagement = () => {
         }
     ]);
 
+    const fetchCategoryCodes = async () => {
+        const response = await post(`/api/v1/gubn`, {
+            body: {parentCode: "BOARD_CATEGORY"},
+        });
+        return response?.data || [];
+    };
+
+    useEffect(() => {
+        const fetchAndSetCategoryCodes = async () => {
+            const updatedTopGubns = await fetchCategoryCodes();
+            setCategorys(updatedTopGubns.map((gubn) => ({value: gubn.code, label: gubn.name})));
+        };
+        fetchAndSetCategoryCodes();
+    }, []);
+
+    useEffect(() => {
+
+    }, [setCategorys]);
+
     return (
         <div className={styles.container}>
-            <div className={styles.toolbar}>
-                <button className={styles.activeBtn}>활성화</button>
-                <button className={styles.inactiveBtn}>비활성화</button>
-                <select className={styles.categorySelect}>
-                    <option>Q&A</option>
-                </select>
-                <input
-                    type="text"
-                    placeholder="이름으로 검색 하세요"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className={styles.searchInput}
-                />
-                <button className={styles.searchBtn}>검색</button>
+            <div className={styles.header}>
+                <div className={styles.filterContainer}>
+                    <SmallBtn title={"활성화"}/>
+                    <SmallBtn title={"비활성화"}/>
+                    <Select options={[...categorys]}
+                            onChange={(value) => {
+                                setSelectedCategory(value);
+                            }}
+                            value={selectedCategory}/>
+                    <Input
+                        type="text"
+                        placeholder="아이디로 검색 하세요"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <SmallBtn title={"검색"}/>
+                </div>
             </div>
 
             <div className={styles.tableContainer}>
-                <h2 className={styles.subtitle}>게시글 관리</h2>
+                <div className={styles.tableHeaders}>
+                    <h2 className={`${styles.subtitle} ${selectedTitle === "게시글 관리" && styles.selectHeader}`}
+                        onClick={() => setSelectedTitle("게시글 관리")}>게시글 관리</h2>
+                    <h2 className={`${styles.subtitle} ${selectedTitle === "댓글 관리" && styles.selectHeader}`}
+                        onClick={() => setSelectedTitle("댓글 관리")}>댓글 관리</h2>
+                </div>
                 <table className={styles.table}>
                     <thead>
                     <tr>
@@ -49,7 +85,7 @@ const PostManagement = () => {
                     <tbody>
                     {posts.map((post) => (
                         <tr key={post.id}>
-                            <td><input type="checkbox" /></td>
+                            <td><input type="checkbox"/></td>
                             <td>{post.id}</td>
                             <td>{post.username}</td>
                             <td>{post.category}</td>
@@ -65,8 +101,6 @@ const PostManagement = () => {
                     </tbody>
                 </table>
             </div>
-
-            <div className={styles.commentContainer}>댓글 관리</div>
         </div>
     );
 };
