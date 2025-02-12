@@ -29,6 +29,8 @@ public class BoardListDto {
     private LocalDateTime updateDt;
     private String status;
     private Long vCnt;
+    private Long commentCnt;
+    private Long likeCnt;
     private String userName;
     private int userLevel;
     private String filePath;
