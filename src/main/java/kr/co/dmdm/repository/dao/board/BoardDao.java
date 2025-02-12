@@ -33,4 +33,11 @@ public interface BoardDao {
                     String searchType,
                     String searchData);
 
+    List<BoardListDto> getBoardListManagement(String boardType,
+                                              String status,
+                                              int page,
+                                              int size,
+                                              String searchType,
+                                              String searchData,
+                                              String sortType);
 }
