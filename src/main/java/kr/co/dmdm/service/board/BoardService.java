@@ -28,4 +28,6 @@ public interface BoardService {
                                   String searchType,
                                   String searchData,
                                   String sortType);
+
+    Map<String, Object> getBoardsManagement(String boardType, String status, int page, int size, String searchType, String searchData, String sortType);
 }

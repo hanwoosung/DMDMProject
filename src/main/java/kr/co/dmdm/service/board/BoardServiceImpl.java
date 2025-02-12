@@ -18,6 +18,7 @@ import kr.co.dmdm.repository.jpa.board.BoardTagRepository;
 import kr.co.dmdm.repository.jpa.common.FileRepository;
 import kr.co.dmdm.service.common.BadWordService;
 import kr.co.dmdm.service.common.FileService;
+import kr.co.dmdm.utils.ConvertUtils;
 import kr.co.dmdm.utils.PagingUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,6 +84,27 @@ public class BoardServiceImpl implements BoardService {
 
         List<BoardListDto> list = boardDao.getBoardList(boardType, status, start, size, searchType, searchData, sortType);
         splitTag(list);
+
+        PagingUtil pagingUtil = new PagingUtil(boardCnt, page, size, 10);
+
+        result.put("list", list);
+        result.put("paging", pagingUtil);
+
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> getBoardsManagement(String boardType, String status, int page, int size, String searchType, String searchData, String sortType) {
+        Map<String, Object> result = new HashMap<>();
+
+        int boardCnt = boardCnt(boardType, status, searchType, searchData);
+
+        int start = (page - 1) * size;
+        int end = Math.min(start + size, boardCnt);
+
+        List<BoardListDto> list = boardDao.getBoardListManagement(boardType, status, start, size, searchType, searchData, sortType);
+        splitTag(list);
+//        list = list.stream().map((item) -> item.setInsertDt(ConvertUtils.convertToDateTime(item.getInsertDt()))).collect(Collectors.toCollection(ArrayList::new));
 
         PagingUtil pagingUtil = new PagingUtil(boardCnt, page, size, 10);
 

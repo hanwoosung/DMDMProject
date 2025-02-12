@@ -66,4 +66,14 @@ public class BoardController {
         return boardService.getBoards(boardType, "ACTIVE", page, size, searchType, searchData, sortType);
     }
 
+    @GetMapping("/{boardType}/management")
+    public Map<String, Object> getBoardsManagement(@PathVariable String boardType,
+                                         @RequestParam(defaultValue = "1") int page,
+                                         @RequestParam(defaultValue = "10") int size,
+                                         @RequestParam(defaultValue = "all") String searchType,
+                                         @RequestParam(defaultValue = "") String searchData,
+                                         @RequestParam(defaultValue = "recent") String sortType) throws IOException {
+        return boardService.getBoardsManagement(boardType, "ALL", page, size, searchType, searchData, sortType);
+    }
+
 }

@@ -4,24 +4,16 @@ import SmallBtn from "../common/SmallBtnComponents";
 import useApi from "../../hooks/common/useApi";
 import Select from "../common/SelectComponents";
 import Input from "../common/InputComponents";
+import convertUtils from "../../assets/js/common/ConvertUtils";
 
 const PostManagement = () => {
-    const {post} = useApi();
+    const {get, post} = useApi();
 
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedTitle, setSelectedTitle] = useState("게시글 관리");
     const [categorys, setCategorys] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
-    const [posts, setPosts] = useState([
-        {
-            id: 1,
-            username: "dog123",
-            category: "Q&A",
-            title: "나 차키없샘",
-            date: "2025-01-07 18:01",
-            status: "활성"
-        }
-    ]);
+    const [posts, setPosts] = useState([]);
 
     const fetchCategoryCodes = async () => {
         const response = await post(`/api/v1/gubn`, {
@@ -30,36 +22,51 @@ const PostManagement = () => {
         return response?.data || [];
     };
 
+    const fetchPosts = async (selectedCategory) => {
+        const response = await get(`/api/v1/board/${selectedCategory}/management`);
+        return response?.data || [];
+    };
+
     useEffect(() => {
         const fetchAndSetCategoryCodes = async () => {
-            const updatedTopGubns = await fetchCategoryCodes();
-            setCategorys(updatedTopGubns.map((gubn) => ({value: gubn.code, label: gubn.name})));
+            const updatedCategorys = await fetchCategoryCodes();
+            setCategorys(updatedCategorys.map((category) => ({value: category.code, label: category.name})));
         };
         fetchAndSetCategoryCodes();
     }, []);
 
     useEffect(() => {
-
-    }, [setCategorys]);
+        if (!selectedCategory) return;
+        const fetchAndSetPosts = async () => {
+            const posts = await fetchPosts(selectedCategory);
+            console.log(posts);
+            setPosts(posts.list);
+        };
+        fetchAndSetPosts();
+    }, [selectedCategory]);
 
     return (
         <div className={styles.container}>
             <div className={styles.header}>
                 <div className={styles.filterContainer}>
+                    <div className={styles.actionItemBox}>
                     <SmallBtn title={"활성화"}/>
                     <SmallBtn title={"비활성화"}/>
-                    <Select options={[...categorys]}
+                    <Select display={selectedTitle === "댓글 관리" ? "none" : "block"} options={[...categorys]}
                             onChange={(value) => {
                                 setSelectedCategory(value);
                             }}
                             value={selectedCategory}/>
-                    <Input
-                        type="text"
-                        placeholder="아이디로 검색 하세요"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <SmallBtn title={"검색"}/>
+                    </div>
+                    <div className={styles.searchBox}>
+                        <Input
+                            type="text"
+                            placeholder="아이디로 검색 하세요"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                        <SmallBtn title={"검색"}/>
+                    </div>
                 </div>
             </div>
 
@@ -83,14 +90,14 @@ const PostManagement = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {posts.map((post) => (
-                        <tr key={post.id}>
+                    {posts?.map((post) => (
+                        <tr key={post.boardId}>
                             <td><input type="checkbox"/></td>
-                            <td>{post.id}</td>
-                            <td>{post.username}</td>
-                            <td>{post.category}</td>
-                            <td>{post.title}</td>
-                            <td>{post.date}</td>
+                            <td>{post.boardId}</td>
+                            <td>{post.userId}</td>
+                            <td>{post.boardType}</td>
+                            <td>{post.boardTitle}</td>
+                            <td>{post.insert}</td>
                             <td className={styles.statusBtns}>
                                 <button className={styles.activateBtn}>활성화</button>
                                 <button className={styles.deactivateBtn}>비활성화</button>
