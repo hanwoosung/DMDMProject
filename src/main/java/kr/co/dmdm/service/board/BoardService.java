@@ -21,5 +21,11 @@ public interface BoardService {
 
     void saveBoard(Map<String, Object> params);
 
-    List<BoardListDto> getBoards(String boardType, String status);
+    Map<String, Object> getBoards(String boardType,
+                                  String status,
+                                  int page,
+                                  int size,
+                                  String searchType,
+                                  String searchData,
+                                  String sortType);
 }

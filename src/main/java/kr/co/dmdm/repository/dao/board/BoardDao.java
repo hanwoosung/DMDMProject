@@ -20,6 +20,17 @@ import java.util.List;
 @Mapper
 public interface BoardDao {
 
-    List<BoardListDto> getBoardList(String boardType, String status);
+    List<BoardListDto> getBoardList(String boardType,
+                                    String status,
+                                    int page,
+                                    int size,
+                                    String searchType,
+                                    String searchData,
+                                    String sortType);
+
+    int getBoardCnt(String boardType,
+                    String status,
+                    String searchType,
+                    String searchData);
 
 }

@@ -13,13 +13,22 @@ const Search = ({
                     ],
                     btnTitle = "검색",
                     onClick,
+                    onSelectChange,
+                    onInputChange,
+                    selectValue
                 },
 ) => {
     return (
         <div className={SearchStyles.searchWrap}>
             <Select options={options}
-                    width={100} />
-            <Input />
+                    width={100}
+                    value={selectValue}
+                    onChange={onSelectChange} />
+
+            <Input onChange={(e) => {
+                onInputChange(e.target.value);
+            }} />
+
             <SmallBtn title={btnTitle}
                       onClick={onClick} />
         </div>

@@ -3,7 +3,9 @@ package kr.co.dmdm.controller.board;
 import kr.co.dmdm.dto.board.BoardDto;
 import kr.co.dmdm.dto.board.BoardListDto;
 import kr.co.dmdm.dto.common.FileDto;
+import kr.co.dmdm.service.board.BoardService;
 import kr.co.dmdm.service.board.BoardServiceImpl;
+import kr.co.dmdm.service.common.FileService;
 import kr.co.dmdm.service.common.FileServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +35,8 @@ import java.util.Map;
 @Slf4j
 public class BoardController {
 
-    private final FileServiceImpl fileService;
-    private final BoardServiceImpl boardService;
+    private final FileService fileService;
+    private final BoardService boardService;
 
     @PostMapping("/file")
     public FileDto saveFiles(@RequestParam("image") MultipartFile file) throws IOException {
@@ -55,8 +57,13 @@ public class BoardController {
     }
 
     @GetMapping("/{boardType}")
-    public List<BoardListDto> getBoards(@PathVariable String boardType) throws IOException {
-        return boardService.getBoards(boardType, "ACTIVE");
+    public Map<String, Object> getBoards(@PathVariable String boardType,
+                                         @RequestParam(defaultValue = "1") int page,
+                                         @RequestParam(defaultValue = "1") int size,
+                                         @RequestParam(defaultValue = "all") String searchType,
+                                         @RequestParam(defaultValue = "") String searchData,
+                                         @RequestParam(defaultValue = "recent") String sortType) throws IOException {
+        return boardService.getBoards(boardType, "ACTIVE", page, size, searchType, searchData, sortType);
     }
 
 }
