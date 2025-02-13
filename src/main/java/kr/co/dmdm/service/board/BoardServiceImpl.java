@@ -97,14 +97,14 @@ public class BoardServiceImpl implements BoardService {
     public Map<String, Object> getBoardsManagement(String boardType, String status, int page, int size, String searchType, String searchData, String sortType) {
         Map<String, Object> result = new HashMap<>();
 
-        int boardCnt = boardCnt(boardType, status, searchType, searchData);
+        int boardCnt = boardCntManagement(boardType, status, searchType, searchData);
 
         int start = (page - 1) * size;
         int end = Math.min(start + size, boardCnt);
 
         List<BoardListDto> list = boardDao.getBoardListManagement(boardType, status, start, size, searchType, searchData, sortType);
         splitTag(list);
-//        list = list.stream().map((item) -> item.setInsertDt(ConvertUtils.convertToDateTime(item.getInsertDt()))).collect(Collectors.toCollection(ArrayList::new));
+        list = list.stream().peek((item)-> item.setInsert(ConvertUtils.convertToDateTime(item.getInsertDt()))).collect(Collectors.toCollection(ArrayList::new));
 
         PagingUtil pagingUtil = new PagingUtil(boardCnt, page, size, 10);
 
@@ -116,6 +116,10 @@ public class BoardServiceImpl implements BoardService {
 
     private int boardCnt(String boardType, String status, String searchType, String searchData){
         return boardDao.getBoardCnt(boardType, status, searchType, searchData);
+    }
+
+    private int boardCntManagement(String boardType, String status, String searchType, String searchData){
+        return boardDao.getBoardCntManagement(boardType, status, searchType, searchData);
     }
 
     private static void splitTag(List<BoardListDto> boardList) {

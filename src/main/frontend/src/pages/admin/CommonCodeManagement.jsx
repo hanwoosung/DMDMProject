@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 import styles from "../../assets/css/admin/CommonCode.module.css";
 import useFetch from "../../hooks/common/useFetch";
-import Select from "../common/SelectComponents";
-import Input from "../common/InputComponents";
-import SmallBtn from "../common/SmallBtnComponents";
+import Select from "../../components/common/SelectComponents";
+import Input from "../../components/common/InputComponents";
+import SmallBtn from "../../components/common/SmallBtnComponents";
 import useApi from "../../hooks/common/useApi";
-import Alert from "../common/AlertComponents";
+import Alert from "../../components/common/AlertComponents";
 
 const CommonCodeManagement = () => {
         const [topCode, setTopCode] = useState("");

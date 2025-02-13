@@ -40,4 +40,9 @@ public interface BoardDao {
                                               String searchType,
                                               String searchData,
                                               String sortType);
+
+    int getBoardCntManagement(String boardType,
+                              String status,
+                              String searchType,
+                              String searchData);
 }

@@ -1,10 +1,13 @@
 import React, {useEffect, useState} from "react";
 import styles from "../../assets/css/admin/PostManagement.module.css";
-import SmallBtn from "../common/SmallBtnComponents";
+import SmallBtn from "../../components/common/SmallBtnComponents";
 import useApi from "../../hooks/common/useApi";
-import Select from "../common/SelectComponents";
-import Input from "../common/InputComponents";
+import Select from "../../components/common/SelectComponents";
+import Input from "../../components/common/InputComponents";
 import convertUtils from "../../assets/js/common/ConvertUtils";
+import PostTable from "../../components/admin/PostTable";
+import CommentTable from "../../components/admin/CommentTable";
+import PagingButtons from "../../components/common/PagingButtons";
 
 const PostManagement = () => {
     const {get, post} = useApi();
@@ -14,6 +17,8 @@ const PostManagement = () => {
     const [categorys, setCategorys] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
     const [posts, setPosts] = useState([]);
+    const [pagingData, setPagingData] = useState()
+    const [currentPage, setCurrentPage] = useState(1);
 
     const fetchCategoryCodes = async () => {
         const response = await post(`/api/v1/gubn`, {
@@ -22,8 +27,8 @@ const PostManagement = () => {
         return response?.data || [];
     };
 
-    const fetchPosts = async (selectedCategory) => {
-        const response = await get(`/api/v1/board/${selectedCategory}/management`);
+    const fetchPosts = async (selectedCategory, currentPage) => {
+        const response = await get(`/api/v1/board/${selectedCategory}/management?page=${currentPage}`);
         return response?.data || [];
     };
 
@@ -38,25 +43,31 @@ const PostManagement = () => {
     useEffect(() => {
         if (!selectedCategory) return;
         const fetchAndSetPosts = async () => {
-            const posts = await fetchPosts(selectedCategory);
+            const posts = await fetchPosts(selectedCategory, currentPage);
             console.log(posts);
             setPosts(posts.list);
+            setPagingData(posts.paging);
         };
         fetchAndSetPosts();
-    }, [selectedCategory]);
+    }, [currentPage, selectedCategory]);
+
+    const changeCategory = (selectedCategory) => {
+        setCurrentPage(1);
+        setSelectedCategory(selectedCategory);
+    }
 
     return (
         <div className={styles.container}>
             <div className={styles.header}>
                 <div className={styles.filterContainer}>
                     <div className={styles.actionItemBox}>
-                    <SmallBtn title={"활성화"}/>
-                    <SmallBtn title={"비활성화"}/>
-                    <Select display={selectedTitle === "댓글 관리" ? "none" : "block"} options={[...categorys]}
-                            onChange={(value) => {
-                                setSelectedCategory(value);
-                            }}
-                            value={selectedCategory}/>
+                        <SmallBtn title={"활성화"}/>
+                        <SmallBtn title={"비활성화"}/>
+                        <Select display={selectedTitle === "댓글 관리" ? "none" : "block"} options={[...categorys]}
+                                onChange={(value) => {
+                                    changeCategory(value);
+                                }}
+                                value={selectedCategory}/>
                     </div>
                     <div className={styles.searchBox}>
                         <Input
@@ -77,37 +88,19 @@ const PostManagement = () => {
                     <h2 className={`${styles.subtitle} ${selectedTitle === "댓글 관리" && styles.selectHeader}`}
                         onClick={() => setSelectedTitle("댓글 관리")}>댓글 관리</h2>
                 </div>
-                <table className={styles.table}>
-                    <thead>
-                    <tr>
-                        <th>선택</th>
-                        <th>게시글 번호</th>
-                        <th>아이디</th>
-                        <th>카테고리</th>
-                        <th>제목</th>
-                        <th>등록일시</th>
-                        <th>상태</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {posts?.map((post) => (
-                        <tr key={post.boardId}>
-                            <td><input type="checkbox"/></td>
-                            <td>{post.boardId}</td>
-                            <td>{post.userId}</td>
-                            <td>{post.boardType}</td>
-                            <td>{post.boardTitle}</td>
-                            <td>{post.insert}</td>
-                            <td className={styles.statusBtns}>
-                                <button className={styles.activateBtn}>활성화</button>
-                                <button className={styles.deactivateBtn}>비활성화</button>
-                                <button className={styles.deleteBtn}>삭제</button>
-                            </td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
+                {selectedTitle === "게시글 관리" ? <PostTable posts={posts}/> : <CommentTable comments={posts}/>}
             </div>
+
+            {pagingData &&
+                <PagingButtons
+                    currentPage={currentPage}
+                    pageSize={10}
+                    pageBthSize={10}
+                    onPageChange={(page) => setCurrentPage(page)}
+                    pagingData={pagingData}
+                />
+            }
+
         </div>
     );
 };

@@ -15,8 +15,8 @@ import BoardList from "./pages/board/BoardList";
 import FightZone from "./pages/FightZone";
 
 import EmoticonRegister from "./components/emoticon/EmoticonRegister";
-import CommonCodeManagement from "./components/admin/CommonCodeManagement";
-import PostManagement from "./components/admin/PostManagement";
+import CommonCodeManagement from "./pages/admin/CommonCodeManagement";
+import PostManagement from "./pages/admin/PostManagement";
 
 function App() {
     const {isLoggedIn} = useLogin();
