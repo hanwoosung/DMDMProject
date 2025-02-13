@@ -8,8 +8,8 @@ const ObserverUserComponent = (props) => {
           <div className={styles.userList}>
               {props.observerUsers.map((user, index) => (
                   <div key={index} className={styles.userItem}>
-                      <span>{user.username}/</span>
-                      <span>{user.nickname}</span>
+                      <span>{user.username}</span>
+                      <span>({user.nickname})</span>
                   </div>
               ))}
           </div>

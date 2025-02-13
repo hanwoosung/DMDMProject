@@ -33,6 +33,7 @@ public class UserSocketController extends BaseWebSocketController {
             ChatUserDto request,
             @DestinationVariable Long chatRoomId
     ) {
+        System.out.println("입실발생!!!!!!!!!!!!!!" + request);
         return roomMemberHandler.joinUser(request, chatRoomId);
     }
 

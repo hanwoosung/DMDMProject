@@ -13,6 +13,14 @@
   font-style: normal;
 }
 
+#root {
+  width: 100%;
+}
+
+body{
+  width: 100%;
+}
+
 .App{
   margin: 0 ;
   display: flex;

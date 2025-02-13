@@ -1,4 +1,5 @@
 header{
+    background-color: white;
     border: 1px solid #DADADA;
 }
 
@@ -105,7 +106,7 @@ header{
     gap: 15px;
 }
 
-.iconSize{
+.profileImg{
     min-width: 24px;
     width: 24px;
     height: 24px;

@@ -5,9 +5,12 @@ import ObserverChat from '../components/fightzone/ObserverChatComponent';
 import ObserverUsers from '../components/fightzone/ObserverUserComponent';
 import FighterChat from '../components/fightzone/FighterChatComponent';
 import FighterInfo from '../components/fightzone/FighterInfoComponent';
+import ExitBtn from "../components/fightzone/FightZoneExitComponent";
+import usePageLeave from "../hooks/usePageLeave";
 import styles from '../assets/css/FightZone.module.css';
 
 const FightZone = () => {
+
     const {roomNo} = useParams();
     const stompClient = useRef(null);
     const chatUserId = useRef(window.localStorage.getItem("userId"));
@@ -23,7 +26,6 @@ const FightZone = () => {
     const observerMessageEnd = useRef();
 
     const [fighterMessages, setFighterMessages] = useState([]);
-    const [fighterName, setFighterName] = useState('');
     const [fighterContent, setFighterContent] = useState('');
 
     const [observerMessages, setObserverMessages] = useState([]);
@@ -118,13 +120,6 @@ const FightZone = () => {
         });
 
         stompClient.current.activate();
-        window.addEventListener('beforeunload', leaveUser);
-
-        return () => {
-            stompClient.current.deactivate();
-            window.removeEventListener('beforeunload', leaveUser);
-        };
-        //불필요한 재렌더링 방지. 혹여나 오류 발생시 roomNo 집어넣기
     }, []);
 
     useEffect(() => {
@@ -220,46 +215,55 @@ const FightZone = () => {
         );
     }
 
+    //페이지 이동, 종료 시 작동 함수
+    usePageLeave(leaveUser);
+
     return (
         <div className={styles.fightBoard}>
-            <div className={styles.fightZone}>
-                {/* 토론자 채팅 공간 */}
-                <div className={styles.fighterSection}>
-                    <FighterInfo
-                        selectedVote={selectedVote}
-                        setSelectedVote={setSelectedVote}
-                        roomTimer={roomTimer}
-                        leftPercent={leftPercent}
-                        rightPercent={rightPercent}
-                        chatUserId={chatUserId}
-                        exampleTimer={exampleTimer}
-                        refs={{leftUser, rightUser, chatUserId}}
-                    />
+            <div className={styles.exitAndZone}>
+                <ExitBtn
+                    leftUser={leftUser}
+                    rightUser={rightUser}
+                    chatUserId={chatUserId}
+                />
+                <div className={styles.fightZone}>
+                    <div className={styles.fighterSection}>
+                        <FighterInfo
+                            selectedVote={selectedVote}
+                            setSelectedVote={setSelectedVote}
+                            roomTimer={roomTimer}
+                            leftPercent={leftPercent}
+                            rightPercent={rightPercent}
+                            chatUserId={chatUserId}
+                            exampleTimer={exampleTimer}
+                            refs={{leftUser, rightUser, chatUserId}}
+                        />
 
-                    {/*토론자 채팅 섹션*/}
-                    <FighterChat
-                        fighterContent={fighterContent}
-                        setFighterContent={setFighterContent}
-                        fighterMessages={fighterMessages}
-                        sendFighterChat={sendFighterChat}
-                        refs={{fighterMessageEnd, leftUser, rightUser, chatUserId}}
-                    />
-                </div>
+                        {/*토론자 채팅 섹션*/}
+                        <FighterChat
+                            fighterContent={fighterContent}
+                            setFighterContent={setFighterContent}
+                            fighterMessages={fighterMessages}
+                            sendFighterChat={sendFighterChat}
+                            refs={{fighterMessageEnd, leftUser, rightUser, chatUserId}}
+                        />
+                    </div>
 
-                {/* 관전자 채팅 공간 */}
-                <div className={styles.observerSection}>
-                    {/* 관전자 목록 공간 */}
-                    <ObserverUsers
-                        observerUsers={observerUsers}
-                        roomNo={roomNo}
-                    />
-                    <ObserverChat
-                        observerMessages={observerMessages}
-                        observerContent={observerContent}
-                        setObserverContent={setObserverContent}
-                        sendObserverChat={sendObserverChat}
-                        refs={{observerMessageEnd, leftUser, rightUser, chatUserId}}
-                    />
+                    {/* 관전자 채팅 공간 */}
+                    <div className={styles.observerSection}>
+                        {/* 관전자 목록 공간 */}
+                        <ObserverUsers
+                            observerUsers={observerUsers}
+                            roomNo={roomNo}
+                        />
+                        <ObserverChat
+                            observerMessages={observerMessages}
+                            observerContent={observerContent}
+                            setObserverContent={setObserverContent}
+                            sendObserverChat={sendObserverChat}
+                            refs={{observerMessageEnd, leftUser, rightUser, chatUserId}}
+                        />
+                    </div>
                 </div>
             </div>
         </div>

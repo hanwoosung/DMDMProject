@@ -16,6 +16,7 @@ import FightZone from "./pages/FightZone";
 
 import EmoticonRegister from "./components/emoticon/EmoticonRegister";
 import CommonCodeManagement from "./components/admin/CommonCodeManagement";
+import FightZoneList from "./pages/FightZoneList";
 
 function App() {
     const {isLoggedIn} = useLogin();
@@ -81,6 +82,10 @@ function App() {
                 <Route path="/oauth2-jwt-header" element={<OAuth2Redirect/>}/>
 
                 <Route path="/logout" element={<Logout />} />
+
+                <Route path="/fight/list" element={
+                   <FightZoneList/>
+                }/>
 
                 <Route path="/fight-zone/:roomNo" element={
                     <FightZone/>

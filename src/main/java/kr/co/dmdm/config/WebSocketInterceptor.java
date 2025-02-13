@@ -40,7 +40,6 @@ public class WebSocketInterceptor implements ChannelInterceptor {
         StompCommand command = accessor.getCommand();
 
         if (command == StompCommand.SUBSCRIBE || command == StompCommand.CONNECT || command == StompCommand.SEND) {
-            String destination = accessor.getDestination();
             String accessToken = accessor.getFirstNativeHeader("access");
 
             if (accessToken == null || accessToken.trim().isEmpty()) {
@@ -50,8 +49,6 @@ public class WebSocketInterceptor implements ChannelInterceptor {
 
             try {
                 jwtUtil.isExpired(accessToken);
-                log.info("✅ jwt 허용 {}", destination);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }

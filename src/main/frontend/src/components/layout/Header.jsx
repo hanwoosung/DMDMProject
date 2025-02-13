@@ -49,9 +49,11 @@ const Header = () => {
         };
     }, []);
 
-    const gotoFightZone = () =>{
-        let roomNo = prompt('(테스팅)방번호 입력','');
-        navigate(`/fight-zone/${roomNo}`)
+    const gotoFightZone = () => {
+        let roomNo = prompt('(테스팅)방번호 입력', '');
+        if (roomNo) {
+            navigate(`/fight-zone/${roomNo}`)
+        }
     };
 
     return (

@@ -1,0 +1,122 @@
+.flexColumn{
+    display: flex;
+    flex-direction: Column;
+}
+
+.flexRow{
+    display: flex;
+    flex-direction: row;
+}
+
+.titleBtn{
+    composes: flexRow;
+    align-items: center;
+    cursor: pointer;
+}
+
+.profileImg{
+    min-width: 50px;
+    width: 50px;
+    height: 50px;
+}
+
+.profileContainer{
+    composes: flexRow;
+    align-items: center;
+    gap: 15px;
+}
+
+.profileName{
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.profileLevelInfo{
+    composes: flexRow;
+    align-items: center;
+    gap: 10px;
+}
+
+.profileLevel{
+    height: auto;
+    padding: 2px;
+    background-color: #F7E864;
+    margin-bottom: 5px;
+}
+
+.profileWinLose{
+    composes: flexRow;
+    gap: 15px;
+}
+
+.profileImg{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+.profileInfo{
+    composes: flexColumn;
+}
+
+.titleText{
+    margin-left: 15px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.headMenu{
+    min-height: 90px;
+    width: 1200px;
+    margin: 0 auto;
+    composes: flexRow;
+    border: 15px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.levelBar{
+    composes: flexColumn;
+}
+
+.levelGraphContainer{
+    position: relative;
+    width: 200px;
+    height: 7px;
+}
+
+.leveGraph{
+    position: absolute;
+    height: 7px;
+    top: 0;
+    left: 0;
+    border-radius: 5px;
+}
+
+.leveGraphAndPercent{
+    composes: flexRow;
+    align-items: center;
+    gap: 3px;
+}
+
+.levelProgressGraph{
+    composes: leveGraph;
+    background-color: #4A8BFF;
+}
+.levelTotalGraph{
+    composes: leveGraph;
+    background-color: #E5E5E5;
+    width: 100%;
+}
+.levelPercent{
+    color: #878E96;
+    font-size: 10px;
+}
+.expContainer{
+    color: #878E96;
+    font-size: 10px;
+    text-align: center;
+}
