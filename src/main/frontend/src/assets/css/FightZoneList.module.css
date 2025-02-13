@@ -45,17 +45,18 @@
 }
 
 .fightRoomCard {
+    composes: flexRow;
     background: white;
     padding: 15px;
     border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
+    gap: 15px;
 }
 
-.fightInfo {
-    display: flex;
+.fightersInfo {
+    composes: flexRow;
     align-items: center;
+    gap: 15px;
     justify-content: space-between;
 }
 
@@ -64,6 +65,7 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
+    gap: 5px;
 }
 
 .fighterName {
@@ -73,36 +75,25 @@
 .fighterLevel {
     font-size: 12px;
     font-weight: bold;
-    color: gray;
+    padding: 1px 5px;
 }
 
 .fighterType {
     font-size: 12px;
-    font-weight: bold;
     padding: 3px 6px;
     border-radius: 5px;
-    margin-top: 5px;
-}
+    color: white;
 
-.green {
-    background-color: #dfffd6;
-    color: #007f00;
-}
-
-.red {
-    background-color: #ffd6d6;
-    color: #ff0000;
 }
 
 .vsText {
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 30px;
+    font-weight: bolder;
 }
 
 .fightTitle {
     font-weight: bold;
     font-size: 16px;
-    margin: 10px 0;
 }
 
 .spectators {
@@ -111,17 +102,21 @@
 }
 
 .voteBar {
-    display: flex;
-    height: 20px;
-    border-radius: 10px;
+    composes: flexRow;
+    justify-content: center;
+    align-items: center;
+    height: 35px;
+    border-radius: 20px;
     overflow: hidden;
     margin-top: 5px;
-    background: #ddd;
+    background: gray;
 }
 
 .vote {
+    color: white;
+    height: 100%;
     text-align: center;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -129,8 +124,7 @@
 }
 
 .votePending {
-    width: 100%;
-    background: gray;
+    font-weight: bold;
     color: white;
 }
 
@@ -140,4 +134,16 @@
     border-radius: 50%;
     object-fit: cover;
     pointer-events: none;
+}
+
+.chatRoomInfo{
+    flex: 1;
+    composes: flexColumn;
+    justify-content: center;
+    gap: 10px;
+}
+.fighterInfo{
+    composes: flexRow;
+    gap: 5px;
+    align-items: center;
 }
