@@ -36,17 +36,17 @@ public class ModelMapperConfig {
         };
 
         // AlarmRequestDto -> Alarm 매핑 설정
-        modelMapper.typeMap(kr.co.dmdm.dto.Alarm.request.AlarmRequestDto.class, kr.co.dmdm.entity.Alarm.class)
+        modelMapper.typeMap(kr.co.dmdm.dto.alarm.request.AlarmRequestDto.class, kr.co.dmdm.entity.Alarm.class)
                 .addMappings(mapper -> mapper.using(enumToStringConverter).map(
-                        kr.co.dmdm.dto.Alarm.request.AlarmRequestDto::getAlarmType,
+                        kr.co.dmdm.dto.alarm.request.AlarmRequestDto::getAlarmType,
                         kr.co.dmdm.entity.Alarm::setAlarmType
                 ));
 
         // Alarm -> AlarmRequestDto 매핑 설정
-        modelMapper.typeMap(kr.co.dmdm.entity.Alarm.class, kr.co.dmdm.dto.Alarm.request.AlarmRequestDto.class)
+        modelMapper.typeMap(kr.co.dmdm.entity.Alarm.class, kr.co.dmdm.dto.alarm.request.AlarmRequestDto.class)
                 .addMappings(mapper -> mapper.using(stringToEnumConverter).map(
                         kr.co.dmdm.entity.Alarm::getAlarmType,
-                        kr.co.dmdm.dto.Alarm.request.AlarmRequestDto::setAlarmType
+                        kr.co.dmdm.dto.alarm.request.AlarmRequestDto::setAlarmType
                 ));
 
         // GubnDto → Gubn 변환 시 EmbeddedId 설정
