@@ -1,4 +1,4 @@
-package kr.co.dmdm.dto.Alarm.response;
+package kr.co.dmdm.dto.alarm.response;
 
 /**
  * packageName    : kr.co.dmdm.dto.Alarm.response

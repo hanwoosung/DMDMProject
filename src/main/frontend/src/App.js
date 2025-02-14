@@ -14,7 +14,7 @@ import {useLogin} from "./contexts/AuthContext";
 import BoardList from "./pages/board/BoardList";
 import FightZone from "./pages/FightZone";
 
-import EmoticonRegister from "./components/emoticon/EmoticonRegister";
+import EmoticonRegister from "./pages/emoticon/EmoticonRegister";
 import CommonCodeManagement from "./components/admin/CommonCodeManagement";
 
 function App() {
