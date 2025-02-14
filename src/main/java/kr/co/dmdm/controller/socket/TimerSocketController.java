@@ -1,10 +1,9 @@
 package kr.co.dmdm.controller.socket;
 
 import kr.co.dmdm.component.TimerScheduler;
-import kr.co.dmdm.dto.ChatMessageResponseDto;
-import kr.co.dmdm.dto.TimerRequestDto;
+import kr.co.dmdm.dto.fight.response.ChatMessageResponseDto;
+import kr.co.dmdm.dto.fight.request.TimerRequestDto;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;

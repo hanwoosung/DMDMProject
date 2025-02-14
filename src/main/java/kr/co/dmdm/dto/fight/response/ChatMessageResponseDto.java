@@ -1,4 +1,4 @@
-package kr.co.dmdm.dto;
+package kr.co.dmdm.dto.fight.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

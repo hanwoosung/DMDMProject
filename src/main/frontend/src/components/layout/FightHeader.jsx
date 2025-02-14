@@ -6,7 +6,7 @@ const FightHeader = () => {
     return (
         <header>
             <div className={styles.headMenu}>
-                <div className={styles.titleBtn}>
+                <div className={styles.titleBtn} onClick={() => window.location.reload()}>
                     <Colosseum className={styles.iconSize}/>
                     <div className={styles.titleText}>투기장</div>
                 </div>

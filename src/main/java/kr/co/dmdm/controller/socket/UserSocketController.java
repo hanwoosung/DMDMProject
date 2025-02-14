@@ -1,6 +1,6 @@
 package kr.co.dmdm.controller.socket;
 
-import kr.co.dmdm.dto.ChatUserDto;
+import kr.co.dmdm.dto.fight.ChatUserDto;
 import kr.co.dmdm.service.RoomMemberHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;

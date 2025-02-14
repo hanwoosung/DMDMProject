@@ -11,6 +11,8 @@ import styles from '../assets/css/FightZone.module.css';
 
 const FightZone = () => {
 
+    // todo fetchReissue 또는 ReissueController 를 이용하여 jwt 만료시간 연장시키기.
+
     const {roomNo} = useParams();
     const stompClient = useRef(null);
     const chatUserId = useRef(window.localStorage.getItem("userId"));

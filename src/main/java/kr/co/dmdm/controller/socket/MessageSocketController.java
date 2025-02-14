@@ -1,12 +1,11 @@
 package kr.co.dmdm.controller.socket;
 
 import kr.co.dmdm.component.VoteManager;
-import kr.co.dmdm.dto.ChatMessageRequestDto;
-import kr.co.dmdm.dto.ChatMessageResponseDto;
-import kr.co.dmdm.dto.VoteRequestDto;
-import kr.co.dmdm.dto.VoteResponseDto;
+import kr.co.dmdm.dto.fight.request.ChatMessageRequestDto;
+import kr.co.dmdm.dto.fight.response.ChatMessageResponseDto;
+import kr.co.dmdm.dto.fight.request.VoteRequestDto;
+import kr.co.dmdm.dto.fight.response.VoteResponseDto;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 

@@ -49,13 +49,6 @@ const Header = () => {
         };
     }, []);
 
-    const gotoFightZone = () => {
-        let roomNo = prompt('(테스팅)방번호 입력', '');
-        if (roomNo) {
-            navigate(`/fight-zone/${roomNo}`)
-        }
-    };
-
     return (
         <header>
             <div className={styles.flexContainer}>
@@ -69,7 +62,7 @@ const Header = () => {
                              onMouseLeave={() => setIsHovered(false)}>
                             <div className={styles.titleHeadBtn}>커뮤니티</div>
                             <div className={styles.titleHeadBtn}>인기글</div>
-                            <div className={styles.titleHeadBtn} onClick={gotoFightZone}>투기장</div>
+                            <div className={styles.titleHeadBtn} onClick={() => navigate(`/fight/list`)}>투기장</div>
                             <div className={styles.titleHeadBtn}>취업</div>
                             <div className={styles.titleHeadBtn}>공지사항</div>
                             <div className={styles.titleHeadBtn}>이벤트</div>

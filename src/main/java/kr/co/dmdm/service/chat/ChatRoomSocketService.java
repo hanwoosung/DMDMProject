@@ -1,21 +1,21 @@
 package kr.co.dmdm.service.chat;
 
-import kr.co.dmdm.dto.fight.request.ChatRoomRequestDto;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import kr.co.dmdm.type.FightStatus;
 
 /**
  * packageName    : kr.co.dmdm.service.chat
  * fileName       : ChatRoomService
  * author         : 최기환
- * date           : 2025-02-14
+ * date           : 2025-02-04
  * description    :
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
- * 2025-02-14        최기환       최초 생성
+ * 2025-02-04        최기환       최초 생성
  */
-@Service
-public interface ChatRoomService {
-    String insertChatRoom(ChatRoomRequestDto requestDto);
+public interface ChatRoomSocketService {
+
+    void updateTimers();
+
+    void handleRequest(Long chatRoomId, FightStatus fightStatus);
 }

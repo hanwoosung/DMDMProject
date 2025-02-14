@@ -1,12 +1,10 @@
 package kr.co.dmdm.component;
 
-import kr.co.dmdm.dto.ChatMessageResponseDto;
-import kr.co.dmdm.service.chat.ChatRoomService;
+import kr.co.dmdm.dto.fight.response.ChatMessageResponseDto;
+import kr.co.dmdm.service.chat.ChatRoomSocketService;
 import kr.co.dmdm.type.FightNotice;
 import kr.co.dmdm.type.FightStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -29,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TimerScheduler {
 
     private final Map<Long, Map<String, FightStatus>> chatRoomRequest = new ConcurrentHashMap<>();
-    private final ChatRoomService chatRoomService;
+    private final ChatRoomSocketService chatRoomSocketService;
 
 
     //방의 요청목록 찾기, 없으면 생성
@@ -61,7 +59,7 @@ public class TimerScheduler {
             //값이 있으면 요청 Map clear 및 요청 실행
             if(proceed) {
                 requestMap.clear();
-                chatRoomService.handleRequest(chatRoomId, fightStatus);
+                chatRoomSocketService.handleRequest(chatRoomId, fightStatus);
             }
 
             //요청 처리 후 메시지 반환

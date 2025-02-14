@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.dmdm.repository.dao.fight.ChatRoomDao">
+    <insert id="insertChatRoom">
+        INSERT INTO tbl_fight
+        (fight_id, fight_title, send_user_id, receive_user_id)
+        VALUES
+        (null, #{C.fightTitle}, #{C.sendUserId}, #{C.receiveUserId})
+    </insert>
+    <update id="updateChatRoom">
+        UPDATE tbl_fight
+        SET
+        win_user_id=#{C.winUserId},
+        send_vote=#{C.sendVote},
+        receive_vote=#{C.receiveVote}
+        WHERE fight_id=#{C.fightId}
+    </update>
+    <select id="findById" parameterType="int" resultType="boolean">
+        SELECT COUNT(*)
+        FROM tbl_fight
+        WHERE fight_id = #{fightId}
+        AND win_user_id IS NULL
+    </select>
+    <select id="findChattingRoom">
+        SELECT * FROM tbl_fight
+        WHERE win_user_id IS NULL
+        LIMIT #{start},#{amount}
+    </select>
+    <select id="findSendAndReceiveChattingRoom" resultType="boolean">
+        SELECT COUNT(*)
+        FROM tbl_fight
+        WHERE send_user_id = #{send}
+        AND receive_user_id = #{receive}
+        AND win_user_id IS NULL
+    </select>
+</mapper>

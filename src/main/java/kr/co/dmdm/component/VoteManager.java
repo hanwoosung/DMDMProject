@@ -1,11 +1,10 @@
 package kr.co.dmdm.component;
 
-import kr.co.dmdm.dto.VoteRequestDto;
-import kr.co.dmdm.dto.VoteResponseDto;
+import kr.co.dmdm.dto.fight.request.VoteRequestDto;
+import kr.co.dmdm.dto.fight.response.VoteResponseDto;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
