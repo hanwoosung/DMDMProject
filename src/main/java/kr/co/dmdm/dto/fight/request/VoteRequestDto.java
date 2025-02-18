@@ -20,5 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class VoteRequestDto {
     private String username;
+    // todo vote는 투표할 사용자 id로 수정하기
     private String vote;
 }

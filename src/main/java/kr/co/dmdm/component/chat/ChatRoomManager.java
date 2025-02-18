@@ -23,6 +23,7 @@ public class ChatRoomManager {
     private final VoteHandler voteHandler;
 
     public void deleteInfo(Long roomId){
+        // 투표 결과 가져오기
         chatTimeHandler.timerDelete(roomId);
         roomMemberHandler.deleteUserList(roomId);
         timerRequestHandler.deleteRequest(roomId);
