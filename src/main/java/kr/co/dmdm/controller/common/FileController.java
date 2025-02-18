@@ -1,12 +1,13 @@
 package kr.co.dmdm.controller.common;
 
+import kr.co.dmdm.dto.common.FileDto;
+import kr.co.dmdm.dto.common.request.FileRequestDto;
+import kr.co.dmdm.service.common.FileService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,7 +28,10 @@ import java.nio.file.Paths;
 
 @RequestMapping("/file")
 @RestController
+@RequiredArgsConstructor
 public class FileController {
+
+    private final FileService fileService;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -35,7 +39,7 @@ public class FileController {
     @GetMapping("/{fileName}")
     public Resource getFile(@PathVariable String fileName) throws IOException {
         // 저장된 파일 경로
-        Path filePath = Paths.get(uploadDir +"/" + fileName);
+        Path filePath = Paths.get(uploadDir + "/" + fileName);
         Resource resource = new FileSystemResource(filePath);
 
         if (resource.exists()) {
@@ -43,5 +47,12 @@ public class FileController {
         } else {
             throw new FileNotFoundException(fileName);
         }
+    }
+
+    @PostMapping("/path")
+    public String getFilePath(@RequestBody FileRequestDto file) {
+        FileDto fileDto = fileService.findFileByRefNoAndFileType(file.getFileRef(), file.getFileType());
+
+        return fileDto.getFilePath();
     }
 }

@@ -87,6 +87,15 @@ header{
     z-index: 100;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
+.profileContainer{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profileName{
+    font-weight: bold;
+}
 
 .detailTitleBtn{
     font-size: 1.3rem;
@@ -212,4 +221,22 @@ header{
     composes: headBtn;
 
     text-wrap: nowrap;
+}
+
+.profileImage{
+    min-width: 50px;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    border-radius: 25px;
+}
+
+.loginAndJoinBox{
+    display: flex;
+    gap: 20px;
+}
+
+.login:hover , .join:hover {
+    color: #FFB733;
+    cursor: pointer;
 }
