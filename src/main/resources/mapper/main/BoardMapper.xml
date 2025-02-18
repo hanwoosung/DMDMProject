@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.dmdm.repository.dao.main.MainDao">
+
+    <select id="findBoardList" resultType="kr.co.dmdm.dto.main.response.MainBoardDto">
+        SELECT a.board_id,
+               a.board_title,
+               a.board_content,
+               a.user_id,
+               fnc_timestamp(a.insert_dt) as `insert`,
+               a.insert_dt,
+               a.v_cnt,
+               b.user_level,
+               b.user_name,
+               c.file_path,
+               IFNULL(e.comment_count, 0) AS comment_count,
+               IFNULL(f.like_count, 0)    AS like_count
+        FROM tbl_board a
+                 LEFT JOIN tbl_user b ON a.user_id = b.user_id
+                 LEFT JOIN tbl_file c ON a.user_id = c.user_id AND c.file_type = 'PROFILE'
+                 LEFT JOIN tbl_black_list d ON a.user_id = d.receive_user_id
+            AND d.send_user_id = #{userId}
+                 LEFT JOIN (SELECT board_id, COUNT(*) AS comment_count
+                            FROM tbl_comment
+                            WHERE status = 'ACTIVE'
+                            GROUP BY board_id) e ON a.board_id = e.board_id
+                 LEFT JOIN (SELECT like_target, COUNT(*) AS like_count
+                            FROM tbl_likes
+                            WHERE like_target_type = 'BOARD'
+                              AND like_type = 'LIKE'
+                            GROUP BY like_target) f ON a.board_id = f.like_target
+        WHERE d.receive_user_id IS NULL
+          AND a.`status` = 'ACTIVE'
+          AND a.board_type = #{type}
+        ORDER BY a.insert_dt DESC LIMIT 5;
+    </select>
+    <select id="findTodayRankBoardList" resultType="kr.co.dmdm.dto.main.response.MainBoardDto">
+        SELECT a.board_id,
+               a.board_title,
+               a.board_content,
+               a.user_id,
+               fnc_timestamp(a.insert_dt) as `insert`,
+               a.insert_dt,
+               a.v_cnt,
+               b.user_level,
+               b.user_name,
+               c.file_path,
+               d.best_date,
+               d.best_type,
+               d.best_rank,
+               IFNULL(e.comment_count, 0) AS comment_count,
+               IFNULL(f.like_count, 0)    AS like_count
+        FROM tbl_board a
+                 LEFT JOIN tbl_user b ON a.user_id = b.user_id
+                 LEFT JOIN tbl_file c ON a.user_id = c.user_id AND c.file_type = 'PROFILE'
+                 LEFT JOIN tbl_best_board d ON a.board_id = d.board_id
+                 LEFT JOIN (SELECT board_id, COUNT(*) AS comment_count
+                            FROM tbl_comment
+                            WHERE status = 'ACTIVE'
+                            GROUP BY board_id) e ON a.board_id = e.board_id
+                 LEFT JOIN (SELECT like_target, COUNT(*) AS like_count
+                            FROM tbl_likes
+                            WHERE like_target_type = 'BOARD'
+                              AND like_type = 'LIKE'
+                            GROUP BY like_target) f ON a.board_id = f.like_target
+        WHERE d.best_date = CURDATE()
+          AND d.best_type = 'DAY'
+        ORDER BY d.best_rank ASC LIMIT 5;
+    </select>
+
+    <select id="findWeekRankBoardList" resultType="kr.co.dmdm.dto.main.response.MainBoardDto">
+        SELECT a.board_id,
+               a.board_title,
+               a.board_content,
+               a.user_id,
+               fnc_timestamp(a.insert_dt) as `insert`,
+               a.insert_dt,
+               a.v_cnt,
+               b.user_level,
+               b.user_name,
+               c.file_path,
+               d.best_date,
+               d.best_type,
+               d.best_rank,
+               IFNULL(e.comment_count, 0) AS comment_count,
+               IFNULL(f.like_count, 0)    AS like_count
+        FROM tbl_board a
+                 LEFT JOIN tbl_user b ON a.user_id = b.user_id
+                 LEFT JOIN tbl_file c ON a.user_id = c.user_id AND c.file_type = 'PROFILE'
+                 LEFT JOIN tbl_best_board d ON a.board_id = d.board_id
+                 LEFT JOIN (SELECT board_id, COUNT(*) AS comment_count
+                            FROM tbl_comment
+                            WHERE status = 'ACTIVE'
+                            GROUP BY board_id) e ON a.board_id = e.board_id
+                 LEFT JOIN (SELECT like_target, COUNT(*) AS like_count
+                            FROM tbl_likes
+                            WHERE like_target_type = 'BOARD'
+                              AND like_type = 'LIKE'
+                            GROUP BY like_target) f ON a.board_id = f.like_target
+        WHERE d.best_date BETWEEN DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)
+            AND DATE_ADD(DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY), INTERVAL 6 DAY)
+          AND d.best_type = 'WEEK'
+        ORDER BY d.best_rank ASC LIMIT 5;
+    </select>
+
+    <select id="findLevelUserList" resultType="kr.co.dmdm.dto.main.response.UserRankingDto">
+        SELECT u.user_id,
+               u.user_name,
+               u.user_level,
+               u.gold_medal,
+               u.silver_medal,
+               u.bronze_medal,
+               c.file_path
+        FROM tbl_user u
+                 LEFT JOIN tbl_file c ON u.user_id = c.user_id AND c.file_type = 'PROFILE'
+        WHERE status = 'ACTIVE'
+        ORDER BY user_level DESC, user_exp DESC LIMIT 5;
+    </select>
+
+    <select id="findTotalUserList" resultType="kr.co.dmdm.dto.main.response.UserRankingDto">
+        SELECT u.user_id,
+               u.user_name,
+               u.user_level,
+               u.gold_medal,
+               u.silver_medal,
+               u.bronze_medal,
+               u.insert_dt,
+               c.file_path,
+               (u.gold_medal * COALESCE(c1.first_special, 0) +
+                u.silver_medal * COALESCE(c2.first_special, 0) +
+                u.bronze_medal * COALESCE(c3.first_special, 0)) AS total_medal_score
+        FROM tbl_user u
+                 LEFT JOIN tbl_common c1 ON c1.code = 'GOLD' AND c1.parent_code = 'MEDAL'
+                 LEFT JOIN tbl_common c2 ON c2.code = 'SILVER' AND c2.parent_code = 'MEDAL'
+                 LEFT JOIN tbl_common c3 ON c3.code = 'BRONZE' AND c3.parent_code = 'MEDAL'
+                 LEFT JOIN tbl_file c ON u.user_id = c.user_id AND c.file_type = 'PROFILE'
+        WHERE u.status = 'ACTIVE'
+        ORDER BY total_medal_score DESC, u.insert_dt ASC LIMIT 5;
+    </select>
+
+</mapper>
