@@ -1,6 +1,7 @@
 package kr.co.dmdm.service.chat;
 
 import kr.co.dmdm.dto.fight.request.ChatRoomRequestDto;
+import kr.co.dmdm.global.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +18,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface ChatRoomService {
-    String insertChatRoom(ChatRoomRequestDto requestDto);
+    Response<?> insertChatRoom(ChatRoomRequestDto requestDto);
 }

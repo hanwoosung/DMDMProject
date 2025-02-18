@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.dmdm.repository.dao.fight.ChatRoomDao">
-    <insert id="insertChatRoom">
+    <insert id="insertChatRoom" useGeneratedKeys="true" keyProperty="fightId">
         INSERT INTO tbl_fight
         (fight_id, fight_title, send_user_id, receive_user_id)
         VALUES

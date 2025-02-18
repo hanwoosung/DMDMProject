@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Mapper
 public interface ChatRoomDao {
-    int insertChatRoom(@Param("C") ChatRoomRequestDto chatRoomRequestDto);
+    void insertChatRoom(@Param("C") ChatRoomRequestDto chatRoomRequestDto);
     int updateChatRoom(@Param("C") ChatRoomRequestDto chatRoomRequestDto);
     boolean findById(int fightId);
     List<ChatRoomResponseDto> findChattingRoom(@Param("start")int startIdx, @Param("amount")int amount);

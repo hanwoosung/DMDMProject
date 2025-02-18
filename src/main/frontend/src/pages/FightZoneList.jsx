@@ -6,6 +6,7 @@ import BigBtn from "../components/common/BigBtnComponents";
 import useApi from "../hooks/common/useApi";
 import leftFighterImg from "../assets/image/ex_profile.png";
 import rightFighterImg from "../assets/image/ex_chiwawa.jpg";
+import {useEffect} from "react";
 
 // todo useEffect에서 페이징 값을 받으면 이에 대한 배열요소 6개를 가져옴
 const fightRooms = [
@@ -100,11 +101,25 @@ const FightZoneList = () => {
                 receiveUserId: receiveId
             },
         })
-
         console.log(response);
 
-        // navigate(`/fight-zone/${receiveId}`)
+        if(response.statusCode !== 201){
+            alert(response.data)
+        }
+
+        navigate(`/fight-zone/${response.data}`)
     }
+
+    useEffect(async () => {
+        const response = await get(`/api/v1/chat-room`, {
+            params: {
+                startIdx: 0,
+                amount: 10
+            }
+        })
+
+        console.log(response.data)
+    }, [])
 
     return (
         <div className={styles.flexColumn} style={{background: "#FFFBF4"}}>

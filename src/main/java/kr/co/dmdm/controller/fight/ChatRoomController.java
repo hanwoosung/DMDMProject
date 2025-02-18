@@ -2,6 +2,7 @@ package kr.co.dmdm.controller.fight;
 
 import kr.co.dmdm.dto.fight.request.ChatRoomRequestDto;
 import kr.co.dmdm.dto.fight.response.ChatRoomResponseDto;
+import kr.co.dmdm.global.Response;
 import kr.co.dmdm.repository.dao.fight.ChatRoomDao;
 import kr.co.dmdm.service.chat.ChatRoomService;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class ChatRoomController {
 
     //방 생성
     @PostMapping
-    public String chatRoomMaker(@RequestBody ChatRoomRequestDto requestDto) {
+    public Response<?> chatRoomMaker(@RequestBody ChatRoomRequestDto requestDto) {
         return chatRoomService.insertChatRoom(requestDto);
     }
     //방 마감
@@ -45,8 +46,9 @@ public class ChatRoomController {
         return chatRoomDao.findById(fightId);
     }
 
+    //방 리스트 페이지별 조회
     @GetMapping
-    public List<ChatRoomResponseDto> getChatRooms() {
-        return chatRoomDao.findChattingRoom(0,10);
+    public List<ChatRoomResponseDto> getChatRooms(@RequestParam int startIdx, @RequestParam int amount) {
+        return chatRoomDao.findChattingRoom(startIdx,amount);
     }
 }

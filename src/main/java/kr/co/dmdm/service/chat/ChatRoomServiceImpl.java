@@ -1,11 +1,12 @@
 package kr.co.dmdm.service.chat;
 
 import kr.co.dmdm.dto.fight.request.ChatRoomRequestDto;
+import kr.co.dmdm.global.Response;
+import kr.co.dmdm.global.Result;
 import kr.co.dmdm.repository.dao.fight.ChatRoomDao;
 import kr.co.dmdm.repository.jpa.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 /**
@@ -26,23 +27,38 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final ChatRoomDao chatRoomDao;
 
     @Override
-    public String insertChatRoom(ChatRoomRequestDto requestDto) {
+    public Response<?> insertChatRoom(ChatRoomRequestDto requestDto) {
         if (userRepository.findById(requestDto.getReceiveUserId()).isEmpty()) {
-            return "존재하지 않는 아이디입니다";
+            return new Response<>(
+                    HttpStatus.NOT_FOUND,
+                    Result.FAILURE,
+                    "요청 실패",
+                    "존재하지 않는 아이디입니다"
+            );
         }
 
         if (chatRoomDao.findSendAndReceiveChattingRoom(
                 requestDto.getSendUserId(),
                 requestDto.getReceiveUserId()
         )) {
-
-            return "채팅방이 이미 존재합니다";
+            return new Response<>(
+                    HttpStatus.CONFLICT,
+                    Result.FAILURE,
+                    "요청 실패",
+                    "채팅방이 이미 존재합니다"
+            );
         }
 
-        if (chatRoomDao.insertChatRoom(requestDto) != 0) {
-            return "채팅방 생성 성공";
+        chatRoomDao.insertChatRoom(requestDto);
+        if (requestDto.getFightId() != 0) {
+            return new Response<>(
+                    HttpStatus.CREATED,
+                    Result.SUCCESS,
+                    "요청 성공",
+                    requestDto.getFightId()
+            );
         }
 
-        return "채팅방 생성 실패";
+        return Response.failure(HttpStatus.INTERNAL_SERVER_ERROR, "채팅방 생성 실패");
     }
 }
