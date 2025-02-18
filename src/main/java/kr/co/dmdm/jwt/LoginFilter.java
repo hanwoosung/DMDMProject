@@ -41,23 +41,23 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             LoginRequestDto loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequestDto.class);
 
             String username = loginRequest.getUserId();
             String password = loginRequest.getUserPw();
+            String ipAddress = StringgetClientIpAddr(request);
 
-            System.out.println("Received username: " + username);
+            System.out.println("Received username: " + username + " from IP: " + ipAddress);
 
             if (username == null || password == null) {
                 throw new CustomException(HttpStatus.BAD_REQUEST, "아이디 혹은 비밀번호 확인");
             }
 
-            if (loginAttemptService.isBlocked(username)) {
+    /*        if (loginAttemptService.isBlocked(ipAddress)) {
                 throw new CustomException(HttpStatus.TOO_MANY_REQUESTS, "로그인 시도가 너무 많습니다. 1분 후 다시 시도하세요.");
-            }
+            }*/
 
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
             return authenticationManager.authenticate(authToken);
@@ -73,11 +73,27 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String userId = customUserDetails.getUsername();
         String userNickName = customUserDetails.getUserNickName();
+        String ipAddress = StringgetClientIpAddr(request);
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
+
+        if (loginAttemptService.isBlocked(ipAddress)) {
+            try {
+                response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+                response.setContentType("application/json;charset=UTF-8");
+
+                Response<Void> errorResponse = Response.failureNoTime(HttpStatus.TOO_MANY_REQUESTS, "로그인 시도가 너무 많습니다. 1분 후 다시 시도하세요.");
+                ObjectMapper objectMapper = new ObjectMapper();
+                response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         String access = jwtUtil.createJwt("access", userId, role, 600000L);
         String refresh = jwtUtil.createJwt("refresh", userId, role, 86400000L);
@@ -100,40 +116,60 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             ObjectMapper objectMapper = new ObjectMapper();
             response.getWriter().write(objectMapper.writeValueAsString(successResponse));
 
-            // 🔹 로그인 성공 시 실패 횟수 초기화
-            loginAttemptService.resetAttempts(userId);
+            loginAttemptService.resetAttempts(ipAddress);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
         String errorMessage = "아이디 또는 비밀번호를 확인해주세요.";
+        String ipAddress = request.getRemoteAddr();
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json;charset=UTF-8");
 
-            // 🔹 로그인 실패 횟수 증가
-            String username = request.getParameter("userId");
-            if (username != null) {
-                loginAttemptService.incrementAttempts(username);
+            loginAttemptService.incrementAttempts(ipAddress);
 
-                // 🔹 5번 초과 시 429 응답
-                if (loginAttemptService.isBlocked(username)) {
-                    response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
-                    errorMessage = "로그인 시도가 너무 많습니다. 1분 후 다시 시도하세요.";
-                }
+            if (loginAttemptService.isBlocked(ipAddress)) {
+                response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+                errorMessage = "로그인 시도가 너무 많습니다. 1분 후 다시 시도하세요.";
+                Response<Void> errorResponse = Response.failureNoTime(HttpStatus.TOO_MANY_REQUESTS, errorMessage);
+                response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+            } else {
+
+                Response<Void> errorResponse = Response.failureNoTime(HttpStatus.UNAUTHORIZED, errorMessage);
+                response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
             }
-
-            Response<Void> errorResponse = Response.failureNoTime(HttpStatus.UNAUTHORIZED, errorMessage);
-            response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
-
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String StringgetClientIpAddr(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+
+        return ip;
     }
 }

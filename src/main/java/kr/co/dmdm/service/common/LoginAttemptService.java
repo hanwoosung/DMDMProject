@@ -1,54 +1,40 @@
 package kr.co.dmdm.service.common;
 
-/**
- * packageName    : kr.co.dmdm.service.common
- * fileName       : LoginAttemptService
- * author         : 한우성
- * date           : 2025-02-18
- * description    :
- * ===========================================================
- * DATE              AUTHOR             NOTE
- * -----------------------------------------------------------
- * 2025-02-18        한우성       최초 생성
- */
-
+import kr.co.dmdm.repository.jpa.common.RedisRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class LoginAttemptService {
 
-    private static final int MAX_ATTEMPTS = 5;
-    private static final long BLOCK_TIME = 60;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisRepository redisRepository;
 
-    public void incrementAttempts(String username) {
-        String redisKey = "login:" + username;
-        Integer attempts = (Integer) redisTemplate.opsForValue().get(redisKey);
-        if (attempts == null) {
-            attempts = 0;
-        }
-        attempts++;
-
-        redisTemplate.opsForValue().set(redisKey, attempts, BLOCK_TIME, TimeUnit.SECONDS);
+    /**
+     * 로그인 시도 횟수 증가 (IP 기준)
+     */
+    public void incrementAttempts(String ipAddress) {
+        redisRepository.incrementLoginAttempts(ipAddress);
     }
 
-    public int getAttempts(String username) {
-        String redisKey = "login:" + username;
-        Integer attempts = (Integer) redisTemplate.opsForValue().get(redisKey);
-        return (attempts != null) ? attempts : 0;
+    /**
+     * 현재 로그인 시도 횟수 가져오기 (IP 기준)
+     */
+    public int getAttempts(String ipAddress) {
+        return redisRepository.getLoginAttempts(ipAddress);
     }
 
-    public boolean isBlocked(String username) {
-        return getAttempts(username) >= MAX_ATTEMPTS;
+    /**
+     * 로그인 차단 여부 확인 (IP 기준)
+     */
+    public boolean isBlocked(String ipAddress) {
+        return redisRepository.isLoginBlocked(ipAddress);
     }
 
-    public void resetAttempts(String username) {
-        String redisKey = "login:" + username;
-        redisTemplate.delete(redisKey);
+    /**
+     * 로그인 성공 시 실패 횟수 초기화 (IP 기준)
+     */
+    public void resetAttempts(String ipAddress) {
+        redisRepository.resetLoginAttempts(ipAddress);
     }
 }
