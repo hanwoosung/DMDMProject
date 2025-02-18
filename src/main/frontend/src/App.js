@@ -16,6 +16,7 @@ import FightZone from "./pages/FightZone";
 
 import EmoticonRegister from "./components/emoticon/EmoticonRegister";
 import CommonCodeManagement from "./components/admin/CommonCodeManagement";
+import MainPage from "./pages/MainPage";
 
 function App() {
     const {isLoggedIn} = useLogin();
@@ -24,7 +25,7 @@ function App() {
             <Routes>
                 <Route path="/" element={
                     <Layout>
-                        <div>메인페이지 입니다......</div>
+                        <MainPage/>
                     </Layout>
                 }/>
 

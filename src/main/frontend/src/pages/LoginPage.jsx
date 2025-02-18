@@ -75,8 +75,8 @@ const LoginPage = () => {
                 const  role =  response.data.data.userRole;
                 const  userId =  response.data.data.userId;
 
-                setAlertMessage("로그인 성공");
-                setIsAlert(true);
+                /*setAlertMessage("로그인 성공");
+                setIsAlert(true);*/
 
                 window.localStorage.setItem("access", response.headers.get("access"));
                 window.localStorage.setItem("name", name);
@@ -86,7 +86,6 @@ const LoginPage = () => {
                 setIsLoggedIn(true);
                 setLoginUser(name);
 
-                // 로그인 완료 후, 이전 요청이 존재하면 이전 요청으로 이동
                 navigate(prevUrl, { replace: true });
             }
         } catch (err) {
@@ -143,7 +142,7 @@ const LoginPage = () => {
                 onClick={handleLoginClick}
                 disabled={false}
             >
-                한우성인
+                로그인
             </button>
 
             <div className={styles.lineContainer}>

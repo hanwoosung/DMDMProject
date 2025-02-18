@@ -7,7 +7,6 @@ const AuthProvider = ({ children }) => {
     const [loginUser, setLoginUser] = useState(window.localStorage.getItem("name"));
 
     useEffect(() => {
-        // ✅ 로컬 스토리지 값이 변경되었을 때 로그인 상태 업데이트
         const handleStorageChange = () => {
             setIsLoggedIn(!!window.localStorage.getItem("access"));
             setLoginUser(window.localStorage.getItem("name"));

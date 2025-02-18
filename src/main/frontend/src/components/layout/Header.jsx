@@ -54,6 +54,10 @@ const Header = () => {
         navigate(`/fight-zone/${roomNo}`)
     };
 
+    const logout = () =>{
+        navigate("/logout")
+    }
+
     return (
         <header>
             <div className={styles.flexContainer}>
@@ -261,7 +265,7 @@ const Header = () => {
                         <hr className={styles.profileDetailLine}/>
                         <div className={styles.flexRow}>
                             <Logout className={styles.profileIcon}/>
-                            <div className={styles.profileDetailSpan}>로그아웃</div>
+                            <div className={styles.profileDetailSpan} onClick={logout}>로그아웃</div>
                         </div>
                     </div>
                 </div>
