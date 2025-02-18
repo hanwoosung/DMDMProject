@@ -29,4 +29,12 @@ public class ChatRoomResponseDto {
     LocalDateTime insertDt;
     int SendVote;
     int receiveVote;
+    String sendId;
+    String sendName;
+    String sendBadge;
+    int sendLevel;
+    String receiveId;
+    String receiveName;
+    String receiveBadge;
+    int receiveLevel;
 }

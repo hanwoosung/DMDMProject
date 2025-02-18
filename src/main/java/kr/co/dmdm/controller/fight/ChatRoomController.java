@@ -40,15 +40,14 @@ public class ChatRoomController {
     public boolean chatRoomUpdate(@RequestBody ChatRoomRequestDto requestDto) {
         return chatRoomDao.updateChatRoom(requestDto) != 0;
     }
-    //방 마감여부 확인
-    @GetMapping("/{fightId}")
-    public boolean chatRoomGet(@PathVariable int fightId) {
-        return chatRoomDao.findById(fightId);
-    }
 
     //방 리스트 페이지별 조회
     @GetMapping
-    public List<ChatRoomResponseDto> getChatRooms(@RequestParam int startIdx, @RequestParam int amount) {
-        return chatRoomDao.findChattingRoom(startIdx,amount);
+    public List<ChatRoomResponseDto> getChatRooms(
+            @RequestParam(required = false) Integer fightId,
+            @RequestParam(required = false) Integer startIdx,
+            @RequestParam(required = false) Integer amount
+    ) {
+        return chatRoomDao.findChattingRoom(fightId, startIdx, amount);
     }
 }

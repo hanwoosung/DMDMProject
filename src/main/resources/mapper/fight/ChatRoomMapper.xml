@@ -17,16 +17,27 @@
         receive_vote=#{C.receiveVote}
         WHERE fight_id=#{C.fightId}
     </update>
-    <select id="findById" parameterType="int" resultType="boolean">
-        SELECT COUNT(*)
-        FROM tbl_fight
-        WHERE fight_id = #{fightId}
-        AND win_user_id IS NULL
-    </select>
     <select id="findChattingRoom">
-        SELECT * FROM tbl_fight
+        SELECT
+        F.*,
+        U1.user_id AS send_id,
+        U1.user_name AS send_name,
+        U1.user_badge AS send_badge,
+        U1.user_level AS send_level,
+        U2.user_id AS receive_id,
+        U2.user_name AS receive_name,
+        U2.user_badge AS receive_badge,
+        U2.user_level AS receive_level
+        FROM tbl_fight AS F
+        LEFT JOIN tbl_user U1 ON F.send_user_id = U1.user_id
+        LEFT JOIN tbl_user U2 ON F.receive_user_id = U2.user_id
         WHERE win_user_id IS NULL
-        LIMIT #{start},#{amount}
+        <if test="fightId != null">
+            AND fight_id = #{fightId}
+        </if>
+        <if test="start != null and amount != null">
+            LIMIT #{start}, #{amount}
+        </if>
     </select>
     <select id="findSendAndReceiveChattingRoom" resultType="boolean">
         SELECT COUNT(*)

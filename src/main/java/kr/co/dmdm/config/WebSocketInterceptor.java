@@ -47,11 +47,11 @@ public class WebSocketInterceptor implements ChannelInterceptor {
                 throw new IllegalArgumentException("❌ 실패: JWT 없음");
             }
 
-            try {
-                jwtUtil.isExpired(accessToken);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+//            try {
+//                jwtUtil.isExpired(accessToken);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
         }
 
         return message;

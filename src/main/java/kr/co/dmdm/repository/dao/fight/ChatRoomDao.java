@@ -21,8 +21,14 @@ import java.util.List;
 @Mapper
 public interface ChatRoomDao {
     void insertChatRoom(@Param("C") ChatRoomRequestDto chatRoomRequestDto);
+
     int updateChatRoom(@Param("C") ChatRoomRequestDto chatRoomRequestDto);
-    boolean findById(int fightId);
-    List<ChatRoomResponseDto> findChattingRoom(@Param("start")int startIdx, @Param("amount")int amount);
+
+    List<ChatRoomResponseDto> findChattingRoom(
+            @Param("fightId") Integer fightId,
+            @Param("start") Integer startIdx,
+            @Param("amount") Integer amount
+    );
+
     boolean findSendAndReceiveChattingRoom(@Param("send") String sendId, @Param("receive") String receiveId);
 }

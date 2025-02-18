@@ -8,12 +8,14 @@ import FighterInfo from '../components/fightzone/FighterInfoComponent';
 import ExitBtn from "../components/fightzone/FightZoneExitComponent";
 import usePageLeave from "../hooks/usePageLeave";
 import styles from '../assets/css/FightZone.module.css';
+import useApi from "../hooks/common/useApi";
 
 const FightZone = () => {
 
     // todo fetchReissue 또는 ReissueController 를 이용하여 jwt 만료시간 연장시키기.
 
     const {roomNo} = useParams();
+    const {get} = useApi();
     const stompClient = useRef(null);
     const chatUserId = useRef(window.localStorage.getItem("userId"));
     const chatUserName = useRef(window.localStorage.getItem("name"));
@@ -43,6 +45,27 @@ const FightZone = () => {
 
     // 방 접속시 연결 및 구독설정
     useEffect(() => {
+
+
+        const fetchData = async () => {
+            try {
+
+                const response = await get(`/api/v1/chat-room`, {
+                    params: {
+                        fightId: roomNo
+                    }
+                })
+
+                const roomInfo = response.data[0];
+                console.log(roomInfo)
+            } catch (error) {
+                console.error("데이터 가져오기 오류:", error);
+            }
+        }
+
+        fetchData();
+
+        //그러면 방법이 두가지이다.
 
         //첫 렌더링 시 유저 정보를 반환하는 api 만들기
         stompClient.current = new Client({
