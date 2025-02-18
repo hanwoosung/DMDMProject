@@ -17,10 +17,10 @@ const FightZoneList = () => {
         const fetchFightRooms = async () => {
             try {
                 const response = await get(`/api/v1/chat-room`, {
-                    params: {
-                        startIdx: 0,
-                        amount: 6
-                    }
+                    // params: {
+                    //     startIdx: 0,
+                    //     amount: 6
+                    // }
                 });
 
                 if (response?.data) {
