@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {Client} from '@stomp/stompjs';
 import ObserverChat from '../components/fightzone/ObserverChatComponent';
 import ObserverUsers from '../components/fightzone/ObserverUserComponent';
@@ -15,19 +15,19 @@ const FightZone = () => {
     // todo fetchReissue 또는 ReissueController 를 이용하여 jwt 만료시간 연장시키기.
 
     const {roomNo} = useParams();
+    const navigate = useNavigate();
     const {get} = useApi();
     const stompClient = useRef(null);
     const chatUserId = useRef(window.localStorage.getItem("userId"));
     const chatUserName = useRef(window.localStorage.getItem("name"));
     const accessToken = useRef(window.localStorage.getItem("access"));
-
-    const leftUser = useRef("cgh9694");
-    const rightUser = useRef("asdf");
-
     const isFirstRender = useRef(true); // 첫 렌더링 여부 추적
-
     const fighterMessageEnd = useRef();
     const observerMessageEnd = useRef();
+
+    const [sendUser, setSendUser] = useState('');
+    const [receiveUser, setReceiveUser] = useState('');
+    const [roomInfo, setRoomInfo] = useState(null);
 
     const [fighterMessages, setFighterMessages] = useState([]);
     const [fighterContent, setFighterContent] = useState('');
@@ -45,27 +45,31 @@ const FightZone = () => {
 
     // 방 접속시 연결 및 구독설정
     useEffect(() => {
-
-
         const fetchData = async () => {
             try {
-
                 const response = await get(`/api/v1/chat-room`, {
                     params: {
                         fightId: roomNo
                     }
                 })
 
-                const roomInfo = response.data[0];
-                console.log(roomInfo)
+                if(response.data.length === 0){
+                    alert("존재하지 않는 채팅방입니다.");
+                    navigate(`/fight/list`)
+                    return;
+                }
+
+                console.log(response.data[0]);
+
+                setRoomInfo(response.data[0]);
+                setSendUser(response.data[0].sendUserId)
+                setReceiveUser(response.data[0].receiveUserId)
             } catch (error) {
-                console.error("데이터 가져오기 오류:", error);
+                console.error("데이터 가져오기 오류:", error)
             }
         }
 
         fetchData();
-
-        //그러면 방법이 두가지이다.
 
         //첫 렌더링 시 유저 정보를 반환하는 api 만들기
         stompClient.current = new Client({
@@ -243,12 +247,12 @@ const FightZone = () => {
     //페이지 이동, 종료 시 작동 함수
     usePageLeave(leaveUser);
 
-    return (
+    return roomInfo ? (
         <div className={styles.fightBoard}>
             <div className={styles.exitAndZone}>
                 <ExitBtn
-                    leftUser={leftUser}
-                    rightUser={rightUser}
+                    sendUser={sendUser}
+                    receiveUser={receiveUser}
                     chatUserId={chatUserId}
                 />
                 <div className={styles.fightZone}>
@@ -261,7 +265,10 @@ const FightZone = () => {
                             rightPercent={rightPercent}
                             chatUserId={chatUserId}
                             exampleTimer={exampleTimer}
-                            refs={{leftUser, rightUser, chatUserId}}
+                            sendUser={sendUser}
+                            receiveUser={receiveUser}
+                            roomInfo={roomInfo}
+                            refs={{chatUserId}}
                         />
 
                         {/*토론자 채팅 섹션*/}
@@ -270,7 +277,9 @@ const FightZone = () => {
                             setFighterContent={setFighterContent}
                             fighterMessages={fighterMessages}
                             sendFighterChat={sendFighterChat}
-                            refs={{fighterMessageEnd, leftUser, rightUser, chatUserId}}
+                            sendUser={sendUser}
+                            receiveUser={receiveUser}
+                            refs={{fighterMessageEnd, chatUserId}}
                         />
                     </div>
 
@@ -286,13 +295,15 @@ const FightZone = () => {
                             observerContent={observerContent}
                             setObserverContent={setObserverContent}
                             sendObserverChat={sendObserverChat}
-                            refs={{observerMessageEnd, leftUser, rightUser, chatUserId}}
+                            sendUser={sendUser}
+                            receiveUser={receiveUser}
+                            refs={{observerMessageEnd, chatUserId}}
                         />
                     </div>
                 </div>
             </div>
         </div>
-    );
+    ) : null
 };
 
 export default FightZone;

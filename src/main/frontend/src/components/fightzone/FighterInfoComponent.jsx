@@ -2,10 +2,9 @@ import styles from "../../assets/css/FightZone.module.css";
 import leftFighterImg from "../../assets/image/ex_profile.png";
 import SmallBtn from "../common/SmallBtnComponents";
 import rightFighterImg from "../../assets/image/ex_chiwawa.jpg";
-import React, {forwardRef} from "react";
+import React, {forwardRef, useEffect} from "react";
 
 const FighterInfoComponent = forwardRef((props, ref) => {
-
     const {
         selectedVote,
         setSelectedVote,
@@ -13,10 +12,13 @@ const FighterInfoComponent = forwardRef((props, ref) => {
         rightPercent,
         leftPercent,
         exampleTimer,
+        sendUser,
+        receiveUser,
+        roomInfo,
         refs
     } = props
 
-    const {leftUser, rightUser, chatUserId} = refs
+    const {chatUserId} = refs
 
     //투표 버튼 이벤트
     const handleVote = (candidate) => {
@@ -80,16 +82,16 @@ const FighterInfoComponent = forwardRef((props, ref) => {
         <div className={styles.fighterInfoContainer}>
             <div className={styles.fighterInfo}>
                 <div className={styles.flexRow} style={{gap: 10}}>
-                    <div className={styles.fighterBadge} style={{background: "#ffd633"}}>Lv. 6</div>
-                    <div className={styles.fighterLevel}
+                    <div className={styles.fighterBadge} style={{background: "#ffd633"}}>Lv. {roomInfo.sendLevel}</div>
+                    {roomInfo.sendBadge && <div className={styles.fighterLevel}
                          style={getBadgeStyle("#ffd633", "#000")}
-                    >신입 유저
-                    </div>
+                    >{roomInfo.sendBadge}
+                    </div>}
                 </div>
                 <img src={leftFighterImg} alt="프로필사진"
                      className={styles.fighterImage}
                      style={{border: "3px solid #300CFF"}}/>
-                <div className={styles.fighterName}>도지</div>
+                <div className={styles.fighterName}>{roomInfo.sendName}</div>
                 <button className={selectedVote === "LEFT" ?
                     styles.leftVoteBtn :
                     styles.leftNoVoteBtn}
@@ -99,9 +101,8 @@ const FighterInfoComponent = forwardRef((props, ref) => {
                 </button>
             </div>
             <div className={styles.fightStatus}>
-                <div className={styles.fightTitle}>HTML이 프로그래밍 언어겠냐?</div>
-
-                {(chatUserId.current === leftUser.current || chatUserId.current === rightUser.current) && (
+                <div className={styles.fightTitle}>{roomInfo.fightTitle}</div>
+                {(chatUserId.current === roomInfo.sendId || chatUserId.current === roomInfo.receiveId) && (
                     <div style={{display: "flex", flexDirection: "row", gap: "10px"}}>
                         <SmallBtn title={"토론 시작"} onClick={() => exampleTimer(chatUserId.current, "START")}/>
                         <SmallBtn title={"마감"} onClick={() => exampleTimer(chatUserId.current, "END")}/>
@@ -113,16 +114,16 @@ const FighterInfoComponent = forwardRef((props, ref) => {
             </div>
             <div className={styles.fighterInfo}>
                 <div className={styles.flexRow} style={{gap: 10}}>
-                    <div className={styles.fighterBadge} style={{background: "#ff3333"}}>Lv. 80</div>
-                    <div className={styles.fighterLevel}
+                    <div className={styles.fighterBadge} style={{background: "#ff3333"}}>Lv. {roomInfo.receiveLevel}</div>
+                    {roomInfo.receiveBadge && <div className={styles.fighterLevel}
                          style={getBadgeStyle("#ff3333", "#000")}
-                    >뉴비 절단기
-                    </div>
+                    >{roomInfo.receiveBadge}
+                    </div>}
                 </div>
                 <img src={rightFighterImg} alt="프로필 사진"
                      className={styles.fighterImage}
                      style={{border: "3px solid #FF0000"}}/>
-                <div className={styles.fighterName}>코큰 댕댕이</div>
+                <div className={styles.fighterName}>{roomInfo.receiveName}</div>
                 <button className={selectedVote === "RIGHT" ?
                     styles.rightVoteBtn :
                     styles.rightNoVoteBtn

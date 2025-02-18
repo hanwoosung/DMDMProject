@@ -3,8 +3,8 @@ import React, {forwardRef, useEffect} from "react";
 
 const ObserverChatComponent = forwardRef((props, ref) => {
 
-    const {observerMessages, observerContent, setObserverContent, sendObserverChat, refs} = props;
-    const {observerMessageEnd, leftUser, rightUser, chatUserId} = refs;
+    const {observerMessages, observerContent, setObserverContent, sendObserverChat, sendUser, receiveUser, refs} = props;
+    const {observerMessageEnd, chatUserId} = refs;
 
     useEffect(() => {
         observerMessageEnd.current.scrollIntoView();
@@ -22,7 +22,7 @@ const ObserverChatComponent = forwardRef((props, ref) => {
                 <div ref={observerMessageEnd}></div>
             </div>
 
-            {!(chatUserId.current === leftUser.current || chatUserId.current === rightUser.current) && (
+            {!(chatUserId.current === sendUser || chatUserId.current === receiveUser) && (
                 <div className={styles.chatInputContainer}>
                     <div>
                         {chatUserId.current}

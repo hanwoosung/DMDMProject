@@ -9,9 +9,11 @@ const FighterChatComponent = forwardRef((props, ref) => {
         fighterContent,
         setFighterContent,
         sendFighterChat,
+        sendUser,
+        receiveUser,
         refs
     } = props;
-    const {fighterMessageEnd, leftUser, rightUser, chatUserId} = refs;
+    const {fighterMessageEnd, chatUserId} = refs;
 
     useEffect(() => {
         fighterMessageEnd.current.scrollIntoView();
@@ -21,7 +23,7 @@ const FighterChatComponent = forwardRef((props, ref) => {
         <div className={styles.chatSection}>
             <div className={styles.chatMessages}>
                 {fighterMessages.map((message, index) => {
-                    if (message.username === leftUser.current) {
+                    if (message.username === sendUser) {
                         return (
                             <div key={index}
                                  className={styles.chatMessage}
@@ -38,7 +40,7 @@ const FighterChatComponent = forwardRef((props, ref) => {
                         );
                     }
 
-                    if (message.username === rightUser.current) {
+                    if (message.username === receiveUser) {
                         return (
                             <div key={index}
                                  className={styles.chatMessage}
@@ -71,7 +73,7 @@ const FighterChatComponent = forwardRef((props, ref) => {
                 <div ref={fighterMessageEnd}></div>
             </div>
 
-            {(chatUserId.current === leftUser.current || chatUserId.current === rightUser.current) && (
+            {(chatUserId.current === sendUser || chatUserId.current === receiveUser) && (
             <div className={styles.chatInputContainer}>
                 <input
                     type="text"

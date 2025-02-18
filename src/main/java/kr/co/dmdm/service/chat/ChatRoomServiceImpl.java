@@ -37,6 +37,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
             );
         }
 
+        //todo receiveId랑 sendId가 바뀌어서 들어가도 중복되도록 처리할것
         if (chatRoomDao.findSendAndReceiveChattingRoom(
                 requestDto.getSendUserId(),
                 requestDto.getReceiveUserId()

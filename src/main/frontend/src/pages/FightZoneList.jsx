@@ -53,6 +53,7 @@ const FightZoneList = () => {
     });
 
     const exRoomMaker = async () => {
+        const userId = window.localStorage.getItem("userId")
         const receiveId = prompt("상대 id를 입력하세요")
         const title = prompt("제목을 입력하세요")
 
@@ -61,11 +62,16 @@ const FightZoneList = () => {
             return
         }
 
+        if (receiveId === userId) {
+            alert("상대 id를 입력해주세요")
+            return
+        }
+
 
         const response = await post(`/api/v1/chat-room`, {
             body: {
                 fightTitle: title,
-                sendUserId: window.localStorage.getItem("userId"),
+                sendUserId: userId,
                 receiveUserId: receiveId
             },
         })

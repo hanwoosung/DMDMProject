@@ -64,4 +64,11 @@ public class VoteManager {
 
         return voteResult;
     }
+
+    /**
+     * 투표 현황 삭제
+     */
+    public void voteDelete(Long chatRoomId) {
+        userVotes.remove(chatRoomId);
+    }
 }

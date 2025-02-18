@@ -28,6 +28,12 @@ public class RoomMemberHandler {
         return chatUsers.computeIfAbsent(roomId, id -> new ArrayList<>());
     }
 
+    /**
+     * 사용자 참여
+     * @param request 사용자 정보
+     * @param chatRoomId 방번호
+     * @return 유저리스트
+     */
     public List<ChatUserDto> joinUser(ChatUserDto request, Long chatRoomId) {
         for(ChatUserDto element : getChatUsers(chatRoomId)){
             if( element.getUsername().equals(request.getUsername()) &&
@@ -41,8 +47,22 @@ public class RoomMemberHandler {
         return getChatUsers(chatRoomId);
     }
 
+    /**
+     * 사용자 퇴장
+     * @param request 사용자 정보
+     * @param chatRoomId 방번호
+     * @return 유저리스트
+     */
     public List<ChatUserDto> leaveUser(ChatUserDto request, Long chatRoomId) {
         getChatUsers(chatRoomId).remove(request);
         return getChatUsers(chatRoomId);
+    }
+
+    /**
+     * 사용장 목록 삭제
+     * @param chatRoomId 방번호
+     */
+    public void deleteUserList(Long chatRoomId) {
+        chatUsers.remove(chatRoomId);
     }
 }
