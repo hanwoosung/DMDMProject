@@ -1,6 +1,6 @@
 package kr.co.dmdm.controller.socket;
 
-import kr.co.dmdm.component.TimerScheduler;
+import kr.co.dmdm.component.chat.TimerRequestHandler;
 import kr.co.dmdm.dto.fight.response.ChatMessageResponseDto;
 import kr.co.dmdm.dto.fight.request.TimerRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TimerSocketController extends BaseWebSocketController {
 
-    private final TimerScheduler timerScheduler;
+    private final TimerRequestHandler timerRequestHandler;
 
     @MessageMapping("/example/timer.{chatRoomId}")
     @SendTo("/subscribe/fighter.{chatRoomId}")
     public ChatMessageResponseDto startExampleTimer(@DestinationVariable Long chatRoomId, TimerRequestDto requestDto) {
-        return timerScheduler.requestInsert(chatRoomId, requestDto.getUsername(), requestDto.getRequest());
+        return timerRequestHandler.requestInsert(chatRoomId, requestDto.getUsername(), requestDto.getRequest());
     }
 }

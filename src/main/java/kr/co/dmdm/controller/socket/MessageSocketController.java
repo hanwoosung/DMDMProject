@@ -1,6 +1,6 @@
 package kr.co.dmdm.controller.socket;
 
-import kr.co.dmdm.component.VoteManager;
+import kr.co.dmdm.component.chat.VoteHandler;
 import kr.co.dmdm.dto.fight.request.ChatMessageRequestDto;
 import kr.co.dmdm.dto.fight.response.ChatMessageResponseDto;
 import kr.co.dmdm.dto.fight.request.VoteRequestDto;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MessageSocketController extends BaseWebSocketController {
 
-    private final VoteManager voteManager;
+    private final VoteHandler voteManager;
 
     @MessageMapping("/observer.{chatRoomId}")
     @SendTo("/subscribe/observer.{chatRoomId}")

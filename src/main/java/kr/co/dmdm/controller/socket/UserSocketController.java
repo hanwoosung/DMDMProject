@@ -1,7 +1,7 @@
 package kr.co.dmdm.controller.socket;
 
 import kr.co.dmdm.dto.fight.ChatUserDto;
-import kr.co.dmdm.service.RoomMemberHandler;
+import kr.co.dmdm.component.chat.RoomMemberHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -42,5 +42,6 @@ public class UserSocketController extends BaseWebSocketController {
     public List<ChatUserDto> leaveChatRoom(ChatUserDto request, @DestinationVariable Long chatRoomId){
         System.out.println("퇴실 발생!!!!!!!!!!!!!!"+ request);
         return roomMemberHandler.leaveUser(request, chatRoomId);
+        // todo 토론자일시 패배처리하기
     }
 }

@@ -1,6 +1,7 @@
-package kr.co.dmdm.service;
+package kr.co.dmdm.component.chat;
 
 import kr.co.dmdm.dto.fight.ChatUserDto;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * -----------------------------------------------------------
  * 2025-01-24        최기환       최초 생성
  */
-@Service
+@Component
 public class RoomMemberHandler {
 
     private final Map<Long, List<ChatUserDto>> chatUsers = new ConcurrentHashMap<>();

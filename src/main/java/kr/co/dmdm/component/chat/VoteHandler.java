@@ -1,4 +1,4 @@
-package kr.co.dmdm.component;
+package kr.co.dmdm.component.chat;
 
 import kr.co.dmdm.dto.fight.request.VoteRequestDto;
 import kr.co.dmdm.dto.fight.response.VoteResponseDto;
@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 2025-01-23        최기환       최초 생성
  */
 @Component
-public class VoteManager {
+public class VoteHandler {
     // 방별로 투표 상태를 저장
     private final Map<Long, Map<String, String>> userVotes = new ConcurrentHashMap<>();
 

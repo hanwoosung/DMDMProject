@@ -1,7 +1,6 @@
-package kr.co.dmdm.component;
+package kr.co.dmdm.component.chat;
 
 import kr.co.dmdm.dto.fight.response.ChatMessageResponseDto;
-import kr.co.dmdm.service.chat.ChatRoomSocketService;
 import kr.co.dmdm.type.FightNotice;
 import kr.co.dmdm.type.FightStatus;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +23,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Component
 @RequiredArgsConstructor
-public class TimerScheduler {
+public class TimerRequestHandler {
 
     private final Map<Long, Map<String, FightStatus>> chatRoomRequest = new ConcurrentHashMap<>();
-    private final ChatRoomSocketService chatRoomSocketService;
+    private final ChatTimeHandler chatTimeHandler;
 
 
     //방의 요청목록 찾기, 없으면 생성
@@ -35,6 +34,13 @@ public class TimerScheduler {
         return chatRoomRequest.computeIfAbsent(chatRoomId, id -> new ConcurrentHashMap<>());
     }
 
+    /**
+     * 요청 추가 및 요청 처리
+     * @param chatRoomId 방번호
+     * @param username 유저아이디
+     * @param request 요청
+     * @return 메시지 DTO
+     */
     public ChatMessageResponseDto requestInsert(Long chatRoomId, String username, String request) {
         Map<String, FightStatus> requestMap = getRoomRequest(chatRoomId);
 
@@ -59,13 +65,21 @@ public class TimerScheduler {
             //값이 있으면 요청 Map clear 및 요청 실행
             if(proceed) {
                 requestMap.clear();
-                chatRoomSocketService.handleRequest(chatRoomId, fightStatus);
+                chatTimeHandler.handleRequest(chatRoomId, fightStatus);
             }
 
             //요청 처리 후 메시지 반환
             return new ChatMessageResponseDto("NOTICE", (!proceed ? username + "님이 " : "") + fightNotice.getMessage());
         }
         return null;
+    }
+
+    /**
+     * 요청 삭제
+     * @param chatRoomId 방 번호
+     */
+    public void deleteRequest(Long chatRoomId) {
+        chatRoomRequest.remove(chatRoomId);
     }
 
 }
