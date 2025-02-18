@@ -6,6 +6,7 @@ const UserInput = ({
                        value,
                        maxLength,
                        onChange,
+                       onKeyDown,
                        buttonText,
                        onButtonClick,
                        errorMessage,
@@ -29,6 +30,7 @@ const UserInput = ({
                     placeholder={placeholder}
                     value={value}
                     maxLength={maxLength}
+                    onKeyDown={onKeyDown}
                     onChange={handleInputChange}
                     disabled={disabled}
                 />

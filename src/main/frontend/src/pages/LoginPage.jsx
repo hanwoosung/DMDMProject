@@ -59,6 +59,11 @@ const LoginPage = () => {
         window.location.href = "http://localhost:8090/oauth2/authorization/google"
     }
 
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            handleLoginClick();
+        }
+    };
 
     const handleLoginClick = async () => {
         try {
@@ -125,6 +130,7 @@ const LoginPage = () => {
                 inputStyle={{padding: "12px"}}
                 type="password"
                 errorMessage={errorMessage}
+                onKeyDown={handleKeyDown}
             />
 
             <div className={styles.findText}>

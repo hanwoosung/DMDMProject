@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 @Repository
 @RequiredArgsConstructor
-public class TokenRepository {
+public class RedisRepository {
 
     private final RedisTemplate<String, String> redisTemplate;
 
