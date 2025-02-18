@@ -1,0 +1,115 @@
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 40px auto;
+    /*text-align: center;*/
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.infoContainer {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+}
+
+.infoFooter {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: auto;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.price {
+    font-size: 18px;
+    color: red;
+}
+
+.imageGallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    /*justify-content: center;*/
+}
+
+.thumbnail {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: transform 0.2s;
+}
+
+.thumbnail:hover {
+    transform: scale(1.1);
+}
+
+.description {
+    margin: 20px 0;
+    font-size: 16px;
+    color: #666;
+}
+
+.description {
+    max-height: 100px; /* 원하는 최대 높이 설정 */
+    overflow-y: auto; /* 세로 스크롤 적용 */
+    /*padding: 10px;*/
+    /*background-color: #f9f9f9;*/
+    /*border-radius: 5px;*/
+    line-height: 1.5;
+}
+
+
+.actions {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.buyBtn {
+    background-color: #ffcc00;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.reportBtn {
+    background-color: #ff6666;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modalImage {
+    max-width: 80%;
+    max-height: 80%;
+}
+

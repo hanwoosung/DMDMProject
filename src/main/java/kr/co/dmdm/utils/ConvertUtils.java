@@ -82,4 +82,17 @@ public class ConvertUtils {
             default -> throw new IllegalArgumentException("지원하지 않는 타입: " + dateTime.getClass().getName());
         };
     }
+
+    /**
+     * CamelCase → SNAKE_CASE 변환
+     *
+     * @param input 변환할 문자열 (예: "ProductType")
+     * @return 변환된 문자열 (예: "PRODUCT_TYPE")
+     */
+    public static String convertToSnakeCase(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+        return input.replaceAll("([a-z])([A-Z])", "$1_$2").toUpperCase();
+    }
 }

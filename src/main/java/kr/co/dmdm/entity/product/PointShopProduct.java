@@ -3,8 +3,7 @@ package kr.co.dmdm.entity.product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
@@ -13,7 +12,10 @@ import java.time.Instant;
 @Setter
 @Entity
 @Table(name = "tbl_point_shop_product")
-public class TblPointShopProduct {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class PointShopProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id", nullable = false)

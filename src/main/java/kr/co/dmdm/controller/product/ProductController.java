@@ -1,6 +1,7 @@
 package kr.co.dmdm.controller.product;
 
 import kr.co.dmdm.dto.product.request.ProductRequestDto;
+import kr.co.dmdm.dto.product.response.ProductDetailResponseDto;
 import kr.co.dmdm.service.product.ProductService;
 import kr.co.dmdm.service.product.factory.ProductServiceFactory;
 import kr.co.dmdm.type.ProductType;
@@ -46,5 +47,17 @@ public class ProductController {
         productRequestDto.setProductPrice(productPrice);
 
         productService.saveProduct(productRequestDto);
+    }
+
+    @GetMapping(value = "/{productType}/detail")
+    public ProductDetailResponseDto getProductDetail(@PathVariable String productType, @RequestParam Integer productId) {
+        ProductService productService = productServiceFactory.getService(ProductType.valueOf(productType.toUpperCase()));
+        return productService.getProductDetail(productId);
+    }
+
+    @GetMapping(value = "/{productType}")
+    public List<ProductDetailResponseDto> getProduct(@PathVariable String productType) {
+        ProductService productService = productServiceFactory.getService(ProductType.valueOf(productType.toUpperCase()));
+        return productService.getProduct();
     }
 }

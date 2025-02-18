@@ -21,5 +21,7 @@ public class ProductRequestDto {
     private List<MultipartFile> files;
     private String productName;
     private String productDetail;
-    private int productPrice;
+    private Integer productPrice;
+    private String userId;
+    private String productType;
 }

@@ -16,6 +16,8 @@ import FightZone from "./pages/FightZone";
 
 import EmoticonRegister from "./pages/emoticon/EmoticonRegister";
 import CommonCodeManagement from "./components/admin/CommonCodeManagement";
+import EmoticonDetail from "./pages/emoticon/EmoticonDetail";
+import EmoticonList from "./pages/emoticon/EmoticonList";
 
 function App() {
     const {isLoggedIn} = useLogin();
@@ -57,19 +59,19 @@ function App() {
                     <AsideLayout>
                         <AlarmTestPage/>
                     </AsideLayout>
-                } />
+                }/>
 
                 <Route path="/board-write/:boardType" element={
                     <Layout>
                         <BoardWrite/>
                     </Layout>
-                } />
+                }/>
 
                 <Route path="/board-list/:boardType" element={
                     <Layout>
                         <BoardList/>
                     </Layout>
-                } />
+                }/>
 
                 <Route path="/sign-up" element={
                     <SignUpPage/>
@@ -80,14 +82,27 @@ function App() {
                 }/>
                 <Route path="/oauth2-jwt-header" element={<OAuth2Redirect/>}/>
 
-                <Route path="/logout" element={<Logout />} />
+                <Route path="/logout" element={<Logout/>}/>
 
                 <Route path="/fight-zone/:roomNo" element={
                     <FightZone/>
                 }/>
+
                 <Route path="/emoticon-register" element={
                     <Layout>
                         <EmoticonRegister/>
+                    </Layout>
+                }/>
+
+                <Route path="/emoticon/:productId" element={
+                    <Layout>
+                        <EmoticonDetail />
+                    </Layout>
+                }/>
+
+                <Route path="/emoticon-list" element={
+                    <Layout>
+                        <EmoticonList/>
                     </Layout>
                 }/>
 

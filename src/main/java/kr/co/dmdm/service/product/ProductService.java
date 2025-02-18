@@ -1,7 +1,10 @@
 package kr.co.dmdm.service.product;
 
 import kr.co.dmdm.dto.product.request.ProductRequestDto;
+import kr.co.dmdm.dto.product.response.ProductDetailResponseDto;
 import kr.co.dmdm.type.ProductType;
+
+import java.util.List;
 
 /**
  * packageName    : kr.co.dmdm.service.product
@@ -16,4 +19,8 @@ import kr.co.dmdm.type.ProductType;
  */
 public interface ProductService {
     void saveProduct(ProductRequestDto productRequestDto);
+
+    ProductDetailResponseDto getProductDetail(Integer productId);
+
+    List<ProductDetailResponseDto> getProduct();
 }

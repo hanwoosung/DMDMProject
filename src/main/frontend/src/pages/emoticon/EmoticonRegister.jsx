@@ -69,10 +69,6 @@ export default function EmoticonRegister() {
         formData.append("productDetail", productDetail);
         formData.append("productPrice", productPrice);
 
-        // console.log("🔹 FormData 내용:");
-        // for (let pair of formData.entries()) {
-        //     console.log(`${pair[0]}:`, pair[1]);
-        // }
         const response = await post("api/v1/product/EMOTICON", {
                 headers: {"Content-Type": "multipart/form-data"},
                 body: formData
@@ -94,8 +90,6 @@ export default function EmoticonRegister() {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.heading}>이미지 등록 폼</h1>
-
             <div className={styles.formContainer}>
                 <div className={styles.formGroup}>
                     <label className={styles.label} style={{textAlign: "center"}}>대표 이미지</label>
@@ -159,7 +153,7 @@ export default function EmoticonRegister() {
 
 
                 <div className={styles.imageRegisterForm}>
-                    <label className={styles.imageLabel} style={{marginRight: "10px"}}>100x100, 5~20개</label>
+                    <label style={{marginRight: "10px"}}>100x100, 5~20개</label>
                     <input
                         type="file"
                         accept="image/png, image/jpeg, image/jpg, image/gif, image/webp"
