@@ -31,5 +31,7 @@ public interface ChatRoomDao {
             @Param("amount") Integer amount
     );
 
+    
+
     boolean findSendAndReceiveChattingRoom(@Param("send") String sendId, @Param("receive") String receiveId);
 }
