@@ -3,6 +3,7 @@ package kr.co.dmdm.component.chat;
 import kr.co.dmdm.type.FightStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -26,10 +27,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 @RequiredArgsConstructor
 public class ChatTimeHandler {
+    private final RoomMemberHandler roomMemberHandler;
+    private final VoteHandler voteHandler;
 
     private final Map<Long, Integer> chatRoomTimers = new ConcurrentHashMap<>();
     private final SimpMessagingTemplate messagingTemplate;
-    private final ChatRoomManager chatRoomManager;
 
     @Scheduled(fixedRate = 1000) // 1초마다 실행
     public void updateTimers() {
@@ -40,8 +42,7 @@ public class ChatTimeHandler {
 
         chatRoomTimers.forEach((chatRoomId, remainingTime) -> {
             if (remainingTime <= 0) {
-                timerDelete(chatRoomId);
-                chatRoomManager.deleteInfo(chatRoomId);
+                deleteInfo(chatRoomId);
             } else {
                 chatRoomTimers.put(chatRoomId, remainingTime - 1);
                 messagingTemplate.convertAndSend("/subscribe/timer." + chatRoomId, remainingTime - 1);
@@ -65,10 +66,6 @@ public class ChatTimeHandler {
         }
     }
 
-    public void timerDelete(Long chatRoomId) {
-        chatRoomTimers.remove(chatRoomId);
-    }
-
     private void startTimer(Long chatRoomId) {
         System.out.println(chatRoomId + "번 방, 타이머 시작" + 3600);
         chatRoomTimers.put(chatRoomId, 3600);
@@ -77,7 +74,7 @@ public class ChatTimeHandler {
     private void stopTimer(Long chatRoomId) {
         System.out.println("토론 중지");
         chatRoomTimers.remove(chatRoomId);
-        chatRoomManager.deleteInfo(chatRoomId);
+        deleteInfo(chatRoomId);
         messagingTemplate.convertAndSend("/subscribe/timer." + chatRoomId, 0);
     }
 
@@ -86,4 +83,13 @@ public class ChatTimeHandler {
         chatRoomTimers.compute(chatRoomId, (k, remainingTime) -> (remainingTime == null ? 0 : remainingTime) + 1800);
     }
 
+    public void timerDelete(Long chatRoomId) {
+        chatRoomTimers.remove(chatRoomId);
+    }
+    
+    public void deleteInfo(Long roomId) {
+        timerDelete(roomId);
+        roomMemberHandler.deleteUserList(roomId);
+        voteHandler.voteDelete(roomId);
+    }
 }

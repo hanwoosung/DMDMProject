@@ -13,35 +13,34 @@ import useApi from "../hooks/common/useApi";
 const FightZone = () => {
 
     // todo fetchReissue 또는 ReissueController 를 이용하여 jwt 만료시간 연장시키기.
+    const {roomNo} = useParams()
+    const navigate = useNavigate()
+    const {get} = useApi()
+    const stompClient = useRef(null)
+    const chatUserId = useRef(window.localStorage.getItem("userId"))
+    const chatUserName = useRef(window.localStorage.getItem("name"))
+    const accessToken = useRef(window.localStorage.getItem("access"))
+    const isFirstRender = useRef(true) // 첫 렌더링 여부 추적
+    const fighterMessageEnd = useRef()
+    const observerMessageEnd = useRef()
 
-    const {roomNo} = useParams();
-    const navigate = useNavigate();
-    const {get} = useApi();
-    const stompClient = useRef(null);
-    const chatUserId = useRef(window.localStorage.getItem("userId"));
-    const chatUserName = useRef(window.localStorage.getItem("name"));
-    const accessToken = useRef(window.localStorage.getItem("access"));
-    const isFirstRender = useRef(true); // 첫 렌더링 여부 추적
-    const fighterMessageEnd = useRef();
-    const observerMessageEnd = useRef();
+    const [sendUser, setSendUser] = useState('')
+    const [receiveUser, setReceiveUser] = useState('')
+    const [roomInfo, setRoomInfo] = useState(null)
 
-    const [sendUser, setSendUser] = useState('');
-    const [receiveUser, setReceiveUser] = useState('');
-    const [roomInfo, setRoomInfo] = useState(null);
+    const [fighterMessages, setFighterMessages] = useState([])
+    const [fighterContent, setFighterContent] = useState('')
 
-    const [fighterMessages, setFighterMessages] = useState([]);
-    const [fighterContent, setFighterContent] = useState('');
+    const [observerMessages, setObserverMessages] = useState([])
+    const [observerContent, setObserverContent] = useState('')
+    const [observerUsers, setObserverUsers] = useState([])
 
-    const [observerMessages, setObserverMessages] = useState([]);
-    const [observerContent, setObserverContent] = useState('');
-    const [observerUsers, setObserverUsers] = useState([]);
+    const [selectedVote, setSelectedVote] = useState(null)
 
-    const [selectedVote, setSelectedVote] = useState(null);
+    const [leftPercent, setLeftPercent] = useState(0)
+    const [rightPercent, setRightPercent] = useState(0)
 
-    const [leftPercent, setLeftPercent] = useState(0);
-    const [rightPercent, setRightPercent] = useState(0);
-
-    const [roomTimer, setRoomTimer] = useState(3600);
+    const [roomTimer, setRoomTimer] = useState(3600)
 
     // 방 접속시 연결 및 구독설정
     useEffect(() => {
@@ -54,14 +53,14 @@ const FightZone = () => {
                 })
 
                 if(response.data.length === 0){
-                    alert("존재하지 않는 채팅방입니다.");
+                    alert("존재하지 않는 채팅방입니다.")
                     navigate(`/fight/list`)
-                    return;
+                    return
                 }
 
-                console.log(response.data[0]);
+                console.log(response.data[0])
 
-                setRoomInfo(response.data[0]);
+                setRoomInfo(response.data[0])
                 setSendUser(response.data[0].sendUserId)
                 setReceiveUser(response.data[0].receiveUserId)
             } catch (error) {
@@ -69,7 +68,7 @@ const FightZone = () => {
             }
         }
 
-        fetchData();
+        fetchData()
 
         //첫 렌더링 시 유저 정보를 반환하는 api 만들기
         stompClient.current = new Client({
@@ -79,48 +78,48 @@ const FightZone = () => {
             },
             brokerURL: 'ws://localhost:8090/ws-connect',
             onConnect: (frame) => {
-                console.log('Connected: ' + frame);
+                console.log('Connected: ' + frame)
 
                 // 토론자 채팅 구독
                 stompClient.current.subscribe(`/subscribe/fighter.${roomNo}`, (message) => {
-                        const body = JSON.parse(message.body);
-                        setFighterMessages((prevMessages) => [...prevMessages, body]);
+                        const body = JSON.parse(message.body)
+                        setFighterMessages((prevMessages) => [...prevMessages, body])
                     },
                     {access: accessToken.current}
-                );
+                )
 
                 // 관전자 채팅 구독
                 stompClient.current.subscribe(`/subscribe/observer.${roomNo}`, (message) => {
-                        const body = JSON.parse(message.body);
-                        setObserverMessages((prevMessages) => [...prevMessages, body]);
+                        const body = JSON.parse(message.body)
+                        setObserverMessages((prevMessages) => [...prevMessages, body])
                     },
                     {access: accessToken.current}
-                );
+                )
 
                 //투표 구독
                 stompClient.current.subscribe(`/subscribe/vote.${roomNo}`, (message) => {
-                        const body = JSON.parse(message.body);
+                        const body = JSON.parse(message.body)
                         console.log("투표 결과")
                         console.log(body)
-                        setLeftPercent(body.leftVote);
-                        setRightPercent(body.rightVote);
+                        setLeftPercent(body.leftVote)
+                        setRightPercent(body.rightVote)
                     },
                     {access: accessToken.current}
-                );
+                )
 
                 // 관전자 유저 리스트 구독
                 stompClient.current.subscribe(`/subscribe/chatRoom.${roomNo}`, (message) => {
-                        const body = JSON.parse(message.body);
-                        console.log(body);
-                        setObserverUsers(body);
+                        const body = JSON.parse(message.body)
+                        console.log(body)
+                        setObserverUsers(body)
                     },
                     {access: accessToken.current}
-                );
+                )
 
                 // 타이머 구독
                 stompClient.current.subscribe(`/subscribe/timer.${roomNo}`, (message) => {
-                        const body = JSON.parse(message.body);
-                        setRoomTimer(body);
+                        const body = JSON.parse(message.body)
+                        setRoomTimer(body)
                     },
                     {access: accessToken.current}
                 )
@@ -140,29 +139,29 @@ const FightZone = () => {
                 })
             },
             onWebSocketError: (error) => {
-                console.error('Error with websocket', error);
+                console.error('Error with websocket', error)
             },
             onStompError: (frame) => {
-                console.error('Broker reported error: ' + frame.headers['message']);
-                console.error('Additional details: ' + frame.body);
+                console.error('Broker reported error: ' + frame.headers['message'])
+                console.error('Additional details: ' + frame.body)
             },
-        });
+        })
 
-        stompClient.current.activate();
-    }, []);
+        stompClient.current.activate()
+    }, [])
 
     useEffect(() => {
         if (isFirstRender.current) {
-            isFirstRender.current = false;
-            return;
+            isFirstRender.current = false
+            return
         }
 
         sendVote(selectedVote)
-    }, [selectedVote]);
+    }, [selectedVote])
 
     useEffect(() => {
         if (roomTimer === 0) {
-            alert("토론이 종료되었습니다!");
+            alert("토론이 종료되었습니다!")
         }
     }, [roomTimer])
 
@@ -172,9 +171,9 @@ const FightZone = () => {
                 destination: `/publish/chatRoom/leave/${roomNo}`,
                 body: JSON.stringify({username: chatUserId.current, nickname: chatUserName.current}),
                 headers: {access: accessToken.current},
-            });
+            })
 
-            stompClient.current.deactivate();
+            stompClient.current.deactivate()
         }
     }
 
@@ -192,10 +191,10 @@ const FightZone = () => {
                 destination: `/publish/fighter.${roomNo}`,
                 body: JSON.stringify({username: chatUserId.current, content: fighterContent}),
                 headers: {access: accessToken.current},
-            });
-            setFighterContent('');
+            })
+            setFighterContent('')
         }
-    };
+    }
 
     const sendObserverChat = () => {
         if (observerContent) {
@@ -203,16 +202,16 @@ const FightZone = () => {
                 destination: `/publish/observer.${roomNo}`,
                 body: JSON.stringify({username: chatUserId.current, content: observerContent}),
                 headers: {access: accessToken.current},
-            });
-            setObserverContent('');
+            })
+            setObserverContent('')
         }
-    };
+    }
 
     const exampleTimer = (username, request) => {
         console.log(username)
         if (!username) {
-            console.log("이름을 넣어주세요");
-            return;
+            console.log("이름을 넣어주세요")
+            return
         }
 
         stompClient.current.publish({
@@ -237,15 +236,15 @@ const FightZone = () => {
     const subscribeMsg = (destination, callback) => {
         stompClient.current.subscribe(
             destination, (message) => {
-                const body = JSON.parse(message.body);
-                callback(body);
+                const body = JSON.parse(message.body)
+                callback(body)
             },
             {access: accessToken.current}
-        );
+        )
     }
 
     //페이지 이동, 종료 시 작동 함수
-    usePageLeave(leaveUser);
+    usePageLeave(leaveUser)
 
     return roomInfo ? (
         <div className={styles.fightBoard}>
@@ -304,6 +303,6 @@ const FightZone = () => {
             </div>
         </div>
     ) : null
-};
+}
 
-export default FightZone;
+export default FightZone

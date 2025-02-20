@@ -47,7 +47,7 @@ public class TimerRequestHandler {
         FightStatus fightStatus = FightStatus.getFightStatus(request);
 
         if(fightStatus != null) {
-            //fightStatus 값이 있는지 확인
+            //클라에서 보낸 값이 fightStatus 값이 있는지 확인
             boolean proceed = requestMap.containsValue(fightStatus);
 
             //동일 K, V면 null 반환
@@ -81,5 +81,4 @@ public class TimerRequestHandler {
     public void deleteRequest(Long chatRoomId) {
         chatRoomRequest.remove(chatRoomId);
     }
-
 }
