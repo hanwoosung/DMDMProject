@@ -1,6 +1,6 @@
 package kr.co.dmdm.service.common;
 
-import kr.co.dmdm.repository.jpa.common.TokenRepository;
+import kr.co.dmdm.repository.jpa.common.RedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class TokenServiceImpl implements TokenService{
-    private final TokenRepository tokenRepository;
+    private final RedisRepository tokenRepository;
 
     @Override
     public void saveRefreshToken(String userId, String refreshToken) {

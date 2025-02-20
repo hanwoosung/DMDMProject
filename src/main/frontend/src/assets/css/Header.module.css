@@ -25,7 +25,6 @@ header{
 
 .titleHeadBtn{
     font-weight: bold;
-
     composes: headBtn;
 }
 
@@ -85,7 +84,17 @@ header{
     top: 50px;
     right: 0;
     gap: 15px;
+    z-index: 100;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+.profileContainer{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profileName{
+    font-weight: bold;
 }
 
 .detailTitleBtn{
@@ -158,6 +167,7 @@ header{
     position: absolute;
     width: 350px;
     top: 50px;
+    z-index: 100;
     right: 0;
     box-shadow: 0 4px 10px rgba(197, 123, 0, 0.2);
 }
@@ -211,4 +221,22 @@ header{
     composes: headBtn;
 
     text-wrap: nowrap;
+}
+
+.profileImage{
+    min-width: 50px;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    border-radius: 25px;
+}
+
+.loginAndJoinBox{
+    display: flex;
+    gap: 20px;
+}
+
+.login:hover , .join:hover {
+    color: #FFB733;
+    cursor: pointer;
 }
