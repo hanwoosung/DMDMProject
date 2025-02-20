@@ -3,9 +3,13 @@ package kr.co.dmdm.service.product;
 import kr.co.dmdm.dto.common.GubnDto;
 import kr.co.dmdm.dto.product.request.ProductRequestDto;
 import kr.co.dmdm.dto.product.response.ProductDetailResponseDto;
-import kr.co.dmdm.entity.product.PointShopProduct;
+import kr.co.dmdm.entity.User;
+import kr.co.dmdm.entity.product.Product;
 import kr.co.dmdm.entity.product.detail.EmoticonDetail;
 import kr.co.dmdm.entity.product.detail.EmoticonDetailId;
+import kr.co.dmdm.global.exception.CustomException;
+import kr.co.dmdm.global.exception.ExceptionEnum;
+import kr.co.dmdm.repository.jpa.UserRepository;
 import kr.co.dmdm.repository.jpa.product.ProductRepository;
 import kr.co.dmdm.repository.jpa.product.detail.EmoticonRepository;
 import kr.co.dmdm.service.common.FileService;
@@ -14,13 +18,12 @@ import kr.co.dmdm.type.ProductType;
 import kr.co.dmdm.utils.ConvertUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -44,6 +47,7 @@ public class ProductServiceEmoticonImpl implements ProductService {
     private final String productType = ProductType.EMOTICON.name();
     private final ProductRepository productRepository;
     private final EmoticonRepository emoticonRepository;
+    private final UserRepository userRepository;
 
     @SneakyThrows
     @Override
@@ -57,7 +61,7 @@ public class ProductServiceEmoticonImpl implements ProductService {
         GubnDto byParentCodeAndCode = gubnService.findByParentCodeAndCode(parentCode, productType);
         String tableName = byParentCodeAndCode.getFirstSpecial();
 
-        PointShopProduct product = PointShopProduct.builder()
+        Product product = Product.builder()
                 .productName(productRequestDto.getProductName())
                 .productType(productType)
                 .productPrice(productRequestDto.getProductPrice())
@@ -66,7 +70,7 @@ public class ProductServiceEmoticonImpl implements ProductService {
                 .build();
         System.out.println(product);
 
-        PointShopProduct savedProduct = productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
 
         List<MultipartFile> multipartFiles = productRequestDto.getFiles();
 
@@ -91,7 +95,7 @@ public class ProductServiceEmoticonImpl implements ProductService {
 
     @Override
     public ProductDetailResponseDto getProductDetail(Integer productId) {
-        PointShopProduct product = productRepository.findById(productId)
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다. productId: " + productId));
 
         List<String> imageUrls = emoticonRepository.findByIdProductId(productId).stream()
@@ -115,5 +119,29 @@ public class ProductServiceEmoticonImpl implements ProductService {
                     return new ProductDetailResponseDto(product, mainImageUrl, imageUrls);
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void buyProduct(String userId, Integer productId) {
+
+        // 이모티콘 상태는 일단 안봄
+        Product product = productRepository.findById(productId).orElse(null);
+        if (product == null) {
+            throw new CustomException(HttpStatus.NOT_FOUND, "없는 이모티콘입니다.");
+        }
+
+        // 사용자 상태 안보고 일단 체크만 함
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, "유효하지 않은 사용자");
+        }
+        int productPrice = product.getProductPrice();
+        int userPoint = user.getUserPoint();
+
+        if(productPrice > userPoint) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, "포인트 부족");
+        }
+
+
     }
 }

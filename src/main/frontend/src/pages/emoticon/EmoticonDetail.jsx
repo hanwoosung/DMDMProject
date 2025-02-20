@@ -5,7 +5,7 @@ import styles from "../../assets/css/emoticon/EmoticonDetail.module.css";
 import BigBtn from "../../components/common/BigBtnComponents";
 
 const EmoticonDetail = () => {
-    const {get} = useApi();
+    const {get, post} = useApi();
     const {productId} = useParams();
     const [emoticon, setEmoticon] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -36,6 +36,16 @@ const EmoticonDetail = () => {
         setSelectedImage(null);
     };
 
+    const buyEmoticon = () => {
+        post("/api/v1/product/EMOTICON")
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
+
     if (loading) return <p className={styles.loading}>로딩 중...</p>;
     if (error) return <p className={styles.error}>{error}</p>;
     if (!emoticon) return <p className={styles.notFound}>이모티콘 정보를 찾을 수 없습니다.</p>;
@@ -48,14 +58,14 @@ const EmoticonDetail = () => {
                 </div>
                 <div className={styles.infoContainer}>
                     <h2 className={styles.title}>{emoticon.productName || "이모티콘 이름 없음"}</h2>
-                    <p className={styles.description}>{emoticon.productDetail + "Lorem ipsum dolor sit amet, consectetur adiasdddddddddddddddddddddpisasddasssssssssicing elit. Architecto cumque enim est eum praesentium, provident quam quos vel voluptatem voluptatum. Aperiam cumque fuga ipsam ipsum labore modi placeat ratione reiciendis." || "설명 없음"}</p>
+                    <p className={styles.description}>{emoticon.productDetail || "설명 없음"}</p>
                     <div className={styles.infoFooter}>
                     <span
                         className={styles.price}>{emoticon.productPrice ? `${emoticon.productPrice.toLocaleString()}원` : "가격 없음"}
                     </span>
                         <div className={styles.actions}>
-                            <BigBtn title="구매하기" onClick={() => alert("구매 기능 미구현")}/>
-                            <BigBtn title="신고하기" onClick={() => alert("신고 기능 미구현")}/>
+                            <BigBtn width={"50%"} title="구매하기" onClick={() => buyEmoticon()}/>
+                            {/*<BigBtn title="신고하기" onClick={() => alert("신고 기능 미구현")}/>*/}
                         </div>
                     </div>
                 </div>

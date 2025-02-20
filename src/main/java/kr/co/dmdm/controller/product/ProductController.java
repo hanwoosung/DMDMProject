@@ -29,7 +29,7 @@ import java.util.List;
 public class ProductController {
     private final ProductServiceFactory productServiceFactory;
 
-    @PostMapping(value = "/{productType}")
+    @PostMapping("/{productType}")
     public void saveProduct(
             @PathVariable String productType,
             @RequestParam("files") List<MultipartFile> files,
@@ -37,8 +37,7 @@ public class ProductController {
             @RequestParam("productDetail") String productDetail,
             @RequestParam("productPrice") int productPrice
     ) {
-        ProductType saveProductType = ProductType.valueOf(productType.toUpperCase());
-        ProductService productService = productServiceFactory.getService(saveProductType);
+        ProductService productService = getProductService(productType);
 
         ProductRequestDto productRequestDto = new ProductRequestDto();
         productRequestDto.setFiles(files);
@@ -49,15 +48,26 @@ public class ProductController {
         productService.saveProduct(productRequestDto);
     }
 
-    @GetMapping(value = "/{productType}/detail")
+    @GetMapping("/{productType}/detail")
     public ProductDetailResponseDto getProductDetail(@PathVariable String productType, @RequestParam Integer productId) {
-        ProductService productService = productServiceFactory.getService(ProductType.valueOf(productType.toUpperCase()));
+        ProductService productService = getProductService(productType);
         return productService.getProductDetail(productId);
     }
 
-    @GetMapping(value = "/{productType}")
+    @GetMapping("/{productType}")
     public List<ProductDetailResponseDto> getProduct(@PathVariable String productType) {
-        ProductService productService = productServiceFactory.getService(ProductType.valueOf(productType.toUpperCase()));
+        ProductService productService = getProductService(productType);
         return productService.getProduct();
     }
+
+    @PostMapping("/{productType}/{productId}")
+    public void buyEmoticon(@PathVariable String productType, @PathVariable Integer productId) {
+        ProductService productService = getProductService(productType);
+        productService.buyProduct("yiok79", productId);
+    }
+
+    private ProductService getProductService(String productType) {
+        return productServiceFactory.getService(ProductType.valueOf(productType.toUpperCase()));
+    }
+
 }

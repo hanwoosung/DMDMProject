@@ -1,6 +1,6 @@
 package kr.co.dmdm.repository.jpa.product;
 
-import kr.co.dmdm.entity.product.PointShopProduct;
+import kr.co.dmdm.entity.product.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -14,5 +14,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * -----------------------------------------------------------
  * 2025-02-18        황승현       최초 생성
  */
-public interface ProductRepository extends JpaRepository<PointShopProduct, Integer> {
+public interface ProductRepository extends JpaRepository<Product, Integer> {
 }

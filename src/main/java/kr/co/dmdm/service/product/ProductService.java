@@ -23,4 +23,6 @@ public interface ProductService {
     ProductDetailResponseDto getProductDetail(Integer productId);
 
     List<ProductDetailResponseDto> getProduct();
+
+    void buyProduct(String userId, Integer productId);
 }

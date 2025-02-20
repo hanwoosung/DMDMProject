@@ -1,6 +1,6 @@
 package kr.co.dmdm.dto.product.response;
 
-import kr.co.dmdm.entity.product.PointShopProduct;
+import kr.co.dmdm.entity.product.Product;
 import lombok.Getter;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public class ProductDetailResponseDto {
     private final String mainImage;
     private final List<String> emoticonImages;
 
-    public ProductDetailResponseDto(PointShopProduct product, String mainImage, List<String> emoticonImages) {
+    public ProductDetailResponseDto(Product product, String mainImage, List<String> emoticonImages) {
         this.productId = product.getId();
         this.productName = product.getProductName();
         this.productType = product.getProductType();

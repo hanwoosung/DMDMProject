@@ -4,6 +4,8 @@ import kr.co.dmdm.dto.common.GubnDto;
 import kr.co.dmdm.entity.Gubn;
 import kr.co.dmdm.entity.GubnCompositeKey;
 import kr.co.dmdm.type.AlarmType;
+import kr.co.dmdm.type.PointHistoryType;
+import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
@@ -87,6 +89,22 @@ public class ModelMapperConfig {
                 );
             }
         };
+
+        // String -> PointHistoryType 변환 설정
+        modelMapper.addConverter(new AbstractConverter<String, PointHistoryType>() {
+            @Override
+            protected PointHistoryType convert(String source) {
+                return PointHistoryType.fromCode(source);
+            }
+        });
+
+        // PointHistoryType -> String 변환 설정
+        modelMapper.addConverter(new AbstractConverter<PointHistoryType, String>() {
+            @Override
+            protected String convert(PointHistoryType source) {
+                return source.name();
+            }
+        });
 
         modelMapper.addConverter(gubnDtoToGubnConverter);
         modelMapper.addConverter(gubnToGubnDtoConverter);
