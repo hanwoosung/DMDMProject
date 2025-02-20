@@ -18,6 +18,7 @@ import EmoticonRegister from "./pages/emoticon/EmoticonRegister";
 import CommonCodeManagement from "./components/admin/CommonCodeManagement";
 import EmoticonDetail from "./pages/emoticon/EmoticonDetail";
 import EmoticonList from "./pages/emoticon/EmoticonList";
+import MainPage from "./pages/MainPage";
 
 function App() {
     const {isLoggedIn} = useLogin();
@@ -26,7 +27,7 @@ function App() {
             <Routes>
                 <Route path="/" element={
                     <Layout>
-                        <div>메인페이지 입니다......</div>
+                        <MainPage/>
                     </Layout>
                 }/>
 
@@ -59,19 +60,19 @@ function App() {
                     <AsideLayout>
                         <AlarmTestPage/>
                     </AsideLayout>
-                }/>
+                } />
 
                 <Route path="/board-write/:boardType" element={
                     <Layout>
                         <BoardWrite/>
                     </Layout>
-                }/>
+                } />
 
                 <Route path="/board-list/:boardType" element={
                     <Layout>
                         <BoardList/>
                     </Layout>
-                }/>
+                } />
 
                 <Route path="/sign-up" element={
                     <SignUpPage/>
@@ -82,12 +83,11 @@ function App() {
                 }/>
                 <Route path="/oauth2-jwt-header" element={<OAuth2Redirect/>}/>
 
-                <Route path="/logout" element={<Logout/>}/>
+                <Route path="/logout" element={<Logout />} />
 
                 <Route path="/fight-zone/:roomNo" element={
                     <FightZone/>
                 }/>
-
                 <Route path="/emoticon-register" element={
                     <Layout>
                         <EmoticonRegister/>

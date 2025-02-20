@@ -6,7 +6,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import axios from "axios";
 import {Response} from "../type/Response";
 import Alert from "../components/common/AlertComponents";
-import { useLogin } from '../contexts/AuthContext';
+import {useLogin} from '../contexts/AuthContext';
 
 const LoginPage = () => {
     const [userId, setUserId] = useState("");
@@ -16,13 +16,13 @@ const LoginPage = () => {
     const [alertMessage, setAlertMessage] = useState("");
     const navigate = useNavigate();
     const location = useLocation();
-    const { isLoggedIn, setIsLoggedIn, setLoginUser } = useLogin();
+    const {isLoggedIn, setIsLoggedIn, setLoginUser} = useLogin();
     const prevUrl = location.state || "/";
 
     // 로그인 상태 확인 후 리다이렉트
     useEffect(() => {
         if (isLoggedIn) {
-            navigate("/", { replace: true });
+            navigate("/", {replace: true});
         }
     }, [isLoggedIn, navigate]);
 
@@ -59,6 +59,11 @@ const LoginPage = () => {
         window.location.href = "http://localhost:8090/oauth2/authorization/google"
     }
 
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            handleLoginClick();
+        }
+    };
 
     const handleLoginClick = async () => {
         try {
@@ -71,12 +76,12 @@ const LoginPage = () => {
             });
             if (response.data.result === Response.SUCCESS) {
 
-                const  name =  response.data.data.userName;
-                const  role =  response.data.data.userRole;
-                const  userId =  response.data.data.userId;
+                const name = response.data.data.userName;
+                const role = response.data.data.userRole;
+                const userId = response.data.data.userId;
 
-                setAlertMessage("로그인 성공");
-                setIsAlert(true);
+                /*setAlertMessage("로그인 성공");
+                setIsAlert(true);*/
 
                 window.localStorage.setItem("access", response.headers.get("access"));
                 window.localStorage.setItem("name", name);
@@ -86,11 +91,12 @@ const LoginPage = () => {
                 setIsLoggedIn(true);
                 setLoginUser(name);
 
-                // 로그인 완료 후, 이전 요청이 존재하면 이전 요청으로 이동
-                navigate(prevUrl, { replace: true });
+                navigate(prevUrl, {replace: true});
+            } else {
+                setErrorMessage(response.data.data.message);
             }
         } catch (err) {
-            setErrorMessage("아이디 또는 비밀번호를 확인해주세요.");
+            setErrorMessage(err.response.data.message);
             console.log(err);
         }
     };
@@ -126,6 +132,7 @@ const LoginPage = () => {
                 inputStyle={{padding: "12px"}}
                 type="password"
                 errorMessage={errorMessage}
+                onKeyDown={handleKeyDown}
             />
 
             <div className={styles.findText}>
@@ -143,7 +150,7 @@ const LoginPage = () => {
                 onClick={handleLoginClick}
                 disabled={false}
             >
-                한우성인
+                로그인
             </button>
 
             <div className={styles.lineContainer}>
@@ -153,8 +160,8 @@ const LoginPage = () => {
             </div>
 
             <div className={styles.snsContainer}>
-                <div className={styles.snsKakaoBtn}  onClick={onKakaoLogin}></div>
-                <div className={styles.snsNaverBtn}  onClick={onNaverLogin}></div>
+                <div className={styles.snsKakaoBtn} onClick={onKakaoLogin}></div>
+                <div className={styles.snsNaverBtn} onClick={onNaverLogin}></div>
                 <div className={styles.snsGithubBtn} onClick={onGithubLogin}></div>
                 <div className={styles.snsGoogleBtn} onClick={onGoogleLogin}></div>
             </div>
