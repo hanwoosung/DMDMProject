@@ -3,6 +3,7 @@ package kr.co.dmdm.service.point;
 import jakarta.transaction.Transactional;
 import kr.co.dmdm.dto.point.request.PointHistoryRequestDto;
 import kr.co.dmdm.entity.PointHistory;
+import kr.co.dmdm.entity.User;
 import kr.co.dmdm.global.exception.CustomException;
 import kr.co.dmdm.repository.jpa.UserRepository;
 import kr.co.dmdm.repository.jpa.point.PointHistoryRepository;
@@ -45,22 +46,24 @@ public class PointServiceImpl implements PointService {
         switch (pointDto.getPointHistoryType()) {
             case SEND_POINT -> sendPoint(pointDto);
             case BUY_PRODUCT -> buyProduct(pointDto);
-            case RECEIVE_POINT -> receivePoint(pointDto);
             case SELL_PRODUCT -> sellProduct(pointDto);
             default -> defaultSavePoint(pointDto);
         }
     }
 
     private void defaultSavePoint(PointHistoryRequestDto pointDto) {
+        PointHistory pointHistory = modelMapper.map(pointDto, PointHistory.class);
+        pointHistoryRepository.save(pointHistory);
+
+        User user = userRepository.findById(pointDto.getUserId()).get();
+        user.setUserPoint(user.getUserPoint() + pointDto.getPoint());
+        userRepository.save(user);
     }
 
     private void sendPoint(PointHistoryRequestDto pointDto) {
     }
 
     private void buyProduct(PointHistoryRequestDto pointDto) {
-    }
-
-    private void receivePoint(PointHistoryRequestDto pointDto) {
     }
 
     private void sellProduct(PointHistoryRequestDto pointDto) {
