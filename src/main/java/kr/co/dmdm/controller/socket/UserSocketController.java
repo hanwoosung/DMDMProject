@@ -1,7 +1,7 @@
 package kr.co.dmdm.controller.socket;
 
+import kr.co.dmdm.component.chat.ChatRoomManager;
 import kr.co.dmdm.dto.fight.ChatUserDto;
-import kr.co.dmdm.component.chat.RoomMemberHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserSocketController extends BaseWebSocketController {
 
-    private final RoomMemberHandler roomMemberHandler;
+    private final ChatRoomManager chatRoomManager;
 
     @MessageMapping("/chatRoom/join/{chatRoomId}")
     @SendTo("/subscribe/chatRoom.{chatRoomId}")
@@ -34,14 +34,15 @@ public class UserSocketController extends BaseWebSocketController {
             @DestinationVariable Long chatRoomId
     ) {
         System.out.println("입실발생!!!!!!!!!!!!!!" + request);
-        return roomMemberHandler.joinUser(request, chatRoomId);
+        return chatRoomManager.joinUser(request, chatRoomId);
     }
 
     @MessageMapping("/chatRoom/leave/{chatRoomId}")
     @SendTo("/subscribe/chatRoom.{chatRoomId}")
-    public List<ChatUserDto> leaveChatRoom(ChatUserDto request, @DestinationVariable Long chatRoomId){
-        System.out.println("퇴실 발생!!!!!!!!!!!!!!"+ request);
-        return roomMemberHandler.leaveUser(request, chatRoomId);
+    public List<ChatUserDto> leaveChatRoom(ChatUserDto request, @DestinationVariable Long chatRoomId) {
+        System.out.println("퇴실 발생!!!!!!!!!!!!!!" + request);
         // todo 토론자일시 패배처리하기
+        // 여기서 방번호로 조회해서 send 랑 receive 받아오셈 그게 같으면 룸매니저 delete 처리하기
+        return chatRoomManager.leaveUser(request, chatRoomId);
     }
 }

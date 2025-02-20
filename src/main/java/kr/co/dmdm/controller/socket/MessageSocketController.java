@@ -1,12 +1,15 @@
 package kr.co.dmdm.controller.socket;
 
-import kr.co.dmdm.component.chat.VoteHandler;
+import kr.co.dmdm.component.chat.ChatRoomManager;
 import kr.co.dmdm.dto.fight.request.ChatMessageRequestDto;
-import kr.co.dmdm.dto.fight.response.ChatMessageResponseDto;
 import kr.co.dmdm.dto.fight.request.VoteRequestDto;
+import kr.co.dmdm.dto.fight.response.ChatMessageResponseDto;
 import kr.co.dmdm.dto.fight.response.VoteResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.handler.annotation.*;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -25,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MessageSocketController extends BaseWebSocketController {
 
-    private final VoteHandler voteManager;
+    private final ChatRoomManager chatRoomManager;
 
     @MessageMapping("/observer.{chatRoomId}")
     @SendTo("/subscribe/observer.{chatRoomId}")
@@ -51,6 +54,6 @@ public class MessageSocketController extends BaseWebSocketController {
             @Payload(required = false) VoteRequestDto request,
             @DestinationVariable Long chatRoomId
     ) {
-        return voteManager.registerVote(chatRoomId, request);
+        return chatRoomManager.registerVote(chatRoomId, request);
     }
 }

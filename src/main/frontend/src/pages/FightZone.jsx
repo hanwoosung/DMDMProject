@@ -107,7 +107,7 @@ const FightZone = () => {
                     {access: accessToken.current}
                 )
 
-                // 관전자 유저 리스트 구독
+                //유저 리스트 구독
                 stompClient.current.subscribe(`/subscribe/chatRoom.${roomNo}`, (message) => {
                         const body = JSON.parse(message.body)
                         console.log(body)
@@ -161,7 +161,8 @@ const FightZone = () => {
 
     useEffect(() => {
         if (roomTimer === 0) {
-            alert("토론이 종료되었습니다!")
+            alert("토론이 종료되었습니다!");
+            navigate('/fight/list')
         }
     }, [roomTimer])
 

@@ -12,10 +12,15 @@
     <update id="updateChatRoom">
         UPDATE tbl_fight
         SET
-        win_user_id=#{C.winUserId},
-        send_vote=#{C.sendVote},
-        receive_vote=#{C.receiveVote}
-        WHERE fight_id=#{C.fightId}
+        win_user_id =
+        CASE
+        WHEN #{R.leftVote} &gt; #{R.rightVote} THEN send_user_id
+        WHEN #{R.leftVote} &lt; #{R.rightVote} THEN receive_user_id
+        ELSE "_DRAW"
+        END,
+        send_vote = #{R.leftVote},
+        receive_vote = #{R.rightVote}
+        WHERE fight_id = #{R.fightId}
     </update>
     <select id="findChattingRoom">
         SELECT

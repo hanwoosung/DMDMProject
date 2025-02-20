@@ -1,6 +1,7 @@
 package kr.co.dmdm.repository.dao.fight;
 
 import kr.co.dmdm.dto.fight.request.ChatRoomRequestDto;
+import kr.co.dmdm.dto.fight.request.RoomUpdateRequestDto;
 import kr.co.dmdm.dto.fight.response.ChatRoomResponseDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -22,7 +23,7 @@ import java.util.List;
 public interface ChatRoomDao {
     void insertChatRoom(@Param("C") ChatRoomRequestDto chatRoomRequestDto);
 
-    int updateChatRoom(@Param("C") ChatRoomRequestDto chatRoomRequestDto);
+    void updateChatRoom(@Param("R") RoomUpdateRequestDto requestDto);
 
     List<ChatRoomResponseDto> findChattingRoom(
             @Param("fightId") Integer fightId,

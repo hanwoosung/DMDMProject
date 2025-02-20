@@ -1,6 +1,7 @@
 package kr.co.dmdm.controller.fight;
 
 import kr.co.dmdm.dto.fight.request.ChatRoomRequestDto;
+import kr.co.dmdm.dto.fight.request.RoomUpdateRequestDto;
 import kr.co.dmdm.dto.fight.response.ChatRoomResponseDto;
 import kr.co.dmdm.global.Response;
 import kr.co.dmdm.repository.dao.fight.ChatRoomDao;
@@ -37,8 +38,8 @@ public class ChatRoomController {
     }
     //방 마감
     @PutMapping
-    public boolean chatRoomUpdate(@RequestBody ChatRoomRequestDto requestDto) {
-        return chatRoomDao.updateChatRoom(requestDto) != 0;
+    public void chatRoomUpdate(@RequestBody RoomUpdateRequestDto requestDto) {
+        chatRoomDao.updateChatRoom(requestDto);
     }
 
     //방 리스트 페이지별 조회
