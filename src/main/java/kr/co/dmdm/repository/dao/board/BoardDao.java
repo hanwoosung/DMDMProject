@@ -27,7 +27,8 @@ public interface BoardDao {
                                     int size,
                                     String searchType,
                                     String searchData,
-                                    String sortType);
+                                    String sortType,
+                                    String sess);
 
     int getBoardCnt(String boardType,
                     String status,
@@ -45,5 +46,9 @@ public interface BoardDao {
     void deleteLikes(@Param("likes") LikesDto likes);
 
     void saveComment(@Param("comment") CommentRequestDto comment);
+
+    void deleteBoard(@Param("boardId") Long boardId);
+
+    void deleteComment(@Param("commentId") Long commentId);
 
 }

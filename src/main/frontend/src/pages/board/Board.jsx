@@ -58,7 +58,6 @@ const Board = () => {
         }
     };
 
-
     const [boardMore, setBoardMore] = useState(false);
     const boardMoreRef = useRef(null); // 🔥 `BoardMore`을 감지할 ref
 
@@ -83,12 +82,12 @@ const Board = () => {
 
     return (
         <div className={BoardStyle.boardContainer}>
-            <Title title={"커뮤니티"} />
+            <Title title={board.boardTypeName} />
             <div className={BoardStyle.infoWrap}>
                 <div className={BoardStyle.flex}>
                     <img
                         className={BoardStyle.profile}
-                        src={"/"}
+                        src={board.filePath}
                         onError={(e) => {
                             e.target.src = profileImg;
                         }}  // 이미지 로드 실패 시 기본 이미지로 대체
@@ -116,8 +115,15 @@ const Board = () => {
                                 .catch(err => console.error("🚨 URL 복사 실패:", err));
                         }} /></span>
                         <span className={BoardStyle.relative} ref={boardMoreRef}>
-                            <More onClick={() => {setBoardMore(!boardMore)}}/>
-                            {boardMore && <BoardMore status={boardMore} />}
+                            <More onClick={() => {
+                                setBoardMore(!boardMore)
+                            }} />
+                            {boardMore && <BoardMore status={boardMore}
+                                                     setAlertMessage={setAlertMessage}
+                                                     setIsAlert={setIsAlert}
+                                                     boardType={board.boardType}
+                                                     userId={board.userId}
+                                                     boardId={board.boardId} />}
                         </span>
                     </div>
                 </div>
@@ -185,6 +191,8 @@ const Board = () => {
                     type={comment.depth > 0 ? "answer" : ""}
                     refCallback={(el) => registerCommentRef(comment.commentId, el)}
                     isHighlighted={highlightedComment === comment.commentId}
+                    setAlertMessage={setAlertMessage}
+                    setIsAlert={setIsAlert}
                 />
             ))}
 

@@ -30,11 +30,16 @@ public interface BoardService {
                                   int size,
                                   String searchType,
                                   String searchData,
-                                  String sortType);
+                                  String sortType,
+                                  String sess);
 
     Map<String, Object> getBoard(int boardId, String sess);
 
     void setLikes(LikesDto likes);
 
     List<CommentDto> saveComment(CommentRequestDto comment);
+
+    void deleteBoard(Long boardId);
+
+    void deleteComment(Long commentId);
 }

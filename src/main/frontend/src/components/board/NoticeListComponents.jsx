@@ -8,7 +8,7 @@ const NoticeList = () => {
 
     const navigate = useNavigate();
 
-    const {data: fetchedEvents, loading} = useFetch(`/api/v1/board/NOTICE`, {}, "get");
+    const {data: fetchedEvents, loading} = useFetch(`/api/v1/board/list/NOTICE`, {}, "get");
     const [notices, setNotices] = useState([]);
 
     useEffect(() => {

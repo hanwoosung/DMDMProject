@@ -44,7 +44,7 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public void saveBoard(Map<String, Object> params) {
         try {
-            String userId = "yiok79";
+            String userId = (String) params.get("sess");
 
             BoardDto boardDto = convertBoardDto(params, userId);
             validateBoardContent(boardDto);
@@ -71,7 +71,14 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Map<String, Object> getBoards(String boardType, String status, int page, int size, String searchType, String searchData, String sortType) {
+    public Map<String, Object> getBoards(String boardType,
+                                         String status,
+                                         int page,
+                                         int size,
+                                         String searchType,
+                                         String searchData,
+                                         String sortType,
+                                         String sess) {
 
         Map<String, Object> result = new HashMap<>();
 
@@ -80,7 +87,10 @@ public class BoardServiceImpl implements BoardService {
         int start = (page - 1) * size;
         int end = Math.min(start + size, boardCnt);
 
-        List<BoardListDto> list = boardDao.getBoardList(boardType, status, start, size, searchType, searchData, sortType);
+        List<BoardListDto> list = boardDao.getBoardList(boardType, status, start, size, searchType, searchData, sortType, sess);
+        System.out.println("gdgdgdgdgdgdgdg");
+        System.out.println(sess);
+        System.out.println("gdgdgdgdgdgdgdg");
         splitTag(list);
 
         PagingUtil pagingUtil = new PagingUtil(boardCnt, page, size, 10);
@@ -145,6 +155,16 @@ public class BoardServiceImpl implements BoardService {
 
         boardDao.saveComment(comment);
         return boardDao.getComments(comment.getBoardId(), comment.getUserId());
+    }
+
+    @Override
+    public void deleteBoard(Long boardId) {
+        boardDao.deleteBoard(boardId);
+    }
+
+    @Override
+    public void deleteComment(Long commentId) {
+        boardDao.deleteComment(commentId);
     }
 
     private int boardCnt(String boardType, String status, String searchType, String searchData) {

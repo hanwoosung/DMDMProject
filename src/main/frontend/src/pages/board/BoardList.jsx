@@ -10,8 +10,11 @@ import Select from "../../components/common/SelectComponents";
 import BasicBoardList from "../../components/board/BasicBoardListComponents";
 import PagingButtons from "../../components/common/PagingButtons";
 import Search from "../../components/common/SearchComponents";
+import SmallBtn from "../../components/common/SmallBtnComponents";
 
 const BoardList = () => {
+
+    const navigate = useNavigate();
 
     const {
         sortType,
@@ -43,6 +46,13 @@ const BoardList = () => {
         <div className={BoardListStyle.boardListContainer}>
             <Title title={boardType.name} />
 
+            <div className={BoardListStyle.searchWrap}>
+                <SmallBtn title={"글작성"}
+                          onClick={() => {
+                              navigate(`/board-write/${boardType.code}`);
+                          }} />
+            </div>
+
             <NoticeList />
 
             {/*<div className={BoardListStyle.selectWrap}>*/}
@@ -56,6 +66,7 @@ const BoardList = () => {
             <BasicBoardList boardList={boardList} />
 
             <div className={BoardListStyle.searchWrap}>
+
                 <Search selectValue={searchType}
                         onSelectChange={setSearchType}
                         onInputChange={setSearch}

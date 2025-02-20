@@ -2,8 +2,8 @@
     background-color: white;
     display: none;
     position: absolute;
-    width: 150px;
-    height: 200px;
+    width: 100px;
+    height: 100px;
     top: 15px;
     right: 0;
     border: 1px solid #AAAAAA;
@@ -17,13 +17,19 @@
     display: block !important;
 }
 
+.BoardContainerOn ul{
+    text-align: center;
+    margin: 0 auto;
+    list-style: none;
+}
+
 .CommentContainer{
     z-index: 100;
     background-color: white;
     display: none;
     position: absolute;
-    width: 150px;
-    height: 200px;
+    width: 100px;
+    height: 100px;
     top: 30px;
     right: 0;
     border: 1px solid #AAAAAA;
@@ -34,4 +40,10 @@
 .CommentContainerOn{
     composes: CommentContainer;
     display: block !important;
+}
+
+.CommentContainerOn ul{
+    text-align: center;
+    margin: 0 auto;
+    list-style: none;
 }

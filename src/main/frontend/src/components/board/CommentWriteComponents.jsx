@@ -4,6 +4,9 @@ import SmallBtn from "../common/SmallBtnComponents";
 import useApi from "../../hooks/common/useApi";
 import {useState} from "react";
 
+import {ReactComponent as CommentEmoticon} from "../../assets/image/icon_comment_emoticon.svg";
+import EmojiGrid from "./EmojiGridComponents";
+
 const CommentWrite = ({
                           style,
                           comment = {
@@ -27,12 +30,16 @@ const CommentWrite = ({
                           setCommentValue(e.target.value);
                       }} />
             <div className={CommentWriteStyle.btnWrap}>
-                <SmallBtn title={"작성"}
-                          onClick={() => {
-                              comment.commentContent = commentValue;
-                              handleSaveComment(comment, setCommentValue);
-                          }} />
+                <span>
+                    <CommentEmoticon width={30} height={30} />
+                    <SmallBtn title={"작성"}
+                              onClick={() => {
+                                  comment.commentContent = commentValue;
+                                  handleSaveComment(comment, setCommentValue);
+                              }} />
+                </span>
             </div>
+            <EmojiGrid />
         </div>
     );
 }

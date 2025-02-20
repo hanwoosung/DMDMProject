@@ -35,6 +35,7 @@ public class CommentDto {
     private Integer likeCnt;
     private Integer hateCnt;
     private String loginLikes;
+    private String filePath;
     private String blackListYn;
 
 }

@@ -30,6 +30,7 @@ import axios from "axios";
 const useApi = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const accessToken = window.localStorage.getItem("access") ?? "";
 
     const axiosInstance = axios.create({
         baseURL: "http://localhost:8090"
@@ -51,7 +52,10 @@ const useApi = () => {
                 url,
                 params,
                 data: body,
-                headers,
+                headers: {
+                    ...headers,
+                    "access": accessToken
+                },
             });
 
             console.log(`%c[RESPONSE] %c${method.toUpperCase()} %c${url}`,

@@ -36,6 +36,7 @@ public class BoardDetailDto {
     private Integer likeCnt;
     private Integer hateCnt;
     private String loginLikes;
+    private String filePath;
     private String tag;
     private List<String> tags = new ArrayList<>();
 }

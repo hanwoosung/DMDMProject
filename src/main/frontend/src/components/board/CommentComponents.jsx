@@ -15,7 +15,9 @@ const Comment = ({
                      type = "",
                      scrollToComment,
                      refCallback,
-                     isHighlighted // 🔥 강조 여부 prop 추가
+                     isHighlighted, // 🔥 강조 여부 prop 추가
+                     setAlertMessage,
+                     setIsAlert
                  }) => {
 
     const [edit, setEdit] = useState(false);
@@ -55,7 +57,7 @@ const Comment = ({
                 <div
                     className={`${CommentStyle[containerClass]} ${isHighlighted ? CommentStyle.commentHighlight : ""}`}>
                     <img className={CommentStyle.profile}
-                         src={"/"}
+                         src={comment.filePath}
                          onError={(e) => {
                              e.target.src = profileImg;
                          }}  // 이미지 로드 실패 시 기본 이미지로 대체
@@ -70,12 +72,12 @@ const Comment = ({
                             <span>{comment.insert}</span>
                         </div>
                         <div className={CommentStyle.commentInfo}>
-                            {comment.commentContent}
+                            {comment.status === "ACTIVE" ? comment.commentContent : (<b>삭제된 게시글 입니다.</b>)}
                             <div
                                 className={isHidden ? CommentStyle.on : CommentStyle.off}
                                 onClick={() => setIsHidden(false)} // 클릭하면 해제
                             >
-                                {isHidden
+                                {isHidden && comment.status === "ACTIVE"
                                     ? comment.blackListYn === "Y"
                                         ? "블랙리스트로 추가된 사용자의 댓글입니다."
                                         : "블라인드된 댓글입니다."
@@ -103,7 +105,12 @@ const Comment = ({
                             )}
                             <span ref={commentMoreRef}>
                                 <More onClick={() => setCommentMore(!commentMore)} />
-                                {commentMore && <CommentMore status={commentMore} />}
+                                {commentMore && <CommentMore status={commentMore}
+                                                             setAlertMessage={setAlertMessage}
+                                                             setIsAlert={setIsAlert}
+                                                             userId={comment.userId}
+                                                             boardId={comment.boardId}
+                                                             commentId={comment.commentId} />}
                             </span>
                         </div>
                     </div>

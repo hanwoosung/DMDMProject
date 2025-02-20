@@ -4,6 +4,9 @@ import kr.co.dmdm.dto.board.BoardDto;
 import kr.co.dmdm.dto.board.BoardListDto;
 import kr.co.dmdm.dto.board.LikesDto;
 import kr.co.dmdm.dto.common.FileDto;
+import kr.co.dmdm.global.exception.CustomException;
+import kr.co.dmdm.global.exception.ExceptionEnum;
+import kr.co.dmdm.jwt.JWTUtil;
 import kr.co.dmdm.service.board.BoardService;
 import kr.co.dmdm.service.board.BoardServiceImpl;
 import kr.co.dmdm.service.common.FileService;
@@ -38,22 +41,41 @@ public class BoardController {
 
     private final FileService fileService;
     private final BoardService boardService;
+    private final JWTUtil jwtUtil;
 
     @PostMapping("/file")
-    public FileDto saveFiles(@RequestParam("image") MultipartFile file) throws IOException {
+    public FileDto saveFiles(@RequestParam("image") MultipartFile file,
+                             @RequestHeader("access") String token) throws IOException {
+
+        String sess = "";
+
+        try {
+            sess = jwtUtil.getUsername(token);
+        } catch (Exception e) {
+            throw new CustomException(ExceptionEnum.SECURITY);
+        }
 
         String fileType = "BOARD";
-        String userId = "yiok79";
 
 //        1차로 refId는 사용자 Id 넣음
-        fileService.saveFile(file, fileType, userId, userId);
+        fileService.saveFile(file, fileType, sess, sess);
 
 //        이후 저장한거 넘김
-        return fileService.findFileByRefNoAndFileType(userId, fileType);
+        return fileService.findFileByRefNoAndFileType(sess, fileType);
     }
 
     @PostMapping
-    public void saveBoards(@RequestBody Map<String, Object> params) throws IOException {
+    public void saveBoards(@RequestBody Map<String, Object> params,
+                           @RequestHeader("access") String token) throws IOException {
+        String sess = "";
+
+        try {
+            sess = jwtUtil.getUsername(token);
+        } catch (Exception e) {
+            throw new CustomException(ExceptionEnum.SECURITY);
+        }
+
+        params.put("sess", sess);
         boardService.saveBoard(params);
     }
 
@@ -63,24 +85,59 @@ public class BoardController {
                                          @RequestParam(defaultValue = "1") int size,
                                          @RequestParam(defaultValue = "all") String searchType,
                                          @RequestParam(defaultValue = "") String searchData,
-                                         @RequestParam(defaultValue = "recent") String sortType) throws IOException {
-        return boardService.getBoards(boardType, "ACTIVE", page, size, searchType, searchData, sortType);
+                                         @RequestParam(defaultValue = "recent") String sortType,
+                                         @RequestHeader("access") String token) throws IOException {
+        String sess = "";
+
+        try {
+            sess = jwtUtil.getUsername(token);
+        } catch (Exception e) {
+            log.error("세션없음 빈값처리");
+        }
+
+        return boardService.getBoards(boardType, "ACTIVE", page, size, searchType, searchData, sortType, sess);
     }
 
     @GetMapping("/{boardId}")
-    public Map<String, Object> getBoard(@PathVariable int boardId){
-        String sess = "yiok79";
+    public Map<String, Object> getBoard(@PathVariable int boardId,
+                                        @RequestHeader("access") String token) throws IOException {
+
+        String sess = "";
+
+        try {
+            sess = jwtUtil.getUsername(token);
+        } catch (Exception e) {
+            log.error("세션없음 빈값처리");
+        }
+
         return boardService.getBoard(boardId, sess);
     }
 
     @PostMapping("/likes")
-    public void changeLikes(@RequestBody LikesDto likes){
+    public void changeLikes(@RequestBody LikesDto likes,
+                            @RequestHeader("access") String token) {
 
-        likes.setUserId("yiok79");
+        String sess = "";
+
+        try {
+            sess = jwtUtil.getUsername(token);
+        } catch (Exception e) {
+            throw new CustomException(ExceptionEnum.SECURITY);
+        }
+
+        likes.setUserId(sess);
 
         boardService.setLikes(likes);
     }
 
+
+    @DeleteMapping("/{boardId}")
+    public void deleteBoard(@PathVariable Long boardId,
+                            @RequestHeader("access") String token) throws IOException {
+
+        String sess = jwtUtil.getUsername(token);
+        boardService.deleteBoard(boardId);
+    }
 
 
 }
