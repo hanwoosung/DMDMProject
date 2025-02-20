@@ -16,6 +16,7 @@ import FightZone from "./pages/FightZone";
 
 import EmoticonRegister from "./components/emoticon/EmoticonRegister";
 import CommonCodeManagement from "./components/admin/CommonCodeManagement";
+import Board from "./pages/board/Board";
 
 function App() {
     const {isLoggedIn} = useLogin();
@@ -68,6 +69,12 @@ function App() {
                 <Route path="/board-list/:boardType" element={
                     <Layout>
                         <BoardList/>
+                    </Layout>
+                } />
+
+                <Route path="/board/:boardId" element={
+                    <Layout>
+                        <Board/>
                     </Layout>
                 } />
 

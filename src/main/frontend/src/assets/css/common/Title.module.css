@@ -9,3 +9,8 @@
     font-size: 1rem;
     margin: 10px 0 5px 0;
 }
+
+.subTitle span{
+    font-size: 1rem;
+    font-weight: normal;
+}

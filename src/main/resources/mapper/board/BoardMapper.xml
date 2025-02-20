@@ -19,14 +19,23 @@
                IFNULL(c.file_path, '/') AS file_path,
                GROUP_CONCAT(d.tag) AS tag,
                COUNT(f.like_target) AS likeCnt,
-               COUNT(g.comment_id) AS commentCnt
+               g.commentCnt
         FROM tbl_board a FORCE INDEX(idx_tbl_board_01)
         LEFT JOIN tbl_user b ON a.user_id = b.user_id
         LEFT JOIN tbl_file c FORCE INDEX (idx_tbl_file_01) ON a.user_id = c.file_ref_no AND c.file_type = 'PROFILE'
-        LEFT JOIN tbl_board_tag d ON a.board_id = d.board_id
+        LEFT JOIN (
+            SELECT board_id, GROUP_CONCAT(DISTINCT tag) AS tag
+            FROM tbl_board_tag
+            GROUP BY board_id
+        ) d ON a.board_id = d.board_id
         LEFT JOIN tbl_black_list e ON a.user_id = e.receive_user_id AND e.send_user_id = '로그인한 아이디'
         LEFT JOIN tbl_likes f ON f.like_target_type = 'BOARD' AND f.like_target = a.board_id AND f.like_type = 'LIKE'
-        LEFT JOIN tbl_comment g ON g.board_id = a.board_id AND g.`status` = 'ACTIVE'
+        LEFT JOIN (
+            SELECT board_id, COUNT(comment_id) AS commentCnt
+            FROM tbl_comment
+            WHERE status = 'ACTIVE'
+            GROUP BY board_id
+        ) g ON g.board_id = a.board_id
         WHERE a.board_type = #{boardType}
         AND a.status = #{status}
         AND e.send_user_id IS NULL
@@ -88,5 +97,156 @@
         </trim>
 
     </select>
+
+    <select id="getBoard" resultType="kr.co.dmdm.dto.board.BoardDetailDto">
+
+        SELECT a.board_id,
+               a.board_type,
+               b.name AS board_type_name,
+               a.board_title,
+               a.board_content,
+               a.user_id,
+               e.user_name,
+               e.user_level,
+               fnc_timestamp(a.insert_dt) AS `insert`,
+               a.insert_dt,
+               a.update_dt,
+               a.`status`,
+               a.v_cnt,
+               SUM(IF(c.like_type = 'LIKE', 1, 0)) AS like_cnt,
+               SUM(IF(c.like_type = 'HATE', 1, 0)) AS hate_cnt,
+               IFNULL(d.like_type, '') AS login_likes,
+               f.tag
+        FROM tbl_board a
+        LEFT JOIN tbl_common b ON a.board_type = b.code AND b.parent_code = 'BOARD_CATEGORY'
+        LEFT JOIN tbl_likes c ON a.board_id = c.like_target AND c.like_target_type = 'BOARD'
+        LEFT JOIN tbl_likes d ON a.board_id = d.like_target AND d.like_target_type = 'BOARD' AND d.user_id = #{sess}
+        LEFT JOIN tbl_user e ON a.user_id = e.user_id
+        LEFT JOIN (
+            SELECT board_id, GROUP_CONCAT(DISTINCT tag) AS tag
+            FROM tbl_board_tag
+            GROUP BY board_id
+        ) f ON a.board_id = f.board_id
+        WHERE a.board_id = ${boardId}
+        GROUP BY a.board_id;
+
+    </select>
+
+    <select id="getComments" resultType="kr.co.dmdm.dto.board.CommentDto">
+        WITH RECURSIVE comment_tree AS (
+            SELECT
+                board_id,
+                comment_id,
+                parent_comment_id,
+                comment_content,
+                comment_type,
+                user_id,
+                fnc_timestamp(insert_dt) AS `insert`,
+                insert_dt,
+                update_dt,
+                status,
+                0 AS depth,
+                CAST(comment_id AS CHAR(255)) AS sort_order
+            FROM tbl_comment
+            WHERE board_id = ${boardId} AND parent_comment_id = 0
+
+            UNION ALL
+
+            SELECT
+                c.board_id,
+                c.comment_id,
+                c.parent_comment_id,
+                c.comment_content,
+                c.comment_type,
+                c.user_id,
+                fnc_timestamp(c.insert_dt) AS `insert`,
+                c.insert_dt,
+                c.update_dt,
+                c.status,
+                ct.depth + 1 AS depth,
+                CONCAT(ct.sort_order, '-', c.comment_id) AS sort_order
+            FROM tbl_comment c JOIN comment_tree ct ON c.parent_comment_id = ct.comment_id
+            WHERE c.board_id = ${boardId}
+        )SELECT
+            a.board_id,
+            a.comment_id,
+            a.parent_comment_id,
+            a.depth,
+            a.comment_content,
+            a.comment_type,
+            a.user_id,
+            b.user_level,
+            b.user_name,
+            a.`insert`,
+            a.insert_dt,
+            a.update_dt,
+            a.`status`,
+            SUM(IF(c.like_type = 'LIKE', 1, 0)) AS like_cnt,
+            SUM(IF(c.like_type = 'HATE', 1, 0)) AS hate_cnt,
+            IFNULL(d.like_type, '') AS login_likes,
+            IF(e.send_user_id IS NULL, 'N', 'Y') AS black_list_yn
+        FROM comment_tree a
+        LEFT JOIN tbl_user b ON a.user_id = b.user_id
+        LEFT JOIN tbl_likes c ON a.comment_id = c.like_target AND c.like_target_type = 'COMMENT'
+        LEFT JOIN tbl_likes d ON a.comment_id = d.like_target AND d.like_target_type = 'COMMENT' AND d.user_id = 'yiok79'
+        LEFT JOIN tbl_black_list e ON a.user_id = e.receive_user_id AND e.send_user_id = 'yiok79'
+        GROUP BY a.comment_id
+        ORDER BY sort_order ASC;
+
+    </select>
+
+    <insert id="insertLikes">
+        INSERT INTO tbl_likes(
+            like_target,
+            like_target_type,
+            user_id,
+            like_type,
+            insert_dt
+        )VALUES (
+            #{likes.likeTarget},
+            #{likes.likeTargetType},
+            #{likes.userId},
+            #{likes.likeType},
+            NOW()
+        );
+    </insert>
+
+    <delete id="deleteLikes">
+        DELETE FROM tbl_likes
+        WHERE like_target = #{likes.likeTarget}
+        AND like_target_type = #{likes.likeTargetType}
+        AND user_id = #{likes.userId}
+    </delete>
+
+    <update id="addViewCount">
+        UPDATE tbl_board
+        SET v_cnt = v_cnt + 1
+        WHERE board_id=${boardId}
+    </update>
+
+    <insert id="saveComment">
+        INSERT INTO tbl_comment(
+            parent_comment_id,
+            board_id,
+            depth,
+            comment_content,
+            comment_type,
+            user_id,
+            insert_dt,
+            update_dt,
+            `status`
+        )VALUES (
+            ${comment.parentCommentId},
+            ${comment.boardId},
+            ${comment.depth},
+            #{comment.commentContent},
+            #{comment.commentType},
+            #{comment.userId},
+            NOW(),
+            NOW(),
+            'ACTIVE'
+        );
+
+    </insert>
 
 </mapper>

@@ -1,6 +1,9 @@
 package kr.co.dmdm.service.board;
 
 import kr.co.dmdm.dto.board.BoardListDto;
+import kr.co.dmdm.dto.board.CommentDto;
+import kr.co.dmdm.dto.board.CommentRequestDto;
+import kr.co.dmdm.dto.board.LikesDto;
 
 import java.util.List;
 import java.util.Map;
@@ -28,4 +31,10 @@ public interface BoardService {
                                   String searchType,
                                   String searchData,
                                   String sortType);
+
+    Map<String, Object> getBoard(int boardId, String sess);
+
+    void setLikes(LikesDto likes);
+
+    List<CommentDto> saveComment(CommentRequestDto comment);
 }

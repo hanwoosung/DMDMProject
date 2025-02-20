@@ -1,0 +1,66 @@
+.boardContainer {
+    width: 1440px;
+    margin: 0 auto;
+    height: 100%;
+    padding-bottom: 100px;
+}
+
+.infoWrap {
+    display: flex;
+    margin-top: 30px;
+}
+
+.profile {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    margin-right: 10px;
+}
+
+.flex {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+.flexColumn {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.flexRight {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    align-items: flex-end;
+    justify-content: space-evenly;
+}
+
+.boardInfo span {
+    margin-left: 10px;
+}
+
+.boardContent {
+    min-height: 300px;
+    margin-top: 20px;
+}
+
+.likeHate {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.commentContent {
+    padding-top: 20px;
+}
+
+.line {
+    margin: 50px 0 25px 0;
+    color: #AAAAAA;
+}
+
+.relative{
+    position: relative;
+}

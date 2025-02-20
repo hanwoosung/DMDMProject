@@ -2,6 +2,7 @@ package kr.co.dmdm.controller.board;
 
 import kr.co.dmdm.dto.board.BoardDto;
 import kr.co.dmdm.dto.board.BoardListDto;
+import kr.co.dmdm.dto.board.LikesDto;
 import kr.co.dmdm.dto.common.FileDto;
 import kr.co.dmdm.service.board.BoardService;
 import kr.co.dmdm.service.board.BoardServiceImpl;
@@ -56,7 +57,7 @@ public class BoardController {
         boardService.saveBoard(params);
     }
 
-    @GetMapping("/{boardType}")
+    @GetMapping("/list/{boardType}")
     public Map<String, Object> getBoards(@PathVariable String boardType,
                                          @RequestParam(defaultValue = "1") int page,
                                          @RequestParam(defaultValue = "1") int size,
@@ -65,5 +66,21 @@ public class BoardController {
                                          @RequestParam(defaultValue = "recent") String sortType) throws IOException {
         return boardService.getBoards(boardType, "ACTIVE", page, size, searchType, searchData, sortType);
     }
+
+    @GetMapping("/{boardId}")
+    public Map<String, Object> getBoard(@PathVariable int boardId){
+        String sess = "yiok79";
+        return boardService.getBoard(boardId, sess);
+    }
+
+    @PostMapping("/likes")
+    public void changeLikes(@RequestBody LikesDto likes){
+
+        likes.setUserId("yiok79");
+
+        boardService.setLikes(likes);
+    }
+
+
 
 }

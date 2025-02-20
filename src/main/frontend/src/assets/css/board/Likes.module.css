@@ -1,0 +1,62 @@
+.container{
+    margin: 0 10px 0 10px;
+    border: 1px solid #FFB733;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 10px 8px 10px;
+}
+
+.containerOn{
+    color: white !important;
+    composes: container;
+    background-color: #FFB733;
+}
+
+.containerOn svg{
+    color: white !important;
+}
+
+.containerOn span{
+    padding: 10px 0 0 4px;
+}
+
+.container svg{
+    width: 36px;
+    height: 36px;
+    /*color: #FFB733;*/
+    color: black;
+}
+
+.container span{
+    padding: 10px 0 0 4px;
+}
+
+.CommentContainer{
+    composes: container;
+    border: 0;
+    padding: 4px 5px 4px 5px;
+}
+
+.CommentContainerOn{
+    color: #FFB733 !important;
+    composes: CommentContainer;
+}
+
+.CommentContainerOn svg{
+    color: #FFB733 !important;
+    width: 24px;
+    height: 24px;
+}
+
+.CommentContainer svg{
+    width: 24px;
+    height: 24px;
+    /*color: #FFB733;*/
+    color: black;
+}
+
+.CommentContainer span{
+    padding: 0 0 0 5px;
+}

@@ -3,8 +3,7 @@ package kr.co.dmdm.service.board;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
-import kr.co.dmdm.dto.board.BoardDto;
-import kr.co.dmdm.dto.board.BoardListDto;
+import kr.co.dmdm.dto.board.*;
 import kr.co.dmdm.dto.common.FileDto;
 import kr.co.dmdm.entity.board.Board;
 import kr.co.dmdm.entity.File;
@@ -92,7 +91,63 @@ public class BoardServiceImpl implements BoardService {
         return result;
     }
 
-    private int boardCnt(String boardType, String status, String searchType, String searchData){
+    @Override
+    public Map<String, Object> getBoard(int boardId, String sess) {
+
+        boardDao.addViewCount(boardId);
+
+        Map<String, Object> result = new HashMap<>();
+
+        BoardDetailDto board = boardDao.getBoard(boardId, sess);
+
+        if (board == null) {
+            throw new CustomException(ExceptionEnum.NOT_FOUND);
+        }
+
+        if (!board.getStatus().equals("ACTIVE")) {
+            throw new RuntimeException("존재하지 않는 게시판입니다.");
+        }
+
+        if (board.getTag() != null && !board.getTag().isEmpty()) {
+            board.setTags(
+                    Arrays.stream(board.getTag().split(","))
+                            .map(String::trim)
+                            .collect(Collectors.toList())
+            );
+        }
+
+        List<CommentDto> comments = boardDao.getComments(boardId, sess);
+
+        result.put("board", board);
+        result.put("comments", comments);
+
+        return result;
+    }
+
+    @Override
+    public void setLikes(LikesDto likes) {
+
+        if (!likes.getLoginLikes().isEmpty()) {
+//            삭제하는 로직
+            boardDao.deleteLikes(likes);
+        }
+
+        if (!likes.getLoginLikes().equals(likes.getLikeType())) {
+//        넣는로직
+            boardDao.insertLikes(likes);
+        }
+    }
+
+    @Override
+    public List<CommentDto> saveComment(CommentRequestDto comment) {
+
+        badWordService.checkBadWord(comment.getCommentContent());
+
+        boardDao.saveComment(comment);
+        return boardDao.getComments(comment.getBoardId(), comment.getUserId());
+    }
+
+    private int boardCnt(String boardType, String status, String searchType, String searchData) {
         return boardDao.getBoardCnt(boardType, status, searchType, searchData);
     }
 

@@ -7,7 +7,7 @@ import Confirm from "../../components/common/ConfirmComponents";
 import NoticeList from "../../components/board/NoticeListComponents";
 import {useNavigate} from "react-router-dom";
 import Select from "../../components/common/SelectComponents";
-import BasicBoardList from "../../components/board/BasicBoardListComponent";
+import BasicBoardList from "../../components/board/BasicBoardListComponents";
 import PagingButtons from "../../components/common/PagingButtons";
 import Search from "../../components/common/SearchComponents";
 

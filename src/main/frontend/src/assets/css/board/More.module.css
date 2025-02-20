@@ -1,0 +1,37 @@
+.BoardContainer{
+    background-color: white;
+    display: none;
+    position: absolute;
+    width: 150px;
+    height: 200px;
+    top: 15px;
+    right: 0;
+    border: 1px solid #AAAAAA;
+    border-radius: 10px;
+    padding: 10px;
+    z-index: 100;
+}
+
+.BoardContainerOn{
+    composes: BoardContainer;
+    display: block !important;
+}
+
+.CommentContainer{
+    z-index: 100;
+    background-color: white;
+    display: none;
+    position: absolute;
+    width: 150px;
+    height: 200px;
+    top: 30px;
+    right: 0;
+    border: 1px solid #AAAAAA;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.CommentContainerOn{
+    composes: CommentContainer;
+    display: block !important;
+}
