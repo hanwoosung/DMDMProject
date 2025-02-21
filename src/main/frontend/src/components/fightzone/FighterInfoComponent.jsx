@@ -12,9 +12,9 @@ const FighterInfoComponent = forwardRef((props, ref) => {
         rightPercent,
         leftPercent,
         exampleTimer,
-        sendUser,
-        receiveUser,
         roomInfo,
+        sendUserExist,
+        receiveUserExist,
         refs
     } = props
 
@@ -50,6 +50,7 @@ const FighterInfoComponent = forwardRef((props, ref) => {
 
         return (
             <div className={styles.timeCount}>
+                <span>남은 시간 </span>
                 <span>{zeroInsert(hour)}</span>
                 <span>:</span>
                 <span>{zeroInsert(min)}</span>
@@ -78,19 +79,29 @@ const FighterInfoComponent = forwardRef((props, ref) => {
         )
     }
 
+    useEffect(() => {
+        console.log(sendUserExist + "결과에용............");
+    }, [sendUserExist]);
+
     return (
         <div className={styles.fighterInfoContainer}>
             <div className={styles.fighterInfo}>
                 <div className={styles.flexRow} style={{gap: 10}}>
                     <div className={styles.fighterBadge} style={{background: "#ffd633"}}>Lv. {roomInfo.sendLevel}</div>
                     {roomInfo.sendBadge && <div className={styles.fighterLevel}
-                         style={getBadgeStyle("#ffd633", "#000")}
+                                                style={getBadgeStyle("#ffd633", "#000")}
                     >{roomInfo.sendBadge}
                     </div>}
                 </div>
-                <img src={leftFighterImg} alt="프로필사진"
-                     className={styles.fighterImage}
-                     style={{border: "3px solid #300CFF"}}/>
+                <div>
+                    <div className={styles.fighterImgBlock} style={sendUserExist ? {display: "none"} : {}}>
+                        <span style={{fontWeight: "bold", color: "white"}}>부재중</span>
+                    </div>
+
+                    <img src={leftFighterImg} alt="프로필사진"
+                         className={styles.fighterImage}
+                         style={{border: "3px solid #300CFF"}}/>
+                </div>
                 <div className={styles.fighterName}>{roomInfo.sendName}</div>
                 <button className={selectedVote === "LEFT" ?
                     styles.leftVoteBtn :
@@ -114,15 +125,21 @@ const FighterInfoComponent = forwardRef((props, ref) => {
             </div>
             <div className={styles.fighterInfo}>
                 <div className={styles.flexRow} style={{gap: 10}}>
-                    <div className={styles.fighterBadge} style={{background: "#ff3333"}}>Lv. {roomInfo.receiveLevel}</div>
+                    <div className={styles.fighterBadge}
+                         style={{background: "#ff3333"}}>Lv. {roomInfo.receiveLevel}</div>
                     {roomInfo.receiveBadge && <div className={styles.fighterLevel}
-                         style={getBadgeStyle("#ff3333", "#000")}
+                                                   style={getBadgeStyle("#ff3333", "#000")}
                     >{roomInfo.receiveBadge}
                     </div>}
                 </div>
-                <img src={rightFighterImg} alt="프로필 사진"
-                     className={styles.fighterImage}
-                     style={{border: "3px solid #FF0000"}}/>
+                <div>
+                    <div className={styles.fighterImgBlock} style={receiveUserExist ? {display: "none"} : {}}>
+                        <span style={{fontWeight: "bold", color: "white"}}>부재중</span>
+                    </div>
+                    <img src={rightFighterImg} alt="프로필 사진"
+                         className={styles.fighterImage}
+                         style={{border: "3px solid #FF0000"}}/>
+                </div>
                 <div className={styles.fighterName}>{roomInfo.receiveName}</div>
                 <button className={selectedVote === "RIGHT" ?
                     styles.rightVoteBtn :

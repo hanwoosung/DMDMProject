@@ -51,7 +51,7 @@ public class ChatRoomManager {
 
         chatRoomTimers.forEach((chatRoomId, remainingTime) -> {
             if (remainingTime <= 0) {
-                deleteInfo(chatRoomId);
+                deleteInfo(chatRoomId, null);
             } else {
                 chatRoomTimers.put(chatRoomId, remainingTime - 1);
                 messagingTemplate.convertAndSend("/subscribe/timer." + chatRoomId, remainingTime - 1);
@@ -103,8 +103,7 @@ public class ChatRoomManager {
      */
     private void stopTimer(Long chatRoomId) {
         System.out.println("토론 마감");
-        deleteInfo(chatRoomId);
-        messagingTemplate.convertAndSend("/subscribe/timer." + chatRoomId, 0);
+        deleteInfo(chatRoomId, null);
     }
 
     /**
@@ -136,15 +135,13 @@ public class ChatRoomManager {
      */
     public List<ChatUserDto> leaveUser(ChatUserDto request, Long chatRoomId) {
         ChatRoomResponseDto roomInfo = chatRoomDao.findChattingRoom(Math.toIntExact(chatRoomId), null, null).getFirst();
+        getVoteData(chatRoomId);
 
-        if (
-            roomInfo.getSendUserId().equals(request.getUsername())
-            || roomInfo.getReceiveUserId().equals(request.getUsername())
-        ) {
-            log.info("토론자 퇴장 이벤트 작동");
-            //프론트는 제한시간을 0초로 수정하여 강제 종료
-            deleteInfo(chatRoomId);
-            messagingTemplate.convertAndSend("/subscribe/timer." + chatRoomId, 0);
+        if (roomInfo.getSendUserId().equals(request.getUsername())) {
+            deleteInfo(chatRoomId, "RECEIVE");
+            return null;
+        } else if (roomInfo.getReceiveUserId().equals(request.getUsername())) {
+            deleteInfo(chatRoomId, "SEND");
             return null;
         }
 
@@ -231,9 +228,16 @@ public class ChatRoomManager {
     /**
      * 채팅방 정보 삭제
      */
-    public void deleteInfo(Long chatRoomId) {
+    public void deleteInfo(Long chatRoomId, String winner) {
         VoteResponseDto voteResponse = voteResult(getVoteData(chatRoomId));
 
+        if(winner.equals("SEND")){
+            voteResponse.setLeftVote(voteResponse.getLeftVote() + 10000);
+        } else if(winner.equals("RECEIVE")){
+            voteResponse.setRightVote(voteResponse.getRightVote() + 10000);
+        }
+
+        messagingTemplate.convertAndSend("/subscribe/timer." + chatRoomId, 0);
         chatRoomDao.updateChatRoom(
                 new RoomUpdateRequestDto(
                         Math.toIntExact(chatRoomId),

@@ -25,15 +25,17 @@ const FightZone = () => {
     const observerMessageEnd = useRef()
 
     const [sendUser, setSendUser] = useState('')
+    const [sendUserExist, setSendUserExist] = useState(false)
     const [receiveUser, setReceiveUser] = useState('')
+    const [receiveUserExist, setReceiveUserExist] = useState(false)
     const [roomInfo, setRoomInfo] = useState(null)
 
     const [fighterMessages, setFighterMessages] = useState([])
     const [fighterContent, setFighterContent] = useState('')
 
+    const [observerUsers, setObserverUsers] = useState([])
     const [observerMessages, setObserverMessages] = useState([])
     const [observerContent, setObserverContent] = useState('')
-    const [observerUsers, setObserverUsers] = useState([])
 
     const [selectedVote, setSelectedVote] = useState(null)
 
@@ -52,7 +54,7 @@ const FightZone = () => {
                     }
                 })
 
-                if(response.data.length === 0){
+                if (response.data.length === 0) {
                     alert("존재하지 않는 채팅방입니다.")
                     navigate(`/fight/list`)
                     return
@@ -109,8 +111,28 @@ const FightZone = () => {
 
                 //유저 리스트 구독
                 stompClient.current.subscribe(`/subscribe/chatRoom.${roomNo}`, (message) => {
-                        const body = JSON.parse(message.body)
-                        console.log(body)
+                        const body = JSON.parse(message.body);
+                        console.log(body);
+
+                        // todo 보면 알겠지만 현재 보낸유저, 받는 유저가 보이지 않음 이것만 해결하면 준비중 해결될듯
+                        console.log(sendUser + "테스트.....");
+                        console.log(receiveUser + "테스트2.........");
+
+                        // 유저 존재 여부를 확인할 변수
+                        let sendUserFound = false;
+                        let receiveUserFound = false;
+
+                        body.forEach((user) => {
+                            if (user.username === sendUser) {
+                                sendUserFound = true;
+                            }
+                            if (user.username === receiveUser) {
+                                receiveUserFound = true;
+                            }
+                        });
+
+                        setSendUserExist(sendUserFound);
+                        setReceiveUserExist(receiveUserFound);
                         setObserverUsers(body)
                     },
                     {access: accessToken.current}
@@ -265,9 +287,9 @@ const FightZone = () => {
                             rightPercent={rightPercent}
                             chatUserId={chatUserId}
                             exampleTimer={exampleTimer}
-                            sendUser={sendUser}
-                            receiveUser={receiveUser}
                             roomInfo={roomInfo}
+                            sendUserExist={sendUserExist}
+                            receiveUserExist={receiveUserExist}
                             refs={{chatUserId}}
                         />
 

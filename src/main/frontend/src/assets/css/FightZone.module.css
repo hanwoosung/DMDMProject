@@ -333,3 +333,14 @@
 .inactiveBtn {
     background-color: #AAAAAA;
 }
+
+.fighterImgBlock{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    background-color: rgba(53,53,53,0.61);
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
