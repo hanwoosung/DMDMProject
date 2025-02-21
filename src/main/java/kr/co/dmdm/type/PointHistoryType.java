@@ -12,28 +12,13 @@ package kr.co.dmdm.type;
  * 2025-02-20        황승현       최초 생성
  */
 public enum PointHistoryType {
-    BUY_PRODUCT(true),
-    SELL_PRODUCT(false),
-    SEND_POINT(true),
-    RECEIVE_POINT(false),
-    WRITE_BOARD(false),
-    WRITE_COMMENT(false),
-    REGISTER_EMOTICON(false);
-
-    private final boolean isReceive;
-
-    PointHistoryType(Boolean isReceive) {
-        this.isReceive = isReceive;
-    }
-
-    /**
-     * 연동되는 유저가 있으면 true
-     * EX) (포인트 보내기 -> 빋는사람) = true, (상품 구매 -> 판매자) = true
-     * @return isReceive
-     */
-    public boolean isReceive() {
-        return isReceive;
-    }
+    BUY_PRODUCT,
+    SELL_PRODUCT,
+    SEND_POINT,
+    RECEIVE_POINT,
+    WRITE_BOARD,
+    WRITE_COMMENT,
+    REGISTER_EMOTICON;
 
     public static PointHistoryType fromCode(String code) {
         for (PointHistoryType type : values()) {

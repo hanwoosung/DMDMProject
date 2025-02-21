@@ -29,9 +29,6 @@ public class PointHistoryRequestDto {
     @Size(max = 15)
     private String userId;
 
-    @Size(max = 15)
-    private String receiveUserId;
-
     @NotNull
     private Integer point;
 
