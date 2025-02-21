@@ -90,6 +90,7 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .authorizeHttpRequests((auth) ->
                         auth.requestMatchers("/api/test/admin").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/user/profile").hasRole("MEMBER")
                         .anyRequest().permitAll()
                 );
         http

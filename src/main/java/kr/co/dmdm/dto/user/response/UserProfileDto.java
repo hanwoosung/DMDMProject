@@ -2,43 +2,33 @@ package kr.co.dmdm.dto.user.response;
 
 import kr.co.dmdm.dto.common.FileDto;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
 /**
  * packageName    : kr.co.dmdm.dto.user.response
- * fileName       : UserDto
+ * fileName       : UserProfileDto
  * author         : 한우성
- * date           : 2025-01-22
+ * date           : 2025-02-20
  * description    :
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
- * 2025-01-22        한우성       최초 생성
+ * 2025-02-20        한우성       최초 생성
  */
-
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
+@Data
+public class UserProfileDto {
     private String userId;
-    private String userPw;
     private String userName;
     private LocalDate userBirth;
     private String userEmail;
     private Character userEmailPushYn;
-    private String userRole;
-    private String userJoinType;
-    private String userBadge;
     private Integer userPoint;
-    private Integer userLevel;
     private Integer userExp;
-    private String status;
-    private Integer goldMedal;
-    private Integer silverMedal;
-    private Integer bronzeMedal;
+    private FileDto fileDto;
+    private boolean isProfileDeleted;
 }

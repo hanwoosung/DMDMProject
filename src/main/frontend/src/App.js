@@ -17,6 +17,7 @@ import FightZone from "./pages/FightZone";
 import EmoticonRegister from "./components/emoticon/EmoticonRegister";
 import CommonCodeManagement from "./components/admin/CommonCodeManagement";
 import MainPage from "./pages/MainPage";
+import UserEditPage from "./pages/UserEditPage";
 
 function App() {
     const {isLoggedIn} = useLogin();
@@ -90,6 +91,12 @@ function App() {
                     <Layout>
                         <EmoticonRegister/>
                     </Layout>
+                }/>
+
+                <Route path="/user-edit" element={
+                    <AsideLayout>
+                    <UserEditPage />
+                    </AsideLayout>
                 }/>
 
             </Routes>
