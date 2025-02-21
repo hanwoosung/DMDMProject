@@ -6,9 +6,12 @@ import {ReactComponent as Comment} from "../../assets/image/icon_comment.svg";
 import {ReactComponent as See} from "../../assets/image/icon_see.svg";
 import {ReactComponent as Like} from "../../assets/image/icon_like.svg";
 import Level from "../common/LevelComponents";
+import {useNavigate} from "react-router-dom";
 
 
 const BasicBoardList = ({boardList = []}) => {
+
+    const navigate = useNavigate();
 
     return (
         <div className={BoardListStyle.basicContainer}>
@@ -24,12 +27,14 @@ const BasicBoardList = ({boardList = []}) => {
                     <div className={BoardListStyle.detail}>
                         <div>
                             <span>
-                                <Level level={board.userLevel}/>
+                                <Level level={board.userLevel} />
                                 <span className={BoardListStyle.name}>{board.userName}</span>
                             </span>
                             <span>{board.insert}</span>
                         </div>
-                        <div className={BoardListStyle.title}>{board.boardTitle}</div>
+                        <div className={BoardListStyle.title} onClick={() => {
+                            navigate(`/board/${board.boardId}`);
+                        }}>{board.boardTitle}</div>
                         <div>
                             <ListTag tagList={board.tagList} />
                             <span>

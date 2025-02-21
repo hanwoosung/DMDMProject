@@ -53,3 +53,10 @@ aside{
     margin-left: 20px;
     margin-right: 10px;
 }
+.selected {
+    background: #FFB733;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 10px;
+}

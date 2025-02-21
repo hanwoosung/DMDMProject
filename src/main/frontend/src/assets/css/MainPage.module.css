@@ -1,0 +1,216 @@
+.container {
+    display: flex;
+    width: 100%;
+    max-width: 1400px;
+    overflow: hidden;
+    margin: 50px auto 100px;
+}
+
+/* 왼쪽 사용자 랭킹 */
+.sidebar {
+    width: 21%;
+    padding: 20px;
+}
+
+.userRanking, .medalRanking {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.userRanking h3, .medalRanking h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.rankItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 8px;
+    gap: 10px;
+    width: 100%;
+}
+
+.rankTitle {
+    display: flex;
+    color: black;
+    align-items: center;
+    gap: 20px;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.userName {
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+    flex-grow: 1;
+    overflow: hidden;
+    cursor: pointer;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 120px;
+    display: block;
+}
+
+.medalIcons {
+    display: flex;
+    justify-content: flex-start;
+    gap: 5px;
+    flex-shrink: 0;
+    min-width: 90px;
+}
+
+/* 🔹 게시판 레이아웃 */
+.boardContainer {
+    width: 80%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    padding: 20px;
+    min-width: 700px;
+}
+
+.board {
+    width: 100%;
+    background: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    min-height: 450px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.boardTitle {
+    background: #c88e00;
+    color: #fff;
+    height: 58px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding-left: 30px;
+    border-radius: 20px;
+    font-size: 23px;
+    font-weight: bold;
+}
+
+/* 🔹 게시글 리스트 */
+.postList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.postItem {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    min-height: 70px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.postItem:last-child {
+    border-bottom: none;
+}
+
+.userIcon {
+    width: 35px;
+    height: 35px;
+    margin-right: 10px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.postUserName {
+    font-size: 12px;
+    color: #000000;
+    font-weight: bold;
+    flex-grow: 1;
+    overflow: hidden;
+    cursor: pointer;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 120px;
+    display: block;
+}
+
+.nameLevelWrapper {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.postContent {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 90%;
+}
+
+.postHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.levelBadge {
+    background: #d4af37;
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    display: inline-block;
+    min-width: 40px;
+    text-align: center;
+}
+
+.timeAgo {
+    font-size: 12px;
+    color: #000000;
+    text-align: left;
+}
+
+.postTitle {
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    max-width: 80%;
+    margin-top: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.postTitle:hover{
+    color: #FFB733;
+    cursor: pointer;
+}
+
+.boardTitleBox {
+    display: flex;
+    gap: 5px;
+}
+
+.postFooter {
+    display: flex;
+    font-size: 12px;
+    color: #666;
+    gap: 15px;
+    align-items: center;
+}
+
+.postFooter span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}

@@ -1,10 +1,10 @@
 import logo from "../../assets/image/img_logo.jpg";
 import profile from "../../assets/image/ex_profile.png";
+
 import {ReactComponent as Message} from "../../assets/image/icon_message.svg";
 import {ReactComponent as OpenMessage} from "../../assets/image/icon_open_message.svg";
 import {ReactComponent as Notification} from "../../assets/image/icon_notification.svg";
 import {ReactComponent as DarkMode} from "../../assets/image/icon_dark_mode.svg";
-import {ReactComponent as Profile} from "../../assets/image/icon_profile.svg";
 import {ReactComponent as Logout} from "../../assets/image/icon_logout.svg";
 import {ReactComponent as Info} from "../../assets/image/icon_info.svg";
 import {ReactComponent as Emoticon} from "../../assets/image/icon_emoticon.svg";
@@ -15,6 +15,7 @@ import {ReactComponent as MoreView} from "../../assets/image/icon_more_view.svg"
 import styles from "../../assets/css/Header.module.css";
 import {useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {useLogin} from "../../contexts/AuthContext";
 
 const Header = () => {
 
@@ -23,6 +24,7 @@ const Header = () => {
     const [popupView, setPopupView] = useState(null);
     const popupRef = useRef(null);
     const navigate = useNavigate();
+    const {isLoggedIn, loginUser, profileImage} = useLogin();
 
     const togglePopupView = (clicked) => {
         setPopupView(clicked === popupView ? null : clicked);
@@ -49,6 +51,32 @@ const Header = () => {
         };
     }, []);
 
+    const gotoFightZone = () => {
+        let roomNo = prompt('(테스팅)방번호 입력', '');
+        navigate(`/fight-zone/${roomNo}`)
+    };
+
+    const goLogout = () => {
+        navigate("/logout")
+    }
+
+    const goLogin = () => {
+        navigate("/login")
+    }
+
+    const goJoin = () => {
+        navigate("/sign-up")
+    }
+
+    const goBoard = (boardType) => {
+        navigate(`/board-list/${boardType}`)
+    }
+
+    const goEdit = () => {
+        navigate("/user-edit")
+    }
+
+
     return (
         <header>
             <div className={styles.flexContainer}>
@@ -62,7 +90,7 @@ const Header = () => {
                              onMouseLeave={() => setIsHovered(false)}>
                             <div className={styles.titleHeadBtn}>커뮤니티</div>
                             <div className={styles.titleHeadBtn}>인기글</div>
-                            <div className={styles.titleHeadBtn} onClick={() => navigate(`/fight/list`)}>투기장</div>
+                            <div className={styles.titleHeadBtn} onClick={gotoFightZone}>투기장</div>
                             <div className={styles.titleHeadBtn}>취업</div>
                             <div className={styles.titleHeadBtn}>공지사항</div>
                             <div className={styles.titleHeadBtn}>이벤트</div>
@@ -74,13 +102,13 @@ const Header = () => {
                              onMouseLeave={() => setIsHovered(false)}>
                             <div className={styles.headerFlexColumn}>
                                 <div className={styles.detailTitleBtn}>커뮤니티</div>
-                                <div className={styles.headBtn}>커뮤니티</div>
-                                <div className={styles.headBtn}>Q & A</div>
-                                <div className={styles.headBtn}>지식</div>
-                                <div className={styles.headBtn}>스터디</div>
+                                <div className={styles.headBtn} onClick={() => {goBoard("COMMUNITY")}}>커뮤니티</div>
+                                <div className={styles.headBtn} onClick={() => {goBoard("QNA")}}>Q & A</div>
+                                <div className={styles.headBtn} onClick={() => {goBoard("KNOW")}}>지식</div>
+                                <div className={styles.headBtn} onClick={() => {goBoard("STUDY")}}>스터디</div>
                             </div>
 
-                            <div className={styles.verticalLine}/>
+                            <div className={styles.verticalLine} />
 
                             <div className={styles.headerFlexColumn}>
                                 <div className={styles.detailTitleBtn}>인기글</div>
@@ -88,72 +116,101 @@ const Header = () => {
                                 <div className={styles.headBtn}>일간 인기</div>
                             </div>
 
-                            <div className={styles.verticalLine}/>
+                            <div className={styles.verticalLine} />
 
                             <div className={styles.headerFlexColumn}>
                                 <div className={styles.detailTitleBtn}>투기장</div>
                                 <div className={styles.headBtn}>투기장</div>
                             </div>
 
-                            <div className={styles.verticalLine}/>
+                            <div className={styles.verticalLine} />
 
                             <div className={styles.headerFlexColumn}>
                                 <div className={styles.detailTitleBtn}>취업</div>
-                                <div className={styles.headBtn}>취업얘기</div>
-                                <div className={styles.headBtn}>채용</div>
+                                <div className={styles.headBtn} onClick={() => {goBoard("EMPLO_TALK")}}>취업얘기</div>
+                                <div className={styles.headBtn} onClick={() => {goBoard("EMPLO")}}>채용</div>
                             </div>
 
-                            <div className={styles.verticalLine}/>
+                            <div className={styles.verticalLine} />
 
                             <div className={styles.headerFlexColumn}>
                                 <div className={styles.detailTitleBtn}>공지사항</div>
-                                <div className={styles.headBtn}>공지사항</div>
+                                <div className={styles.headBtn} onClick={() => {goBoard("NOTICE")}}>공지사항</div>
                             </div>
 
-                            <div className={styles.verticalLine}/>
+                            <div className={styles.verticalLine} />
 
                             <div className={styles.headerFlexColumn}>
                                 <div className={styles.detailTitleBtn}>이벤트</div>
-                                <div className={styles.headBtn}>이벤트</div>
+                                <div className={styles.headBtn} onClick={() => {goBoard("EVENT")}}>이벤트</div>
                             </div>
 
-                            <div className={styles.verticalLine}/>
+                            <div className={styles.verticalLine} />
 
                             <div className={styles.headerFlexColumn}>
                                 <div className={styles.detailTitleBtn}>고객센터</div>
-                                <div className={styles.headBtn}>고객센터</div>
+                                <div className={styles.headBtn} onClick={() => {goBoard("SUPPORT")}}>고객센터</div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className={styles.menuFlexColumn} ref={popupRef}>
+
                     <div className={styles.profileFlexRow}>
-                        <Message className={styles.iconSize}
-                                 onClick={() => {
-                                     togglePopupView("message")
-                                 }}
-                        />
-                        <Notification className={styles.iconSize}
-                                      onClick={() => {
-                                          togglePopupView("notification")
-                                      }}
-                        />
-                        <DarkMode className={styles.iconSize}/>
-                        <Profile className={styles.iconSize}
-                                 onClick={() => {
-                                     togglePopupView("profile")
-                                 }}
-                        />
+                        {isLoggedIn &&
+                            (
+                                <Message className={styles.iconSize}
+                                         onClick={() => {
+                                             togglePopupView("message")
+                                         }}
+                                />
+                            )}
+                        {isLoggedIn &&
+                            (
+                                <Notification className={styles.iconSize}
+                                              onClick={() => {
+                                                  togglePopupView("notification")
+                                              }}
+                                />
+                            )}
+                        <DarkMode className={styles.iconSize} />
+                        {isLoggedIn ? (
+                            <div className={styles.profileContainer}>
+                                {profileImage ? (
+                                        <img src={`${profileImage}`}
+                                             alt="User Profile"
+                                             className={styles.profileImage}
+                                             onClick={() => {
+                                                 togglePopupView("profile");
+                                             }}
+                                        />
+                                    ) :
+                                    (<img src={`${profile}`}
+                                          alt="User Profile"
+                                          className={styles.profileImage}
+                                          onClick={() => {
+                                              togglePopupView("profile");
+                                          }}
+                                    />)
+                                }
+                                <span className={styles.profileName}>{loginUser}</span>
+                            </div>
+                        ) : (
+                            <div className={styles.loginAndJoinBox}>
+                                <div onClick={goLogin} className={styles.login}> 로그인</div>
+                                <div onClick={goJoin} className={styles.join}> 회원가입</div>
+                            </div>
+                        )}
                     </div>
 
                     <div className={styles.headPopupList}
                          style={{display: popupView === "message" ? "flex" : "none"}}
                     >
                         <div className={styles.notifyTitle}>
-                            <OpenMessage style={{width: 16, height: 16}}/>
+                            <OpenMessage style={{width: 16, height: 16}} />
                             <div style={{marginLeft: 10}}>쪽지</div>
                         </div>
-                        <hr className={styles.profileLine}/>
+                        <hr className={styles.profileLine} />
                         <div className={styles.notifyContent}>
                             <div className={styles.notifyBtn}>
                                 <div className={styles.headBtn}>모두 읽음</div>
@@ -163,7 +220,7 @@ const Header = () => {
                             {["구구", "멍멍", "두루미"].map((item, index) => (
                                 <div key={index} className={styles.flexColumn}>
                                     <div className={styles.notifyItem} style={{gap: 10}}>
-                                        <img src={profile} alt="profile" style={{borderRadius: 100}}/>
+                                        <img src={profile} alt="profile" style={{borderRadius: 100}} />
                                         <div className={styles.flexColumn} style={{gap: 3}}>
                                             <div className={styles.flexRow} style={{justifyContent: "space-between"}}>
                                                 <div>{item}</div>
@@ -174,41 +231,41 @@ const Header = () => {
                                         <div className={styles.moreOptionBtn}>
                                             <More className={styles.iconSize} onClick={() => {
                                                 handleToggleOption(index)
-                                            }}/>
+                                            }} />
                                             <div
                                                 className={styles.optionList}
                                                 style={{display: activeOption === index ? "flex" : "none"}}
                                             >
                                                 <div className={styles.optionItem}>삭제</div>
-                                                <hr/>
+                                                <hr />
                                                 <div className={styles.optionItem}>읽음</div>
                                             </div>
                                         </div>
                                     </div>
-                                    <hr className={styles.profileItemLine}/>
+                                    <hr className={styles.profileItemLine} />
                                 </div>
                             ))}
 
 
                         </div>
-                        <MoreView className={styles.moreViewBtn}/>
+                        <MoreView className={styles.moreViewBtn} />
                     </div>
 
                     <div className={styles.headPopupList}
                          style={{display: popupView === "notification" ? "flex" : "none"}}
                     >
                         <div className={styles.notifyTitle}>
-                            <Notification style={{width: 16, height: 16}}/>
+                            <Notification style={{width: 16, height: 16}} />
                             <div style={{marginLeft: 10}}>알림</div>
                         </div>
-                        <hr className={styles.profileLine}/>
+                        <hr className={styles.profileLine} />
                         <div className={styles.notifyContent}>
                             <div className={styles.notifyBtn}>
                                 <div className={styles.headBtn}>모두 읽음</div>
                                 <div className={styles.headBtn}>모두 삭제</div>
                             </div>
                             <div className={styles.notifyItem} style={{gap: 10}}>
-                                <img src={profile} alt="profile" style={{borderRadius: 100}}/>
+                                <img src={profile} alt="profile" style={{borderRadius: 100}} />
                                 <div className={styles.flexColumn} style={{gap: 3}}>
                                     <div className={styles.flexRow} style={{justifyContent: "space-between"}}>
                                         <div>두두두</div>
@@ -216,25 +273,25 @@ const Header = () => {
                                     </div>
                                     <div style={{color: "gray"}}>님이 당신이 작성하신 “코딩 잘하는법...”에 댓글을 달았습니다...</div>
                                 </div>
-                                <More className={styles.iconSize}/>
+                                <More className={styles.iconSize} />
                             </div>
-                            <hr className={styles.profileItemLine}/>
+                            <hr className={styles.profileItemLine} />
                             <div className={styles.notifyItem} style={{gap: 10}}>
-                                <img src={profile} alt="profile" style={{borderRadius: 100}}/>
+                                <img src={profile} alt="profile" style={{borderRadius: 100}} />
                                 <div className={styles.flexColumn} style={{gap: 3}}>
                                     <div className={styles.flexRow} style={{justifyContent: "space-between"}}>
                                         <div className={styles.flexRow}>
                                             <div>두두두</div>
-                                            <Colosseum width="18" height="18" style={{marginLeft: 5}}/>
+                                            <Colosseum width="18" height="18" style={{marginLeft: 5}} />
                                         </div>
                                         <div>YYYY-MM-DD</div>
                                     </div>
                                     <div style={{color: "gray"}}>님이 당신에게 싸움을 걸어왔습니다. 참여여부 확인을 위하여 알림을 클릭해주세요,</div>
                                 </div>
-                                <More className={styles.iconSize}/>
+                                <More className={styles.iconSize} />
                             </div>
                         </div>
-                        <MoreView className={styles.moreViewBtn}/>
+                        <MoreView className={styles.moreViewBtn} />
                     </div>
 
                     <div className={styles.profileDetail}
@@ -242,21 +299,21 @@ const Header = () => {
                     >
                         <div style={{fontWeight: "bold"}}>내 계정</div>
                         <div className={styles.flexRow}>
-                            <Info className={styles.profileIcon}/>
+                            <Info className={styles.profileIcon} />
                             <div className={styles.profileDetailSpan}>프로필</div>
                         </div>
                         <div className={styles.flexRow}>
-                            <Edit className={styles.profileIcon}/>
-                            <div className={styles.profileDetailSpan}>정보수정</div>
+                            <Edit className={styles.profileIcon} />
+                            <div className={styles.profileDetailSpan} onClick={goEdit}>정보수정</div>
                         </div>
                         <div className={styles.flexRow}>
-                            <Emoticon className={styles.profileIcon}/>
+                            <Emoticon className={styles.profileIcon} />
                             <div className={styles.profileDetailSpan}>이모티콘</div>
                         </div>
-                        <hr className={styles.profileDetailLine}/>
+                        <hr className={styles.profileDetailLine} />
                         <div className={styles.flexRow}>
-                            <Logout className={styles.profileIcon}/>
-                            <div className={styles.profileDetailSpan}>로그아웃</div>
+                            <Logout className={styles.profileIcon} />
+                            <div className={styles.profileDetailSpan} onClick={goLogout}>로그아웃</div>
                         </div>
                     </div>
                 </div>

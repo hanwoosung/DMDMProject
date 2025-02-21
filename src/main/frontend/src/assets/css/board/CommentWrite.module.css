@@ -1,0 +1,29 @@
+.container{
+    position: relative;
+    width: 100%;
+    height: 200px;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.btnWrap{
+    position: relative;
+    width: 98%;
+    display: flex;
+    justify-content: right;
+}
+
+.btnWrap span{
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 120px;
+    justify-content: space-between;
+}
+
+
+

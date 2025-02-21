@@ -1,6 +1,6 @@
 package kr.co.dmdm.service.board;
 
-import kr.co.dmdm.dto.board.BoardListDto;
+import kr.co.dmdm.dto.board.*;
 
 import java.util.List;
 import java.util.Map;
@@ -21,5 +21,24 @@ public interface BoardService {
 
     void saveBoard(Map<String, Object> params);
 
-    List<BoardListDto> getBoards(String boardType, String status);
+    Map<String, Object> getBoards(String boardType,
+                                  String status,
+                                  int page,
+                                  int size,
+                                  String searchType,
+                                  String searchData,
+                                  String sortType,
+                                  String sess);
+
+    Map<String, Object> getBoard(int boardId, String sess);
+
+    void setLikes(LikesDto likes);
+
+    List<CommentDto> saveComment(CommentRequestDto comment);
+
+    void deleteBoard(Long boardId);
+
+    void deleteComment(Long commentId);
+
+    List<MyEmoticonDto> getEmoticons(String sess);
 }

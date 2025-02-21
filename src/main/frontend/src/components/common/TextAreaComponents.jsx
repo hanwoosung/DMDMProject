@@ -10,8 +10,10 @@ const TextArea = ({
     return (
         <textarea
             style={{width: width, height: height}}
-            className={TextAreaStyles.textarea} {...rest}>
-            {contents}
+            className={TextAreaStyles.textarea}
+            value={contents}
+            {...rest}>
+
         </textarea>
     )
 
