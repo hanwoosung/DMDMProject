@@ -3,6 +3,7 @@ package kr.co.dmdm.controller.board;
 import kr.co.dmdm.dto.board.CommentDto;
 import kr.co.dmdm.dto.board.CommentRequestDto;
 import kr.co.dmdm.dto.board.LikesDto;
+import kr.co.dmdm.dto.board.MyEmoticonDto;
 import kr.co.dmdm.dto.common.FileDto;
 import kr.co.dmdm.global.exception.CustomException;
 import kr.co.dmdm.global.exception.ExceptionEnum;
@@ -64,5 +65,18 @@ public class CommentController {
         String sess = jwtUtil.getUsername(token);
 
         boardService.deleteComment(commentId);
+    }
+
+    @GetMapping("/emoticon")
+    public List<MyEmoticonDto> getMyEmoticons(@RequestHeader("access") String token) {
+        String sess = "";
+
+        try {
+            sess = jwtUtil.getUsername(token);
+        } catch (Exception e) {
+            throw new CustomException(ExceptionEnum.SECURITY);
+        }
+
+        return boardService.getEmoticons(sess);
     }
 }

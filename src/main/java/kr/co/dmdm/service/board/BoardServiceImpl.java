@@ -88,9 +88,7 @@ public class BoardServiceImpl implements BoardService {
         int end = Math.min(start + size, boardCnt);
 
         List<BoardListDto> list = boardDao.getBoardList(boardType, status, start, size, searchType, searchData, sortType, sess);
-        System.out.println("gdgdgdgdgdgdgdg");
         System.out.println(sess);
-        System.out.println("gdgdgdgdgdgdgdg");
         splitTag(list);
 
         PagingUtil pagingUtil = new PagingUtil(boardCnt, page, size, 10);
@@ -165,6 +163,11 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public void deleteComment(Long commentId) {
         boardDao.deleteComment(commentId);
+    }
+
+    @Override
+    public List<MyEmoticonDto> getEmoticons(String sess) {
+        return boardDao.getMyEmoticons(sess);
     }
 
     private int boardCnt(String boardType, String status, String searchType, String searchData) {

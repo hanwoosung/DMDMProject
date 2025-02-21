@@ -1,9 +1,6 @@
 package kr.co.dmdm.service.board;
 
-import kr.co.dmdm.dto.board.BoardListDto;
-import kr.co.dmdm.dto.board.CommentDto;
-import kr.co.dmdm.dto.board.CommentRequestDto;
-import kr.co.dmdm.dto.board.LikesDto;
+import kr.co.dmdm.dto.board.*;
 
 import java.util.List;
 import java.util.Map;
@@ -42,4 +39,6 @@ public interface BoardService {
     void deleteBoard(Long boardId);
 
     void deleteComment(Long commentId);
+
+    List<MyEmoticonDto> getEmoticons(String sess);
 }

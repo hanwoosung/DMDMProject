@@ -4,6 +4,7 @@
     justify-content: center;
     gap: 30px;
     font-family: Arial, sans-serif;
+    margin: 20px auto;
 }
 
 .pagingButtons button {

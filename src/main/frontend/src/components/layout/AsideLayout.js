@@ -10,8 +10,8 @@ const AsideLayout = ({children, title}) => {
             <Header/>
             <main className={styles.content}>
                 {/*잠시 주석했다잉*/}
-                {/*<Aside/>*/}
-                <AdminAside/>
+                <Aside/>
+                {/*<AdminAside/>*/}
                 <div className={styles.detail}>
                     {title ? <h1>{title}</h1> : null}
                     {children}

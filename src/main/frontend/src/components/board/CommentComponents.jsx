@@ -7,6 +7,7 @@ import CommentWrite from "./CommentWriteComponents";
 import Depth from "./DepthComponents";
 import {useEffect, useRef, useState} from "react";
 import CommentMore from "./CommentMoreComponents";
+import DOMPurify from "dompurify";
 
 const Comment = ({
                      handleLike,
@@ -48,6 +49,11 @@ const Comment = ({
     }, [commentMore]);
 
 
+    const sanitizedContent = DOMPurify.sanitize(comment.commentContent, {
+        ADD_TAGS: ["iframe"], // 🚀 iframe 허용
+        ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"]
+    });
+
     return (
         <div className={`${CommentStyle.flexColum}`}
              ref={refCallback}> {/* 🔥 강조 클래스 추가 */}
@@ -71,19 +77,31 @@ const Comment = ({
                     </span>
                             <span>{comment.insert}</span>
                         </div>
+
+
                         <div className={CommentStyle.commentInfo}>
-                            {comment.status === "ACTIVE" ? comment.commentContent : (<b>삭제된 게시글 입니다.</b>)}
-                            <div
-                                className={isHidden ? CommentStyle.on : CommentStyle.off}
-                                onClick={() => setIsHidden(false)} // 클릭하면 해제
-                            >
-                                {isHidden && comment.status === "ACTIVE"
-                                    ? comment.blackListYn === "Y"
+                            {comment.status === "ACTIVE" ? (
+                                comment.commentType === "EMOTICON" ? (
+                                    <div dangerouslySetInnerHTML={{__html: sanitizedContent}} />
+                                ) : (
+                                    comment.commentContent
+                                )
+                            ) : (
+                                <b>삭제된 게시글 입니다.</b>
+                            )}
+
+                            {isHidden && comment.status === "ACTIVE" && (
+                                <div
+                                    className={isHidden ? CommentStyle.on : CommentStyle.off}
+                                    onClick={() => setIsHidden(false)}
+                                >
+                                    {comment.blackListYn === "Y"
                                         ? "블랙리스트로 추가된 사용자의 댓글입니다."
-                                        : "블라인드된 댓글입니다."
-                                    : ""}
-                            </div>
+                                        : "블라인드된 댓글입니다."}
+                                </div>
+                            )}
                         </div>
+
                         <div className={CommentStyle.btnInfo} ref={commentMoreRef}>
                             <CommentLikes cnt={comment.likeCnt}
                                           status={comment.loginLikes === "LIKE" ? "LIKE" : ""}

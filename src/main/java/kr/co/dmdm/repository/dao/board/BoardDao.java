@@ -51,4 +51,6 @@ public interface BoardDao {
 
     void deleteComment(@Param("commentId") Long commentId);
 
+    List<MyEmoticonDto> getMyEmoticons(@Param("sess") String sess);
+
 }

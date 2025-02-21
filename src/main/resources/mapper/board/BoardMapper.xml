@@ -264,4 +264,17 @@
         SET status = 'DELETE'
         WHERE comment_id = #{commentId}
     </update>
+
+    <select id="getMyEmoticons" resultType="kr.co.dmdm.dto.board.MyEmoticonDto">
+        SELECT a.item_id,
+               a.item_type,
+               a.user_id,
+               b.order_no,
+               c.file_path
+        FROM tbl_user_item a
+                 LEFT JOIN tbl_emoticon_detail b ON a.item_id = b.product_id
+                 LEFT JOIN tbl_file c ON c.file_ref_no = CONCAT(b.product_id, '/', b.order_no) AND c.file_type = 'tbl_emoticon_detail'
+        WHERE a.item_type = 'EMOTICON'
+        AND a.user_id = #{sess}
+    </select>
 </mapper>
