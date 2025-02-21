@@ -68,6 +68,15 @@ const Header = () => {
         navigate("/sign-up")
     }
 
+    const goBoard = (boardType) => {
+        navigate(`/board-list/${boardType}`)
+    }
+
+    const goEdit = () => {
+        navigate("/user-edit")
+    }
+
+
     return (
         <header>
             <div className={styles.flexContainer}>
@@ -93,10 +102,10 @@ const Header = () => {
                              onMouseLeave={() => setIsHovered(false)}>
                             <div className={styles.headerFlexColumn}>
                                 <div className={styles.detailTitleBtn}>커뮤니티</div>
-                                <div className={styles.headBtn}>커뮤니티</div>
-                                <div className={styles.headBtn}>Q & A</div>
-                                <div className={styles.headBtn}>지식</div>
-                                <div className={styles.headBtn}>스터디</div>
+                                <div className={styles.headBtn} onClick={() => {goBoard("COMMUNITY")}}>커뮤니티</div>
+                                <div className={styles.headBtn} onClick={() => {goBoard("QNA")}}>Q & A</div>
+                                <div className={styles.headBtn} onClick={() => {goBoard("KNOW")}}>지식</div>
+                                <div className={styles.headBtn} onClick={() => {goBoard("STUDY")}}>스터디</div>
                             </div>
 
                             <div className={styles.verticalLine} />
@@ -118,29 +127,29 @@ const Header = () => {
 
                             <div className={styles.headerFlexColumn}>
                                 <div className={styles.detailTitleBtn}>취업</div>
-                                <div className={styles.headBtn}>취업얘기</div>
-                                <div className={styles.headBtn}>채용</div>
+                                <div className={styles.headBtn} onClick={() => {goBoard("EMPLO_TALK")}}>취업얘기</div>
+                                <div className={styles.headBtn} onClick={() => {goBoard("EMPLO")}}>채용</div>
                             </div>
 
                             <div className={styles.verticalLine} />
 
                             <div className={styles.headerFlexColumn}>
                                 <div className={styles.detailTitleBtn}>공지사항</div>
-                                <div className={styles.headBtn}>공지사항</div>
+                                <div className={styles.headBtn} onClick={() => {goBoard("NOTICE")}}>공지사항</div>
                             </div>
 
                             <div className={styles.verticalLine} />
 
                             <div className={styles.headerFlexColumn}>
                                 <div className={styles.detailTitleBtn}>이벤트</div>
-                                <div className={styles.headBtn}>이벤트</div>
+                                <div className={styles.headBtn} onClick={() => {goBoard("EVENT")}}>이벤트</div>
                             </div>
 
                             <div className={styles.verticalLine} />
 
                             <div className={styles.headerFlexColumn}>
                                 <div className={styles.detailTitleBtn}>고객센터</div>
-                                <div className={styles.headBtn}>고객센터</div>
+                                <div className={styles.headBtn} onClick={() => {goBoard("SUPPORT")}}>고객센터</div>
                             </div>
                         </div>
                     </div>
@@ -295,7 +304,7 @@ const Header = () => {
                         </div>
                         <div className={styles.flexRow}>
                             <Edit className={styles.profileIcon} />
-                            <div className={styles.profileDetailSpan}>정보수정</div>
+                            <div className={styles.profileDetailSpan} onClick={goEdit}>정보수정</div>
                         </div>
                         <div className={styles.flexRow}>
                             <Emoticon className={styles.profileIcon} />

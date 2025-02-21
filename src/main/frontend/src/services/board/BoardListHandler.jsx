@@ -33,7 +33,7 @@ const useBoardListHandler = () => {
     const {
         data: boardListData,
         boardListDataLoading
-    } = useFetch(`/api/v1/board/${boardTypeParam}?page=${currentPage}&size=${pageSize}&searchType=${searchType}&searchData=${searchData}&sortType=${sortType}`, {}, "get");
+    } = useFetch(`/api/v1/board/list/${boardTypeParam}?page=${currentPage}&size=${pageSize}&searchType=${searchType}&searchData=${searchData}&sortType=${sortType}`, {}, "get");
 
     const handlePageChange = (page) => {
         setCurrentPage(page);

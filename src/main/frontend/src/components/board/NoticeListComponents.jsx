@@ -2,9 +2,13 @@ import useFetch from "../../hooks/common/useFetch";
 import {ReactComponent as NoticeIcon} from "../../assets/image/icon_notice.svg";
 import BoardListStyle from "../../assets/css/board/BoardList.module.css";
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 const NoticeList = () => {
-    const {data: fetchedEvents, loading} = useFetch(`/api/v1/board/NOTICE`, {}, "get");
+
+    const navigate = useNavigate();
+
+    const {data: fetchedEvents, loading} = useFetch(`/api/v1/board/list/NOTICE`, {}, "get");
     const [notices, setNotices] = useState([]);
 
     useEffect(() => {
@@ -19,7 +23,9 @@ const NoticeList = () => {
             {notices.length > 0 ? (
                 notices.map((notice, index) => (
                     <div key={index} className={BoardListStyle.noticeList}>
-                        <span>
+                        <span onClick={() => {
+                            navigate(`/board/${notice.boardId}`);
+                        }}>
                             <span>
                                 <NoticeIcon />
                                 {"[공지]"}

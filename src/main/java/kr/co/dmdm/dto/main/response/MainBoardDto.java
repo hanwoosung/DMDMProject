@@ -30,7 +30,7 @@ public class MainBoardDto {
     private String filePath;
     private String insert;
     private LocalDateTime insertDt;
-    private int viewCount;
+    private int vCnt;
     private int commentCount;
     private int likeCount;
 }

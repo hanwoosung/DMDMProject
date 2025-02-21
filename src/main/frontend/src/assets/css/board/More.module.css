@@ -1,0 +1,47 @@
+.BoardContainer{
+    background-color: white;
+    display: none;
+    position: absolute;
+    width: 100px;
+    top: 15px;
+    right: 0;
+    border: 1px solid #AAAAAA;
+    border-radius: 10px;
+    padding: 10px;
+    z-index: 100;
+}
+
+.BoardContainerOn{
+    composes: BoardContainer;
+    display: block !important;
+}
+
+.BoardContainerOn ul{
+    text-align: center;
+    margin: 0 auto;
+    list-style: none;
+}
+
+.CommentContainer{
+    z-index: 100;
+    background-color: white;
+    display: none;
+    position: absolute;
+    width: 100px;
+    top: 30px;
+    right: 0;
+    border: 1px solid #AAAAAA;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.CommentContainerOn{
+    composes: CommentContainer;
+    display: block !important;
+}
+
+.CommentContainerOn ul{
+    text-align: center;
+    margin: 0 auto;
+    list-style: none;
+}

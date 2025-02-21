@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import ConfirmStyles from "../../assets/css/common/Confirm.module.css";
 import SmallBtn from "./SmallBtnComponents";
 
@@ -8,11 +9,19 @@ const Alert = ({
                    onAlert
                }) => {
 
+    const btnRef = useRef(null);
+
+    useEffect(() => {
+        if (isVisible && btnRef.current) {
+            btnRef.current.focus();
+        }
+    }, [isVisible]);
+
     if (!isVisible) return null;
 
     const handleAlert = () => {
         if (onAlert) {
-            onAlert(); // 확인 버튼 클릭 시 호출
+            onAlert();
         }
     };
 
@@ -23,7 +32,9 @@ const Alert = ({
                 <div className={ConfirmStyles.actions}>
                     <SmallBtn className={ConfirmStyles.confirm}
                               onClick={handleAlert}
-                              title={confirmName} />
+                              title={confirmName}
+                              ref={btnRef}
+                    />
                 </div>
             </div>
         </div>

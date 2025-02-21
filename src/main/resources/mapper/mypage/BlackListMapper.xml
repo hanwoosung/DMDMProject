@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.dmdm.repository.dao.mypage.BlackListDao">
+
+    <select id="getBlackList">
+        SELECT a.send_user_id,
+               a.receive_user_id,
+               b.user_name,
+               a.insert_dt
+        FROM tbl_black_list a
+        LEFT JOIN tbl_user b ON a.receive_user_id = b.user_id
+        WHERE a.send_user_id = #{sess}
+        LIMIT #{page}, #{size}
+    </select>
+
+    <select id="getBlackListCnt">
+        SELECT COUNT(*)
+        FROM tbl_black_list a
+        WHERE a.send_user_id = #{sess}
+    </select>
+
+    <delete id="deleteBlackList">
+        DELETE FROM tbl_black_list
+        WHERE send_user_id = #{sess}
+        AND receive_user_id IN
+        <foreach collection="receivedUserId" item="id" open="(" separator="," close=")">
+            #{id.receiveUserId}
+        </foreach>
+    </delete>
+
+</mapper>
