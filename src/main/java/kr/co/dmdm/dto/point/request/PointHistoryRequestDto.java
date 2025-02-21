@@ -26,7 +26,7 @@ public class PointHistoryRequestDto {
     private PointHistoryType pointHistoryType;
 
     @NotNull
-    @Size(max = 15)
+    @Size(max = 255)
     private String userId;
 
     @NotNull

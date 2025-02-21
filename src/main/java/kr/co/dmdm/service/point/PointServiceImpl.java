@@ -1,6 +1,5 @@
 package kr.co.dmdm.service.point;
 
-import jakarta.transaction.Transactional;
 import kr.co.dmdm.dto.point.request.PointHistoryRequestDto;
 import kr.co.dmdm.entity.PointHistory;
 import kr.co.dmdm.entity.User;
@@ -12,9 +11,9 @@ import kr.co.dmdm.repository.jpa.point.PointHistoryRepository;
 import kr.co.dmdm.repository.jpa.product.ProductRepository;
 import kr.co.dmdm.type.PointHistoryType;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * packageName    : kr.co.dmdm.service.point
@@ -33,7 +32,6 @@ public class PointServiceImpl implements PointService {
     private final UserRepository userRepository;
     private final PointHistoryRepository pointHistoryRepository;
     private final ProductRepository productRepository;
-    private final ModelMapper modelMapper;
 
     @Transactional
     @Override
@@ -53,7 +51,7 @@ public class PointServiceImpl implements PointService {
     }
 
     private void defaultSavePoint(PointHistoryRequestDto pointDto) {
-        PointHistory pointHistory = modelMapper.map(pointDto, PointHistory.class);
+        PointHistory pointHistory = mapperPointDtoToPointHistory(pointDto);
         pointHistoryRepository.save(pointHistory);
 
         User user = userRepository.findById(pointDto.getUserId()).get();
@@ -80,6 +78,8 @@ public class PointServiceImpl implements PointService {
 
         User receiveUser = userRepository.findById(pointDto.getRemark()).get();
         receiveUser.setUserPoint(receiveUser.getUserPoint() + receivePointHistory.getPoint());
+
+        userRepository.save(receiveUser);
     }
 
     private void buyProduct(PointHistoryRequestDto pointDto) {
@@ -96,7 +96,7 @@ public class PointServiceImpl implements PointService {
 
         String sellUserId = product.getUserId();
 
-        PointHistory sellPointHistory = modelMapper.map(pointDto, PointHistory.class);
+        PointHistory sellPointHistory = mapperPointDtoToPointHistory(pointDto);
         sellPointHistory.setUserId(sellUserId);
         sellPointHistory.setPointHistoryType(PointHistoryType.SELL_PRODUCT.name());
         sellPointHistory.setPoint(pointDto.getPoint() * -1);
@@ -105,9 +105,17 @@ public class PointServiceImpl implements PointService {
 
         User receiveUser = userRepository.findById(sellUserId).get();
         receiveUser.setUserPoint(receiveUser.getUserPoint() + sellPointHistory.getPoint());
+
+        userRepository.save(receiveUser);
     }
 
     private PointHistory mapperPointDtoToPointHistory(PointHistoryRequestDto pointDto) {
-        return modelMapper.map(pointDto, PointHistory.class);
+        PointHistory pointHistory = new PointHistory();
+        pointHistory.setUserId(pointDto.getUserId());
+        pointHistory.setRemark(pointDto.getRemark());
+        pointHistory.setPoint(pointDto.getPoint());
+        pointHistory.setPointHistoryType(pointDto.getPointHistoryType().name());
+        pointHistory.setPoint(pointDto.getPoint());
+        return pointHistory;
     }
 }

@@ -5,11 +5,14 @@ import kr.co.dmdm.dto.point.request.PointHistoryRequestDto;
 import kr.co.dmdm.dto.product.request.ProductRequestDto;
 import kr.co.dmdm.dto.product.response.ProductDetailResponseDto;
 import kr.co.dmdm.entity.User;
+import kr.co.dmdm.entity.UserItem;
+import kr.co.dmdm.entity.UserItemId;
 import kr.co.dmdm.entity.product.Product;
 import kr.co.dmdm.entity.product.detail.EmoticonDetail;
 import kr.co.dmdm.entity.product.detail.EmoticonDetailId;
 import kr.co.dmdm.global.exception.CustomException;
 import kr.co.dmdm.global.exception.ExceptionEnum;
+import kr.co.dmdm.repository.jpa.UserItemRepository;
 import kr.co.dmdm.repository.jpa.UserRepository;
 import kr.co.dmdm.repository.jpa.product.ProductRepository;
 import kr.co.dmdm.repository.jpa.product.detail.EmoticonRepository;
@@ -24,6 +27,7 @@ import lombok.SneakyThrows;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -47,23 +51,29 @@ public class ProductServiceEmoticonImpl implements ProductService {
 
     private final FileService fileService;
     private final GubnService gubnService;
-    private final String productType = ProductType.EMOTICON.name();
+    private final ProductType productType = ProductType.EMOTICON;
+    private final String productTypeName = productType.name();
     private final ProductRepository productRepository;
     private final EmoticonRepository emoticonRepository;
     private final UserRepository userRepository;
     private final PointServiceImpl pointServiceImpl;
+    private final UserItemRepository userItemRepository;
 
     @SneakyThrows
     @Override
     public void saveProduct(ProductRequestDto productRequestDto) {
         System.out.println(productRequestDto);
 
-        String userId = "yiok79";
+        String userId = productRequestDto.getUserId();
 
         final int emoticonRegisterPointUnit = 50;
         int emoticonRegisterPoint = emoticonRegisterPointUnit * productRequestDto.getFiles().size();
 
-        User user = userRepository.findById(userId).get();
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            throw new CustomException(ExceptionEnum.USER_NOT_FOUND);
+        }
+
         int userPoint = user.getUserPoint();
         if (user.getUserPoint() < emoticonRegisterPoint) {
             int lackPoint = (userPoint - emoticonRegisterPoint) * -1;
@@ -72,12 +82,12 @@ public class ProductServiceEmoticonImpl implements ProductService {
 
         String parentCode = ConvertUtils.convertToSnakeCase(ProductType.class.getSimpleName());
 
-        GubnDto byParentCodeAndCode = gubnService.findByParentCodeAndCode(parentCode, productType);
+        GubnDto byParentCodeAndCode = gubnService.findByParentCodeAndCode(parentCode, productTypeName);
         String tableName = byParentCodeAndCode.getFirstSpecial();
 
         Product product = Product.builder()
                 .productName(productRequestDto.getProductName())
-                .productType(productType)
+                .productType(productTypeName)
                 .productPrice(productRequestDto.getProductPrice())
                 .productDetail(productRequestDto.getProductDetail())
                 .userId(userId)
@@ -116,7 +126,7 @@ public class ProductServiceEmoticonImpl implements ProductService {
                 .map(detail -> fileService.findFileByRefNoAndFileType(productId + "/" + detail.getId().getOrderNo(), "tbl_emoticon_detail").getFilePath())
                 .collect(Collectors.toList());
 
-        String mainImageUrl = fileService.findFileByRefNoAndFileType(productId.toString(), "PRODUCT_IMAGE").getFilePath();
+        String mainImageUrl = fileService.findFileByRefNoAndFileType(String.valueOf(productId), "PRODUCT_IMAGE").getFilePath();
 
         return new ProductDetailResponseDto(product, mainImageUrl, imageUrls);
     }
@@ -135,32 +145,43 @@ public class ProductServiceEmoticonImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public void buyProduct(String userId, Integer productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomException(ExceptionEnum.PRODUCT_NOT_FOUND));
 
-        // 이모티콘 상태는 일단 안봄
-        Product product = productRepository.findById(productId).orElse(null);
-        if (product == null) {
-            throw new CustomException(ExceptionEnum.PRODUCT_NOT_FOUND);
-        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ExceptionEnum.USER_NOT_FOUND));
 
-        // 사용자 상태 안보고 일단 체크만 함
-        User user = userRepository.findById(userId).orElse(null);
-        if (user == null) {
-            throw new CustomException(ExceptionEnum.USER_NOT_FOUND);
-        }
         int productPrice = product.getProductPrice();
         int userPoint = user.getUserPoint();
 
         if (productPrice > userPoint) {
-            throw new CustomException(HttpStatus.BAD_REQUEST, "포인트 부족");
+            int lackPoint = (userPoint - productPrice) * -1;
+            throw new CustomException(HttpStatus.BAD_REQUEST, lackPoint + "포인트가 부족합니다.\n현재 포인트: " + userPoint);
         }
+
         PointHistoryRequestDto pointHistoryRequestDto = new PointHistoryRequestDto();
         pointHistoryRequestDto.setUserId(userId);
-        pointHistoryRequestDto.setRemark(productId.toString());
-        pointHistoryRequestDto.setPoint(productPrice);
+        pointHistoryRequestDto.setRemark(String.valueOf(productId));
+        pointHistoryRequestDto.setPoint(productPrice * -1);
         pointHistoryRequestDto.setPointHistoryType(PointHistoryType.BUY_PRODUCT);
 
         pointServiceImpl.savePoint(pointHistoryRequestDto);
+
+        UserItemId userItemId = new UserItemId();
+        userItemId.setItemId(productId);
+        userItemId.setItemType(productTypeName);
+
+        UserItem userItem = userItemRepository.findById(userItemId).orElse(null);
+        if(userItem != null) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, "이미 구매한 이모티콘입니다.");
+        }
+
+        userItemRepository.save(UserItem.builder()
+                .id(userItemId)
+                .userId(userId)
+                .build());
     }
 }

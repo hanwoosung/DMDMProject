@@ -12,15 +12,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
 public class ProductServiceFactory {
     private final Map<ProductType, ProductService> productServiceMap;
 
     @Autowired
     public ProductServiceFactory(List<ProductService> productServices) {
+        System.out.println("🔥 등록된 서비스들: " + productServices); // 로그 추가
         this.productServiceMap = productServices.stream()
                 .collect(Collectors.toMap(
-                        service -> getProductType(service.getClass()),
+                        this::getProductType,
                         service -> service
                 ));
     }
@@ -29,10 +29,10 @@ public class ProductServiceFactory {
         return productServiceMap.get(productType);
     }
 
-    private ProductType getProductType(Class<? extends ProductService> serviceClass) {
-        if (serviceClass == ProductServiceEmoticonImpl.class) {
+    private ProductType getProductType(ProductService service) {
+        if (service instanceof ProductServiceEmoticonImpl) {
             return ProductType.EMOTICON;
         }
-        throw new IllegalArgumentException("지원되지 않는 ProductType입니다.");
+        throw new IllegalArgumentException("지원되지 않는 ProductType입니다: " + service.getClass().getSimpleName());
     }
 }

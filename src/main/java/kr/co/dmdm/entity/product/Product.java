@@ -26,7 +26,7 @@ public class Product {
     @Column(name = "product_name", nullable = false, length = 100)
     private String productName;
 
-    @Size(max = 15)
+    @Size(max = 255)
     @NotNull
     @Column(name = "user_id", nullable = false, length = 15)
     private String userId;
