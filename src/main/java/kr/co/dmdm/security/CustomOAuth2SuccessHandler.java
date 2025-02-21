@@ -32,7 +32,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String userId = customOAuth2User.getUsername();
         String role = authentication.getAuthorities().iterator().next().getAuthority();
 
-        String access = jwtUtil.createJwt("access", userId, role, 600000L);
+        String access = jwtUtil.createJwt("access", userId, role, 43200000L);
         String refresh = jwtUtil.createJwt("refresh", userId, role, 86400000L);
 
         tokenService.saveRefreshToken(userId, refresh);

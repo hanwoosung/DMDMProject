@@ -18,6 +18,7 @@ import EmoticonRegister from "./components/emoticon/EmoticonRegister";
 import CommonCodeManagement from "./components/admin/CommonCodeManagement";
 import Board from "./pages/board/Board";
 import MainPage from "./pages/MainPage";
+import UserEditPage from "./pages/UserEditPage";
 import BlackListPage from "./pages/myPage/BlackListPage";
 
 function App() {
@@ -98,6 +99,12 @@ function App() {
                     <Layout>
                         <EmoticonRegister/>
                     </Layout>
+                }/>
+
+                <Route path="/user-edit" element={
+                    <AsideLayout>
+                    <UserEditPage />
+                    </AsideLayout>
                 }/>
 
                 <Route path="/mypage/black-list" element={

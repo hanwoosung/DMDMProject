@@ -58,7 +58,7 @@ public class ReissueService {
 
         // 새로운 액세스 및 리프레시 토큰 생성
         String role = jwtUtil.getRole(refresh);
-        String newAccess = jwtUtil.createJwt("access", userId, role, 600000L);
+        String newAccess = jwtUtil.createJwt("access", userId, role, 43200000L);
         String newRefresh = jwtUtil.createJwt("refresh", userId, role, 86400000L);
 
         // 새로운 리프레시 토큰을 레디스에 저장

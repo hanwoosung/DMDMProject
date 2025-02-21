@@ -91,6 +91,7 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .authorizeHttpRequests((auth) ->
                         auth.requestMatchers("/api/test/admin").hasRole("ADMIN")
+                                .requestMatchers("/api/v1/user/profile").hasRole("MEMBER")
                                 .requestMatchers(HttpMethod.POST, "/api/board/**").hasRole("MEMBER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/board/**").hasRole("MEMBER")
                                 .requestMatchers("/api/comment/**").hasRole("MEMBER")
@@ -108,7 +109,7 @@ public class SecurityConfig {
                 );
 
         http
-                .addFilterAt(new LoginFilter(tokenService, authenticationManager(authenticationConfiguration), jwtUtil,loginAttemptService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(tokenService, authenticationManager(authenticationConfiguration), jwtUtil, loginAttemptService), UsernamePasswordAuthenticationFilter.class);
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, tokenService), LogoutFilter.class);
 

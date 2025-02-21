@@ -72,6 +72,11 @@ const Header = () => {
         navigate(`/board-list/${boardType}`)
     }
 
+    const goEdit = () => {
+        navigate("/user-edit")
+    }
+
+
     return (
         <header>
             <div className={styles.flexContainer}>
@@ -299,7 +304,7 @@ const Header = () => {
                         </div>
                         <div className={styles.flexRow}>
                             <Edit className={styles.profileIcon} />
-                            <div className={styles.profileDetailSpan}>정보수정</div>
+                            <div className={styles.profileDetailSpan} onClick={goEdit}>정보수정</div>
                         </div>
                         <div className={styles.flexRow}>
                             <Emoticon className={styles.profileIcon} />
