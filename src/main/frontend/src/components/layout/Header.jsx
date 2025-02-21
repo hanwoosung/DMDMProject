@@ -16,8 +16,11 @@ import styles from "../../assets/css/Header.module.css";
 import {useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useLogin} from "../../contexts/AuthContext";
+import useApi from "../../hooks/common/useApi";
 
 const Header = () => {
+
+    const {get, post, put, del, apiLoading, error} = useApi();
 
     const [isHovered, setIsHovered] = useState(false);
     const [activeOption, setActiveOption] = useState(null);
@@ -33,9 +36,20 @@ const Header = () => {
         setActiveOption((prev) => (prev === id ? null : id));
     };
 
+    const [alarms, setAlarms] = useState([]);
+
     // todo 빈공간 클릭시 삭제 버튼 숨기기
     useEffect(() => {
         popupView === null && setActiveOption(null);
+
+        if (popupView === "message") {
+
+
+        }
+
+        if (popupView === "notification") {
+            handleLoadAlarm();
+        }
     }, [popupView])
 
     useEffect(() => {
@@ -76,6 +90,41 @@ const Header = () => {
         navigate("/user-edit")
     }
 
+    const handleLoadAlarm = () => {
+
+        get("/api/v1/alarm", {
+            headers: {"Content-Type": "application/json"},
+        }).then((res) => {
+
+            if (res.statusCode !== 200) {
+                return;
+            }
+
+            setAlarms(res.data);
+
+        }).catch((res) => {
+            console.log(res);
+        });
+
+    }
+
+    const handleReadAlarm = (alarmIds) => {
+
+        post("/api/v1/alarm/read", {
+            headers: {"Content-Type": "application/json"},
+            body:alarmIds
+        }).then((res) => {
+
+            if (res.statusCode !== 200) {
+                return;
+            }
+
+            handleLoadAlarm();
+        }).catch((res) => {
+            console.log(res);
+        });
+
+    }
 
     return (
         <header>
@@ -102,10 +151,22 @@ const Header = () => {
                              onMouseLeave={() => setIsHovered(false)}>
                             <div className={styles.headerFlexColumn}>
                                 <div className={styles.detailTitleBtn}>커뮤니티</div>
-                                <div className={styles.headBtn} onClick={() => {goBoard("COMMUNITY")}}>커뮤니티</div>
-                                <div className={styles.headBtn} onClick={() => {goBoard("QNA")}}>Q & A</div>
-                                <div className={styles.headBtn} onClick={() => {goBoard("KNOW")}}>지식</div>
-                                <div className={styles.headBtn} onClick={() => {goBoard("STUDY")}}>스터디</div>
+                                <div className={styles.headBtn} onClick={() => {
+                                    goBoard("COMMUNITY")
+                                }}>커뮤니티
+                                </div>
+                                <div className={styles.headBtn} onClick={() => {
+                                    goBoard("QNA")
+                                }}>Q & A
+                                </div>
+                                <div className={styles.headBtn} onClick={() => {
+                                    goBoard("KNOW")
+                                }}>지식
+                                </div>
+                                <div className={styles.headBtn} onClick={() => {
+                                    goBoard("STUDY")
+                                }}>스터디
+                                </div>
                             </div>
 
                             <div className={styles.verticalLine} />
@@ -127,29 +188,44 @@ const Header = () => {
 
                             <div className={styles.headerFlexColumn}>
                                 <div className={styles.detailTitleBtn}>취업</div>
-                                <div className={styles.headBtn} onClick={() => {goBoard("EMPLO_TALK")}}>취업얘기</div>
-                                <div className={styles.headBtn} onClick={() => {goBoard("EMPLO")}}>채용</div>
+                                <div className={styles.headBtn} onClick={() => {
+                                    goBoard("EMPLO_TALK")
+                                }}>취업얘기
+                                </div>
+                                <div className={styles.headBtn} onClick={() => {
+                                    goBoard("EMPLO")
+                                }}>채용
+                                </div>
                             </div>
 
                             <div className={styles.verticalLine} />
 
                             <div className={styles.headerFlexColumn}>
                                 <div className={styles.detailTitleBtn}>공지사항</div>
-                                <div className={styles.headBtn} onClick={() => {goBoard("NOTICE")}}>공지사항</div>
+                                <div className={styles.headBtn} onClick={() => {
+                                    goBoard("NOTICE")
+                                }}>공지사항
+                                </div>
                             </div>
 
                             <div className={styles.verticalLine} />
 
                             <div className={styles.headerFlexColumn}>
                                 <div className={styles.detailTitleBtn}>이벤트</div>
-                                <div className={styles.headBtn} onClick={() => {goBoard("EVENT")}}>이벤트</div>
+                                <div className={styles.headBtn} onClick={() => {
+                                    goBoard("EVENT")
+                                }}>이벤트
+                                </div>
                             </div>
 
                             <div className={styles.verticalLine} />
 
                             <div className={styles.headerFlexColumn}>
                                 <div className={styles.detailTitleBtn}>고객센터</div>
-                                <div className={styles.headBtn} onClick={() => {goBoard("SUPPORT")}}>고객센터</div>
+                                <div className={styles.headBtn} onClick={() => {
+                                    goBoard("SUPPORT")
+                                }}>고객센터
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -261,37 +337,32 @@ const Header = () => {
                         <hr className={styles.profileLine} />
                         <div className={styles.notifyContent}>
                             <div className={styles.notifyBtn}>
-                                <div className={styles.headBtn}>모두 읽음</div>
+                                <div className={styles.headBtn} onClick={() => {handleReadAlarm(alarms.map((alarm) => {return alarm.alarmId}))}}>모두 읽음</div>
                                 <div className={styles.headBtn}>모두 삭제</div>
                             </div>
-                            <div className={styles.notifyItem} style={{gap: 10}}>
-                                <img src={profile} alt="profile" style={{borderRadius: 100}} />
-                                <div className={styles.flexColumn} style={{gap: 3}}>
-                                    <div className={styles.flexRow} style={{justifyContent: "space-between"}}>
-                                        <div>두두두</div>
-                                        <div>YYYY-MM-DD</div>
-                                    </div>
-                                    <div style={{color: "gray"}}>님이 당신이 작성하신 “코딩 잘하는법...”에 댓글을 달았습니다...</div>
-                                </div>
-                                <More className={styles.iconSize} />
-                            </div>
-                            <hr className={styles.profileItemLine} />
-                            <div className={styles.notifyItem} style={{gap: 10}}>
-                                <img src={profile} alt="profile" style={{borderRadius: 100}} />
-                                <div className={styles.flexColumn} style={{gap: 3}}>
-                                    <div className={styles.flexRow} style={{justifyContent: "space-between"}}>
-                                        <div className={styles.flexRow}>
-                                            <div>두두두</div>
-                                            <Colosseum width="18" height="18" style={{marginLeft: 5}} />
+
+                            {alarms.map((alarm) => (
+                                <div className={styles.notifyItem} style={{gap: 10}} onClick={() => {handleReadAlarm([alarm.alarmId])}}>
+                                    <img src={profile} alt="profile" style={{borderRadius: 100}} />
+                                    <div className={styles.flexColumn} style={{gap: 3}}>
+                                        <div className={styles.flexRow} style={{justifyContent: "space-between"}}>
+                                            <div className={styles.flexRow}>
+                                                <div>{alarm.userName}</div>
+                                                {alarm.alarmType === "FIGHT" ?
+                                                    <Colosseum width="18" height="18" style={{marginLeft: 5}} /> : ""}
+                                            </div>
+                                            <div>{alarm.insertDt}</div>
                                         </div>
-                                        <div>YYYY-MM-DD</div>
+                                        <div style={{color: "gray"}}>{alarm.alarmContent}</div>
                                     </div>
-                                    <div style={{color: "gray"}}>님이 당신에게 싸움을 걸어왔습니다. 참여여부 확인을 위하여 알림을 클릭해주세요,</div>
+
+                                    <hr />
                                 </div>
-                                <More className={styles.iconSize} />
-                            </div>
+                            ))}
+
+
                         </div>
-                        <MoreView className={styles.moreViewBtn} />
+                        {/*<MoreView className={styles.moreViewBtn} />*/}
                     </div>
 
                     <div className={styles.profileDetail}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.dmdm.repository.dao.AlarmDao">
+
+    <select id="getAlarmHeaders" resultType="kr.co.dmdm.dto.Alarm.response.AlarmHeaderResponseDto">
+
+        SELECT a.alarm_id,
+               b.user_name,
+               a.alarm_type,
+               a.target_id,
+               a.send_user_id,
+               a.receive_user_id,
+               a.alarm_content,
+               DATE_FORMAT(a.insert_dt, '%Y-%m-%d') AS insert_dt,
+               a.read_dt,
+               a.`status`,
+               c.file_path
+        FROM tbl_alarm a
+        LEFT JOIN tbl_user b ON a.send_user_id = b.user_id
+        LEFT JOIN tbl_file c ON a.send_user_id = c.file_ref_no AND c.file_type = 'PROFILE'
+        WHERE a.`status` = 'ACTIVE'
+          AND a.read_dt IS NULL
+          AND a.receive_user_id = #{receiveUserId}
+
+    </select>
+
+    <update id="readAlarms">
+        UPDATE tbl_alarm
+        SET read_dt = NOW()
+        WHERE receive_user_id = #{receiveUserId}
+        AND alarm_id IN
+        <foreach collection="alarmIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+</mapper>
