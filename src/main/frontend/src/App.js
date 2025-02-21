@@ -16,8 +16,10 @@ import FightZone from "./pages/FightZone";
 
 import EmoticonRegister from "./components/emoticon/EmoticonRegister";
 import CommonCodeManagement from "./components/admin/CommonCodeManagement";
+import Board from "./pages/board/Board";
 import MainPage from "./pages/MainPage";
 import UserEditPage from "./pages/UserEditPage";
+import BlackListPage from "./pages/myPage/BlackListPage";
 
 function App() {
     const {isLoggedIn} = useLogin();
@@ -73,6 +75,12 @@ function App() {
                     </Layout>
                 } />
 
+                <Route path="/board/:boardId" element={
+                    <Layout>
+                        <Board/>
+                    </Layout>
+                } />
+
                 <Route path="/sign-up" element={
                     <SignUpPage/>
                 }/>
@@ -99,6 +107,11 @@ function App() {
                     </AsideLayout>
                 }/>
 
+                <Route path="/mypage/black-list" element={
+                    <AsideLayout>
+                        <BlackListPage/>
+                    </AsideLayout>
+                }/>
             </Routes>
         </main>
     );

@@ -1,0 +1,116 @@
+.flexRow{
+    display: flex;
+    margin-top: 10px;
+    flex: 1;
+}
+
+.flexColum{
+    display: flex;
+    flex-direction: column;
+}
+
+.depth{
+    display: flex;
+    justify-content: center;
+    width: 4%;
+}
+
+.container {
+    flex: 1;
+    padding: 15px;
+    min-height: 100px;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.bestContainer {
+    composes: container;
+    border: 1px solid #FFEBC6;
+    background-color: #FFEBC6;
+}
+
+.answerContainer{
+    composes: container;
+}
+
+.profile {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    margin-right: 10px;
+}
+
+.commentDetail {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.commentDetail span {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.commentInfo {
+    position: relative; /* 부모 요소 */
+    flex: 1;
+}
+
+.commentInfo .on {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(10px);  /* 🚀 블러 강도를 15px로 증가 */
+    background-color: rgba(255, 255, 255, 0.5); /* 🚀 더 뿌옇게 보이도록 배경 투명도 조정 */
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    z-index: 10;
+    cursor: pointer;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: blue;
+}
+
+.commentInfo .off {
+    display: none;
+}
+
+
+.userInfo {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 5px;
+}
+
+.btnInfo{
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.btnInfo span{
+    cursor: pointer;
+}
+
+.commentWriteWrap{
+    display: flex;
+    padding-top: 10px;
+}
+
+@keyframes blinkEffect {
+    0% { background-color: rgb(255, 235, 198); }
+    100% { background-color: transparent; }
+}
+
+.commentHighlight {
+    animation: blinkEffect 0.5s ease-in-out 1; /* 1.5초 동안 2번 반복 */
+}

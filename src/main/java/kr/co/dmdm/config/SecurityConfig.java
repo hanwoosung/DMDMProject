@@ -10,6 +10,7 @@ import kr.co.dmdm.service.common.LoginAttemptService;
 import kr.co.dmdm.service.common.TokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -90,8 +91,11 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .authorizeHttpRequests((auth) ->
                         auth.requestMatchers("/api/test/admin").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/user/profile").hasRole("MEMBER")
-                        .anyRequest().permitAll()
+                                .requestMatchers("/api/v1/user/profile").hasRole("MEMBER")
+                                .requestMatchers(HttpMethod.POST, "/api/board/**").hasRole("MEMBER")
+                                .requestMatchers(HttpMethod.DELETE, "/api/board/**").hasRole("MEMBER")
+                                .requestMatchers("/api/comment/**").hasRole("MEMBER")
+                                .anyRequest().permitAll()
                 );
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
@@ -105,7 +109,7 @@ public class SecurityConfig {
                 );
 
         http
-                .addFilterAt(new LoginFilter(tokenService, authenticationManager(authenticationConfiguration), jwtUtil,loginAttemptService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(tokenService, authenticationManager(authenticationConfiguration), jwtUtil, loginAttemptService), UsernamePasswordAuthenticationFilter.class);
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, tokenService), LogoutFilter.class);
 

@@ -1,8 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import {useEffect, useMemo, useState} from "react";
 import axios from "axios";
 
 const useFetch = (url, config = {}, method = "get") => {
+
     const BASE_API = "http://localhost:8090";
+    const accessToken = window.localStorage.getItem("access") ?? "";
+
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -18,14 +21,15 @@ const useFetch = (url, config = {}, method = "get") => {
             setError(null);
 
             const httpMethods = {
-                get: () => axios.get(fullUrl, { params: memoConfig.params, ...memoConfig }),
+                get: () => axios.get(fullUrl, {headers: {"access": accessToken}, params: memoConfig.params, ...memoConfig}),
                 post: () =>
                     axios.post(
                         fullUrl,
                         memoConfig.data, // 본문 데이터 전달
                         {
-                            headers: { "Content-Type": "application/json" },
+                            headers: {"Content-Type": "application/json", "access": accessToken},
                             ...memoConfig,
+                            withCredentials: true
                         }
                     ),
             };
@@ -47,7 +51,7 @@ const useFetch = (url, config = {}, method = "get") => {
         loadData();
     }, [url, memoConfig, method]);
 
-    return { data, loading, error };
+    return {data, loading, error};
 };
 
 export default useFetch;

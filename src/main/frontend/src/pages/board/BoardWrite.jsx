@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import BoardWriteStyles from "../../assets/css/board/BoardWrite.module.css";
 import Title from "../../components/common/TitleComponents";
 import Input from "../../components/common/InputComponents";
@@ -10,8 +10,24 @@ import BigBtn from "../../components/common/BigBtnComponents";
 import Tiptap from "../../components/editor/TipTapEditor";
 import Alert from "../../components/common/AlertComponents";
 import Confirm from "../../components/common/ConfirmComponents";
+import fetchAuthorizedPage from "../../services/common/fetchAuthorizedPage";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const BoardWrite = () => {
+
+    const [data, setData] = useState("");
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const result = await fetchAuthorizedPage("http://localhost:8090/board", navigate, location);
+            if (result) setData(result);
+        };
+
+        fetchData();
+    }, [navigate, location]);
+
     const {
         handleRemoveHashTag,
         handleAddHashTag,
