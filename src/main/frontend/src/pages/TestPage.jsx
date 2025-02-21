@@ -9,11 +9,9 @@ import Confirm from "../components/common/ConfirmComponents";
 import Alert from "../components/common/AlertComponents";
 import fetchAuthorizedPage from "../services/common/fetchAuthorizedPage";
 import { useLocation, useNavigate } from "react-router-dom";
-import useApi from "../hooks/common/useApi";
 
 const TestPage = () => {
 
-    const {get} = useApi();
     const [isConfirmVisible, setIsConfirmVisible] = useState(false);
     const [data, setData] = useState("");
     const location = useLocation();
@@ -45,25 +43,14 @@ const TestPage = () => {
 
         window.location.href = "http://localhost:8090/oauth2/authorization/naver"
     }
+/*    useEffect(() => {
+        const fetchData = async () => {
+            const result = await fetchAuthorizedPage("http://localhost:8090/api/test/admin", navigate, location);
+            if (result) setData(result);
+        };
 
-    const secuBtn = async () => {
-        console.log('작동')
-        const accessToken = localStorage.getItem("access");
-        const response = await get("http://localhost:8090/api/test/secu-util",{
-            headers: { access: accessToken }
-        });
-
-        console.log(response);
-    }
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         const result = await fetchAuthorizedPage("http://localhost:8090/api/test/admin", navigate, location);
-    //         if (result) setData(result);
-    //     };
-    //
-    //     fetchData();
-    // }, [navigate, location]);
+        fetchData();
+    }, [navigate, location]);*/
 
     return (
 
@@ -106,10 +93,6 @@ const TestPage = () => {
                 }}
             />
             <a href="http://localhost:8090/oauth2/authorization/naver">로그인</a>
-
-            <SmallBtn
-                title={"시큐리티 테스트"}
-                onClick={secuBtn}/>
         </>
     );
 

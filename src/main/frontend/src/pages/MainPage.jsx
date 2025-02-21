@@ -85,8 +85,10 @@ const MainPage = () => {
                                         alt="User"
                                         className={styles.userIcon}
                                         onError={(e) => {
-                                            e.target.onerror = null;
-                                            e.target.src = `${profileImg}?${Date.now()}`;
+                                            if (e.target.src !== profileImg) {
+                                                e.target.onerror = null;
+                                                e.target.src = profileImg;
+                                            }
                                         }}
                                     />
                                     <span title={user.userName} onClick={nameClickHandler}
@@ -110,8 +112,10 @@ const MainPage = () => {
                                         alt="User"
                                         className={styles.userIcon}
                                         onError={(e) => {
-                                            e.target.onerror = null;
-                                            e.target.src = `${profileImg}?${Date.now()}`;
+                                            if (e.target.src !== profileImg) {
+                                                e.target.onerror = null;
+                                                e.target.src = profileImg;
+                                            }
                                         }}
                                     />
                                     <span title={user.userName} className={styles.userName}
@@ -148,8 +152,10 @@ const MainPage = () => {
                                                         alt="User"
                                                         className={styles.userIcon}
                                                         onError={(e) => {
-                                                            e.target.onerror = null;
-                                                            e.target.src = `${profileImg}?${Date.now()}`;
+                                                            if (e.target.src !== profileImg) {
+                                                                e.target.onerror = null;
+                                                                e.target.src = profileImg;
+                                                            }
                                                         }}
                                                     />
                                                     <Level level={post.userLevel ? `${post.userLevel}` : ""} />
