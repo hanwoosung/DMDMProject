@@ -37,7 +37,9 @@ const Aside = () => {
                         <Speech className={styles.iconSize} />
                         <div>쪽지리스트</div>
                     </div>
-                    <div className={styles.flexRow}>
+                    <div
+                        className={`${styles.flexRow} ${location.pathname === "/mypage/black-list" ? styles.selected : ""}`}
+                        onClick={() => navigate("/mypage/black-list")}>
                         <BlackList className={styles.iconSize} />
                         <div>블랙리스트</div>
                     </div>

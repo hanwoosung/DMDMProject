@@ -26,4 +26,6 @@ public interface BlackListDao {
 
     void deleteBlackList(String sess, List<ResponseBlackListDto> receivedUserId);
 
+    void saveBlackList(String userId, String sess);
+
 }

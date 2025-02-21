@@ -23,4 +23,6 @@ public interface BlackListService {
 
     void deleteBlackList(String sess, List<ResponseBlackListDto> receivedUserIds);
 
+    void saveBlackList(String userId, String sess);
+
 }

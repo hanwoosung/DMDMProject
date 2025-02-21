@@ -15,6 +15,8 @@ import Alert from "../../components/common/AlertComponents";
 import Confirm from "../../components/common/ConfirmComponents";
 import React, {useEffect, useRef, useState} from "react";
 import BoardMore from "../../components/board/BoardMoreComponents";
+import UserMoreComponents from "../../components/board/UserMoreComponents";
+import UserMore from "../../components/board/UserMoreComponents";
 
 const Board = () => {
 
@@ -61,45 +63,60 @@ const Board = () => {
     const [boardMore, setBoardMore] = useState(false);
     const boardMoreRef = useRef(null); // 🔥 `BoardMore`을 감지할 ref
 
+    const [userMore, setUserMore] = useState(false);
+    const userMoreRef = useRef(null); // `UserMore`을 감지할 ref
+
     useEffect(() => {
         const handleClickOutside = (event) => {
+            // BoardMore 외부 클릭 시 닫기
             if (boardMoreRef.current && !boardMoreRef.current.contains(event.target)) {
                 setBoardMore(false);
             }
+
+            // UserMore 외부 클릭 시 닫기 (🔥 단, UserMore 내부 클릭이면 닫지 않음!)
+            if (userMoreRef.current && !userMoreRef.current.contains(event.target)) {
+                setUserMore(false);
+            }
         };
 
-        if (boardMore) {
-            document.addEventListener("mousedown", handleClickOutside); // 🔥 이벤트 리스너 추가
-        } else {
-            document.removeEventListener("mousedown", handleClickOutside); // 🔥 필요 없을 때 제거
-        }
+        document.addEventListener("mousedown", handleClickOutside);
 
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [boardMore]); // `boardMore`이 바뀔 때마다 실행
+    }, [boardMore, userMore]); // ✅ 상태 변경 감지하여 실행
 
 
     return (
         <div className={BoardStyle.boardContainer}>
             <Title title={board.boardTypeName} />
             <div className={BoardStyle.infoWrap}>
-                <div className={BoardStyle.flex}>
+                <div className={BoardStyle.flex} ref={userMoreRef}>
                     <img
                         className={BoardStyle.profile}
                         src={board.filePath}
                         onError={(e) => {
                             e.target.src = profileImg;
-                        }}  // 이미지 로드 실패 시 기본 이미지로 대체
+                        }}
                         alt="Profile"
+                        onClick={() => setUserMore(!userMore)} // ✅ 이미지 클릭 시 UserMore 열기/닫기
                     />
                     <div className={BoardStyle.flexColumn}>
-                        <span>
-                            <Level level={board.userLevel} />
-                        </span>
+        <span>
+            <Level level={board.userLevel} />
+        </span>
                         <span>{board.userName}</span>
                     </div>
+
+                    {/* 🔥 UserMore을 프로필 이미지 클릭 시 열도록 변경 */}
+                    {userMore && (
+                        <div className={BoardStyle.relative} ref={userMoreRef}>
+                            <UserMore setIsAlert={setIsAlert} setAlertMessage={setAlertMessage}
+                                      userId={board.userId} />
+                        </div>
+                    )}
                 </div>
+
                 <div className={BoardStyle.flexRight}>
                     <div className={BoardStyle.boardInfo}>
                         <span>조회수 {board.vcnt}</span>
