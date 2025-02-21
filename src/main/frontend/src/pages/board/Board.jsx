@@ -112,6 +112,7 @@ const Board = () => {
                     {userMore && (
                         <div className={BoardStyle.relative} ref={userMoreRef}>
                             <UserMore setIsAlert={setIsAlert} setAlertMessage={setAlertMessage}
+                                      userName={board.userName}
                                       userId={board.userId} />
                         </div>
                     )}

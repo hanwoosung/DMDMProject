@@ -1,6 +1,7 @@
 package kr.co.dmdm.service;
 
 import kr.co.dmdm.dto.Alarm.request.MessageDto;
+import kr.co.dmdm.dto.Alarm.response.MessageResponseDto;
 import kr.co.dmdm.entity.Message;
 
 /**
@@ -16,5 +17,5 @@ import kr.co.dmdm.entity.Message;
  */
 public interface MessageService {
     String sendMessage(MessageDto message);
-    MessageDto getMessage(Integer id);
+    MessageResponseDto getMessage(Integer id);
 }

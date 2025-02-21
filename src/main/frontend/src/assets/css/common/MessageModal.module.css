@@ -1,0 +1,90 @@
+/* 모달 배경 */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 모달 박스 */
+.modalContent {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 420px;
+    text-align: left;
+    position: relative;
+}
+
+/* 모달 헤더 */
+.modalHeader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+/* 닫기 아이콘 (X 버튼) */
+.closeIcon {
+    font-size: 40px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+    cursor: pointer;
+}
+
+/* 대상 */
+.target {
+    font-size: 14px;
+    margin-bottom: 10px;
+    margin-top: 15px;
+}
+
+/* 라벨 */
+.label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+/* 텍스트 입력창 */
+.textArea {
+    width: 100%;
+    margin-top: 10px;
+    height: 160px;
+    border: 1px solid #FFB733;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    resize: none;
+}
+
+/* 버튼 영역 */
+.modalFooter {
+    margin-top: 15px;
+    text-align: center;
+}
+
+/* 전송 버튼 */
+.sendButton {
+    background: #ffbb33;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+}
