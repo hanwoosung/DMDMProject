@@ -95,7 +95,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             }
         }
 
-        String access = jwtUtil.createJwt("access", userId, role, 600000L);
+        String access = jwtUtil.createJwt("access", userId, role, 43200000L);
         String refresh = jwtUtil.createJwt("refresh", userId, role, 86400000L);
         tokenService.saveRefreshToken(userId, refresh);
 

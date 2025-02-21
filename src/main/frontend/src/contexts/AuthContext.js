@@ -18,6 +18,7 @@ const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loginUser, setLoginUser] = useState(null);
     const [profileImage, setProfileImage] = useState(null);
+    const [role, setRole] = useState(null);
 
     useEffect(() => {
         const checkAuthStatus = async () => {
@@ -27,8 +28,11 @@ const AuthProvider = ({ children }) => {
                 console.log("🔹 accessToken 유효 → 로그인 유지");
                 const userName = window.localStorage.getItem("name");
                 const userId = window.localStorage.getItem("userId");
+                const userRole = window.localStorage.getItem("role");
+
                 setIsLoggedIn(true);
                 setLoginUser(userName);
+                setRole(userRole);
 
                 if (userId) {
                     const profileUrl = await fetchUserProfile(userId);
@@ -41,8 +45,11 @@ const AuthProvider = ({ children }) => {
             const success = await fetchReissue();
             if (success) {
                 const userName = window.localStorage.getItem("name");
+                const userRole = window.localStorage.getItem("role");
+
                 setIsLoggedIn(true);
                 setLoginUser(userName);
+                setRole(userRole);
 
                 if (userName) {
                     const profileUrl = await fetchUserProfile(userName);
@@ -52,6 +59,7 @@ const AuthProvider = ({ children }) => {
                 setIsLoggedIn(false);
                 setLoginUser(null);
                 setProfileImage(null);
+                setRole(null);
             }
         };
 
@@ -60,16 +68,17 @@ const AuthProvider = ({ children }) => {
         const handleStorageChange = () => {
             setIsLoggedIn(!!window.localStorage.getItem("access"));
             setLoginUser(window.localStorage.getItem("name"));
+            setRole(window.localStorage.getItem("role"));
         };
 
         window.addEventListener("storage", handleStorageChange);
         return () => {
             window.removeEventListener("storage", handleStorageChange);
         };
-    }, [loginUser]);
+    }, []);
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, loginUser, setLoginUser, profileImage }}>
+        <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, loginUser, setLoginUser, profileImage, role }}>
             {children}
         </AuthContext.Provider>
     );

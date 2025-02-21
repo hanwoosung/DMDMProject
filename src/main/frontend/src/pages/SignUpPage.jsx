@@ -232,12 +232,12 @@ const SignUpPage = () => {
     };
 
 
-    // 이메일 수신 동의 
+    // 이메일 수신 동의
     const handleEmailAgreeToggle = () => {
         setIsEmailAgree(!isEmailAgree);
     };
 
-    // 약관 전체 동의 
+    // 약관 전체 동의
     const handleAllTermsToggle = () => {
         const newValue = !isTermsChecked.all;
         setIsTermsChecked({
@@ -247,7 +247,7 @@ const SignUpPage = () => {
         });
     };
 
-    // 개별 약관 동의 
+    // 개별 약관 동의
     const handleTermsChange = (type) => {
         setIsTermsChecked((prev) => {
             const updatedState = {

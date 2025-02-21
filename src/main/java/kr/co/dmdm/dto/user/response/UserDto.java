@@ -1,5 +1,6 @@
 package kr.co.dmdm.dto.user.response;
 
+import kr.co.dmdm.dto.common.FileDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
