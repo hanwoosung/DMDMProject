@@ -51,6 +51,15 @@ public class BlackListServiceImpl implements BlackListService {
         blackListDao.deleteBlackList(sess, receivedUserIds);
     }
 
+    @Override
+    public void saveBlackList(String userId, String sess) {
+        try {
+            blackListDao.saveBlackList(userId, sess);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("이미 등록 되어있는 사용자입니다.");
+        }
+    }
+
     private int getBlackListCnt(String sess){
         return blackListDao.getBlackListCnt(sess);
     }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * 패키지명        : kr.co.dmdm.controller.mypage
  * 파일명          : BlackListController
@@ -26,8 +27,8 @@ import java.util.Map;
  */
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/v1/mypage/black-list")
+@RequiredArgsConstructor
 @Slf4j
 public class BlackListController {
 
@@ -51,10 +52,10 @@ public class BlackListController {
     }
 
     @DeleteMapping
-    private Map<String, Object> deleteBlackList(@RequestHeader("access") String token,
-                                                @RequestParam(defaultValue = "1") int page,
-                                                @RequestParam(defaultValue = "10") int size,
-                                                @RequestBody List<ResponseBlackListDto> receivedUserIds) {
+    public Map<String, Object> deleteBlackList(@RequestHeader("access") String token,
+                                               @RequestParam(defaultValue = "1") int page,
+                                               @RequestParam(defaultValue = "10") int size,
+                                               @RequestBody List<ResponseBlackListDto> receivedUserIds) {
 
         String sess = "";
 
@@ -66,5 +67,25 @@ public class BlackListController {
 
         blackListService.deleteBlackList(sess, receivedUserIds);
         return blackListService.getBlackList(sess, page, size);
+    }
+
+    @PostMapping("{userId}")
+    public void saveBlackList(@PathVariable String userId,
+                              @RequestHeader("access") String token) {
+
+        String sess = "";
+
+        try {
+            sess = jwtUtil.getUsername(token);
+        } catch (Exception e) {
+            throw new CustomException(ExceptionEnum.SECURITY);
+        }
+
+        if (sess.equals(userId)) {
+            throw new RuntimeException("자신을 블랙리스트에 추가할 수 없습니다.");
+        }
+
+        blackListService.saveBlackList(userId, sess);
+
     }
 }
