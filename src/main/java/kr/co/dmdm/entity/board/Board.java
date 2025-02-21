@@ -37,7 +37,7 @@ public class Board {
     @Column(name = "board_content", nullable = false)
     private String boardContent;
 
-    @Size(max = 15)
+    @Size(max = 255)
     @NotNull
     @Column(name = "user_id", nullable = false, length = 15)
     private String userId;

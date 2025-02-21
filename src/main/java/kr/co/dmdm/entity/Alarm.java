@@ -26,10 +26,10 @@ public class Alarm {
     @Column(name = "target_id")
     private Integer targetId;
 
-    @Column(name = "send_user_id", nullable = false, length = 15)
+    @Column(name = "send_user_id", nullable = false, length = 255)
     private String sendUserId;
 
-    @Column(name = "receive_user_id", nullable = false, length = 15)
+    @Column(name = "receive_user_id", nullable = false, length = 255)
     private String receiveUserId;
 
     @Lob
