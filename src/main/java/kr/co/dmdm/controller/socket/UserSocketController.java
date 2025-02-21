@@ -43,14 +43,6 @@ public class UserSocketController extends BaseWebSocketController {
     @SendTo("/subscribe/chatRoom.{chatRoomId}")
     public List<ChatUserDto> leaveChatRoom(ChatUserDto request, @DestinationVariable Long chatRoomId) {
         System.out.println("퇴실 발생!!!!!!!!!!!!!!" + request);
-
-        if (request.getUsername() == null) {
-            // todo 토론자일시 패배처리하기
-            // 구분하는 방법을 알아내야 함
-            // 여기서 방번호로 조회해서 send 랑 receive 받아오셈 그게 같으면 룸매니저 delete 처리하기
-            // 그리고 프론트에는 시간을 0초로 수정하도록 보내기.
-        }
-
         return chatRoomManager.leaveUser(request, chatRoomId);
     }
 }

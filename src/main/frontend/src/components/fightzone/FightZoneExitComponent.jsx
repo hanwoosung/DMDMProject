@@ -1,6 +1,6 @@
 import styles from "../../assets/css/FightZone.module.css";
 import leftArrowIcon from "../../assets/image/icon_left_arrow.svg";
-import React, {forwardRef, useEffect} from "react";
+import React, {forwardRef} from "react";
 import {useNavigate} from "react-router-dom";
 
 const FightZoneExitComponent = forwardRef((props, ref) => {

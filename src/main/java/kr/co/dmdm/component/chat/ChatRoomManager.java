@@ -4,6 +4,7 @@ import kr.co.dmdm.dto.fight.ChatUserDto;
 import kr.co.dmdm.dto.fight.request.RoomUpdateRequestDto;
 import kr.co.dmdm.dto.fight.request.VoteRequestDto;
 import kr.co.dmdm.dto.fight.response.ChatMessageResponseDto;
+import kr.co.dmdm.dto.fight.response.ChatRoomResponseDto;
 import kr.co.dmdm.dto.fight.response.VoteResponseDto;
 import kr.co.dmdm.repository.dao.fight.ChatRoomDao;
 import kr.co.dmdm.type.FightNotice;
@@ -101,7 +102,7 @@ public class ChatRoomManager {
      * 토론 마감
      */
     private void stopTimer(Long chatRoomId) {
-        System.out.println("토론 중지");
+        System.out.println("토론 마감");
         deleteInfo(chatRoomId);
         messagingTemplate.convertAndSend("/subscribe/timer." + chatRoomId, 0);
     }
@@ -134,8 +135,20 @@ public class ChatRoomManager {
      * 사용자 퇴장
      */
     public List<ChatUserDto> leaveUser(ChatUserDto request, Long chatRoomId) {
+        ChatRoomResponseDto roomInfo = chatRoomDao.findChattingRoom(Math.toIntExact(chatRoomId), null, null).getFirst();
+
+        if (
+            roomInfo.getSendUserId().equals(request.getUsername())
+            || roomInfo.getReceiveUserId().equals(request.getUsername())
+        ) {
+            log.info("토론자 퇴장 이벤트 작동");
+            //프론트는 제한시간을 0초로 수정하여 강제 종료
+            deleteInfo(chatRoomId);
+            messagingTemplate.convertAndSend("/subscribe/timer." + chatRoomId, 0);
+            return null;
+        }
+
         getChatUsers(chatRoomId).remove(request);
-        // todo 토론자일시 중지 요청
         return getChatUsers(chatRoomId);
     }
 
@@ -222,11 +235,11 @@ public class ChatRoomManager {
         VoteResponseDto voteResponse = voteResult(getVoteData(chatRoomId));
 
         chatRoomDao.updateChatRoom(
-            new RoomUpdateRequestDto(
-                Math.toIntExact(chatRoomId),
-                voteResponse.getLeftVote(),
-                voteResponse.getRightVote()
-            )
+                new RoomUpdateRequestDto(
+                        Math.toIntExact(chatRoomId),
+                        voteResponse.getLeftVote(),
+                        voteResponse.getRightVote()
+                )
         );
 
         chatRoomTimers.remove(chatRoomId);
