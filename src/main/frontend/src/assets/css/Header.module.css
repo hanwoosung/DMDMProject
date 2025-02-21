@@ -1,6 +1,6 @@
-header {
-    background-color: white;
+header{
     border: 1px solid #DADADA;
+    background-color: white;
 }
 
 .flexContainer {
@@ -12,53 +12,52 @@ header {
     justify-content: space-between;
 }
 
-.logoBtn {
+.logoBtn{
     width: 90px;
     height: 90px;
     margin-right: 50px;
     cursor: pointer;
 }
 
-.headBtn:hover {
+.headBtn:hover{
     color: #FFB733;
     cursor: pointer;
 }
 
-.titleHeadBtn {
+.titleHeadBtn{
     font-weight: bold;
-
     composes: headBtn;
 }
 
-.flexRow {
+.flexRow{
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-.flexColumn {
+.flexColumn{
     display: flex;
     flex-direction: column;
 }
 
-.menuDetailFlexRow {
+.menuDetailFlexRow{
     composes: flexRow;
     height: 100%;
     gap: 70px;
 }
 
-.profileFlexColumn {
+.profileFlexColumn{
     composes: flexColumn;
     height: 90px;
     position: relative;
 }
 
-.profileFlexRow {
+.profileFlexRow{
     composes: flexRow;
     gap: 50px;
 }
 
-.headerDetail {
+.headerDetail{
     display: none;
     flex-direction: row;
     justify-content: space-around;
@@ -75,7 +74,7 @@ header {
     z-index: 1000;
 }
 
-.profileDetail {
+.profileDetail{
     display: flex;
     flex-direction: column;
     border: 1px solid #DADADA;
@@ -86,72 +85,81 @@ header {
     top: 50px;
     right: 0;
     gap: 15px;
+    z-index: 100;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
+.profileContainer{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-.detailTitleBtn {
+.profileName{
+    font-weight: bold;
+}
+
+.detailTitleBtn{
     font-size: 1.3rem;
     font-weight: bold;
     margin-bottom: 10px;
 }
 
-.menuFlexColumn {
+.menuFlexColumn{
     composes: flexColumn;
     position: relative;
 }
 
-.headerFlexColumn {
+.headerFlexColumn{
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.profileImg {
+.iconSize{
     min-width: 24px;
     width: 24px;
     height: 24px;
     cursor: pointer;
 }
 
-.profileIcon {
+.profileIcon{
     width: 16px;
     height: 16px;
 }
 
-.verticalLine {
+.verticalLine{
     height: 200px;
     width: 1px;
     background: #DADADA;
 }
 
-.profileDetailLine {
+.profileDetailLine{
     border: 1px solid #DADADA;
     width: 150px;
 }
 
-.profileDetailSpan {
+.profileDetailSpan{
     margin-left: 10px;
 
     composes: headBtn;
 }
 
-.profileLine {
+.profileLine{
     border: 0;
     border-top: 1px solid #FFB733;
 }
-
-.profileItemLine {
+.profileItemLine{
     border: 0;
     border-top: 1px solid #DADADA;
     margin: 10px 0;
 }
 
-.notifyTitle {
+.notifyTitle{
     composes: flexRow;
     padding: 10px 15px;
 }
 
-.headPopupList {
+.headPopupList{
     display: none;
     flex-direction: column;
     border: #FFB733 solid 1px;
@@ -160,23 +168,24 @@ header {
     position: absolute;
     width: 350px;
     top: 50px;
+    z-index: 100;
     right: 0;
     box-shadow: 0 4px 10px rgba(197, 123, 0, 0.2);
 }
 
-.notifyContent {
+.notifyContent{
     composes: flexColumn;
     font-size: 13px;
     padding: 15px;
 }
 
-.notifyItem {
+.notifyItem{
     composes: flexRow;
     justify-content: space-between;
     box-sizing: border-box;
 }
 
-.notifyBtn {
+.notifyBtn{
     composes: flexRow;
     gap: 10px;
     justify-content: end;
@@ -184,7 +193,7 @@ header {
     margin-bottom: 15px;
 }
 
-.moreViewBtn {
+.moreViewBtn{
     height: 24px;
     width: 24px;
     align-self: center;
@@ -192,11 +201,11 @@ header {
     margin-bottom: 10px;
 }
 
-.moreOptionBtn {
+.moreOptionBtn{
     position: relative;
 }
 
-.optionList {
+.optionList{
     display: none;
     flex-direction: column;
     border: 1px solid #DADADA;
@@ -209,15 +218,26 @@ header {
     gap: 3px;
 }
 
-.optionItem {
+.optionItem{
     composes: headBtn;
 
     text-wrap: nowrap;
 }
 
-.iconSize {
-    min-width: 24px;
-    width: 24px;
-    height: 24px;
+.profileImage{
+    min-width: 50px;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    border-radius: 25px;
+}
+
+.loginAndJoinBox{
+    display: flex;
+    gap: 20px;
+}
+
+.login:hover , .join:hover {
+    color: #FFB733;
     cursor: pointer;
 }

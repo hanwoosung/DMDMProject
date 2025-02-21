@@ -180,6 +180,12 @@ const Header = () => {
                                         <img src={`${profileImage}`}
                                              alt="User Profile"
                                              className={styles.profileImage}
+                                             onError={(e) => {
+                                                 if (e.target.src !== profile) {
+                                                     e.target.onerror = null;
+                                                     e.target.src = profile;
+                                                 }
+                                             }}
                                              onClick={() => {
                                                  togglePopupView("profile");
                                              }}
