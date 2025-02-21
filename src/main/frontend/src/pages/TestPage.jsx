@@ -43,14 +43,14 @@ const TestPage = () => {
 
         window.location.href = "http://localhost:8090/oauth2/authorization/naver"
     }
-    useEffect(() => {
+/*    useEffect(() => {
         const fetchData = async () => {
             const result = await fetchAuthorizedPage("http://localhost:8090/api/test/admin", navigate, location);
             if (result) setData(result);
         };
 
         fetchData();
-    }, [navigate, location]);
+    }, [navigate, location]);*/
 
     return (
 

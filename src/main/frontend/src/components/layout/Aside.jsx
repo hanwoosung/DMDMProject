@@ -33,9 +33,11 @@ const Aside = () => {
                         <Emoticon className={styles.iconSize} />
                         <div>이모티콘</div>
                     </div>
-                    <div className={styles.flexRow}>
+                  {/*  <div className={styles.flexRow}>
                         <Speech className={styles.iconSize} />
                         <div>쪽지리스트</div>
+                    </div>*/}
+                    <div className={styles.flexRow}>
                     </div>
                     <div
                         className={`${styles.flexRow} ${location.pathname === "/mypage/black-list" ? styles.selected : ""}`}
