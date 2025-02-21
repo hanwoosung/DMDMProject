@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import BigBtn from "../components/common/BigBtnComponents";
 import SmallBtn from "../components/common/SmallBtnComponents";
 import Input from "../components/common/InputComponents";
@@ -7,8 +7,8 @@ import Search from "../components/common/SearchComponents";
 import Filter from "../components/common/FilterComponents";
 import Confirm from "../components/common/ConfirmComponents";
 import Alert from "../components/common/AlertComponents";
-import fetchAuthorizedPage from "../services/common/fetchAuthorizedPage";
-import { useLocation, useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
+import MessageDetailModal from "../components/common/MessageDetailModal";
 
 const TestPage = () => {
 
@@ -43,27 +43,34 @@ const TestPage = () => {
 
         window.location.href = "http://localhost:8090/oauth2/authorization/naver"
     }
-/*    useEffect(() => {
-        const fetchData = async () => {
-            const result = await fetchAuthorizedPage("http://localhost:8090/api/test/admin", navigate, location);
-            if (result) setData(result);
-        };
 
-        fetchData();
-    }, [navigate, location]);*/
+    const [isMessageOpen, setIsMessageOpen] = useState(false);
+
+    const handleOpenMessageModal = () => {
+        setIsMessageOpen(true);
+    };
+    /*    useEffect(() => {
+            const fetchData = async () => {
+                const result = await fetchAuthorizedPage("http://localhost:8090/api/test/admin", navigate, location);
+                if (result) setData(result);
+            };
+
+            fetchData();
+        }, [navigate, location]);*/
 
     return (
 
         <>
-            <BigBtn onClick={alert2}/>
+            <BigBtn onClick={alert2} />
 
-            <SmallBtn onClick={alert2}/>
+            <SmallBtn onClick={alert2} />
 
-            <Input onClick={alert2}/>
+            <Input onClick={alert2} />
 
-            <Select onChange={alert2}/>
+            <Select onChange={alert2} />
 
-            <Search onClick={alert2}/>
+            <Search onClick={alert2} />
+
 
             <Filter list={[{label: "전체", value: ""}, {label: "전체2", value: "2"}]}
                     defaultValue={"2"}
@@ -73,7 +80,7 @@ const TestPage = () => {
             />
 
             <BigBtn title={"컨펌열기"}
-                    onClick={showConfirm}/>
+                    onClick={showConfirm} />
 
             <Confirm
                 isVisible={isConfirmVisible}
@@ -83,7 +90,7 @@ const TestPage = () => {
             />
 
             <BigBtn title={"Alert열기"}
-                    onClick={showAlert}/>
+                    onClick={showAlert} />
 
             <Alert
                 isVisible={isAlert}
@@ -93,6 +100,11 @@ const TestPage = () => {
                 }}
             />
             <a href="http://localhost:8090/oauth2/authorization/naver">로그인</a>
+
+            <div onClick={handleOpenMessageModal}>쪽지 상세 테스트</div>
+            {isMessageOpen && (
+                <MessageDetailModal messageId={1} onClose={() => setIsMessageOpen(false)}></MessageDetailModal>
+            )}
         </>
     );
 

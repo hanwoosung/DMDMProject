@@ -1,7 +1,10 @@
 package kr.co.dmdm.repository.jpa;
 
+import kr.co.dmdm.dto.Alarm.response.MessageResponseDto;
 import kr.co.dmdm.entity.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  * packageName    : kr.co.dmdm.repository.jpa
@@ -15,5 +18,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * 2025-02-21        한우성       최초 생성
  */
 public interface MessageRepository extends JpaRepository<Message, Integer> {
-    Message findById(int id);
+    @Query("SELECT new kr.co.dmdm.dto.Alarm.response.MessageResponseDto(m.id, m.messageContent, " +
+            "m.sendUserId, u.userName, m.receiveUserId) " +
+            "FROM Message m JOIN User u ON m.sendUserId = u.userId " +
+            "WHERE m.id = :id")
+    MessageResponseDto findMessageWithSenderName(@Param("id") int id);
 }

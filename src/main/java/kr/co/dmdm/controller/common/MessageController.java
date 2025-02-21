@@ -1,6 +1,7 @@
 package kr.co.dmdm.controller.common;
 
 import kr.co.dmdm.dto.Alarm.request.MessageDto;
+import kr.co.dmdm.dto.Alarm.response.MessageResponseDto;
 import kr.co.dmdm.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,12 +30,11 @@ public class MessageController {
 
     @PostMapping
     public String saveMessage(@RequestBody MessageDto message) {
-        messageService.sendMessage(message);
-        return "oo";
+        return messageService.sendMessage(message);
     }
 
     @PostMapping("/ok")
-    public MessageDto ok(@RequestBody Map<String, Integer> request) {
+    public MessageResponseDto ok(@RequestBody Map<String, Integer> request) {
         int messageId = request.get("messageId");
         return messageService.getMessage(messageId);
     }

@@ -78,17 +78,20 @@ const Comment = ({
 
                 <div
                     className={`${CommentStyle[containerClass]} ${isHighlighted ? CommentStyle.commentHighlight : ""}`}>
-                    <div style={{position:"relative"}}>
+                    <div style={{position: "relative"}}>
                         <img className={CommentStyle.profile}
                              src={comment.filePath}
                              onError={(e) => {
                                  e.target.src = profileImg;
                              }}  // 이미지 로드 실패 시 기본 이미지로 대체
-                             alt="Profile" onClick={() => {setUserMore(true)}}/>
+                             alt="Profile" onClick={() => {
+                            setUserMore(true)
+                        }} />
                         {userMore && (
                             <div className={BoardStyle.relative} ref={userMoreRef}>
                                 <UserMore setIsAlert={setIsAlert} setAlertMessage={setAlertMessage}
-                                          userId={comment.userId} />
+                                          userId={comment.userId}
+                                          userName={comment.userName} />
                             </div>
                         )}
                     </div>
