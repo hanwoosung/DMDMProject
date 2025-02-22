@@ -49,7 +49,7 @@ public class File {
     @Column(name = "file_size")
     private Long fileSize; // 파일 크기 (단위: MB)
 
-    @Column(name = "user_id", length = 15)
+    @Column(name = "user_id", length = 255)
     private String userId;
 
     @Column(name = "file_path", length = 255)

@@ -22,7 +22,7 @@
     list-style: none;
 }
 
-.CommentContainer{
+.CommentContainer {
     z-index: 100;
     background-color: white;
     display: none;
@@ -44,4 +44,35 @@
     text-align: center;
     margin: 0 auto;
     list-style: none;
+}
+
+.UserContainer {
+    z-index: 100;
+    background-color: white;
+    display: none;
+    position: absolute;
+    width: 135px;
+    top: 0;
+    right: 40px;
+    border: 1px solid #AAAAAA;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.UserContainerOn{
+    composes: UserContainer;
+    display: block !important;
+}
+
+.UserContainerOn ul{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    list-style: none;
+}
+
+.UserContainerOn ul li:hover{
+    cursor: pointer;
+    color: #FFB733;
 }

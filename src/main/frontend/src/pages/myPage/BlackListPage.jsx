@@ -80,7 +80,8 @@ const BlackListPage = () => {
                 return;
             }
 
-
+            setBlackList(res.data.blackList);
+            setPagingData(res.data.paging);
 
         }).catch((res) => {
             setIsAlert(true);

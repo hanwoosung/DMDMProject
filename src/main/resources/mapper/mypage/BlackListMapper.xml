@@ -11,6 +11,7 @@
         FROM tbl_black_list a
         LEFT JOIN tbl_user b ON a.receive_user_id = b.user_id
         WHERE a.send_user_id = #{sess}
+        ORDER BY a.insert_dt DESC
         LIMIT #{page}, #{size}
     </select>
 
@@ -28,5 +29,17 @@
             #{id.receiveUserId}
         </foreach>
     </delete>
+
+    <insert id="saveBlackList">
+        INSERT INTO tbl_black_list(
+            send_user_id,
+            receive_user_id,
+            insert_dt
+        )VALUES (
+            #{sess},
+            #{userId},
+            NOW()
+        )
+    </insert>
 
 </mapper>
