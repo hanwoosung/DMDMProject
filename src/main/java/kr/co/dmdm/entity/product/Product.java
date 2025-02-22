@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -44,12 +44,12 @@ public class Product {
     @NotNull
     @ColumnDefault("current_timestamp()")
     @Column(name = "insert_dt", nullable = false)
-    private Instant insertDt;
+    private LocalDateTime insertDt;
 
     @NotNull
     @ColumnDefault("current_timestamp()")
     @Column(name = "update_dt", nullable = false)
-    private Instant updateDt;
+    private LocalDateTime updateDt;
 
     @Size(max = 255)
     @NotNull
@@ -58,8 +58,13 @@ public class Product {
 
     @PrePersist
     protected void onCreate() {
-        insertDt = Instant.now();
-        updateDt = Instant.now();
+        insertDt = LocalDateTime.now();
+        updateDt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updateDt = LocalDateTime.now();
     }
 
 }

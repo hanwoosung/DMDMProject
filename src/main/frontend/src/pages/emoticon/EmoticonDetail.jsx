@@ -79,7 +79,15 @@ const EmoticonDetail = () => {
                         className={styles.price}>{emoticon.productPrice ? `${emoticon.productPrice.toLocaleString()}pt` : "가격 없음"}
                     </span>
                             <div className={styles.actions}>
-                                <BigBtn width={"50%"} title="구매하기" onClick={() => buyEmoticon()}/>
+                                <BigBtn width={"50%"} title="구매하기" onClick={
+                                    () => {
+                                        if(!window.localStorage.getItem("access")) {
+                                            onAlert("로그인 후 이용해주세요.");
+                                            return;
+                                        }
+                                        buyEmoticon()
+                                    }}
+                                />
                                 {/*<BigBtn title="신고하기" onClick={() => alert("신고 기능 미구현")}/>*/}
                             </div>
                         </div>

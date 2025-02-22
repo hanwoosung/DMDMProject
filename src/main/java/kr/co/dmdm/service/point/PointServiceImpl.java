@@ -33,7 +33,6 @@ public class PointServiceImpl implements PointService {
     private final PointHistoryRepository pointHistoryRepository;
     private final ProductRepository productRepository;
 
-    @Transactional
     @Override
     public void savePoint(PointHistoryRequestDto pointDto) {
         if (pointDto.getUserId() == null || pointDto.getUserId().isEmpty()) {

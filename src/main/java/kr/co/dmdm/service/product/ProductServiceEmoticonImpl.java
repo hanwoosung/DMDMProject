@@ -18,6 +18,7 @@ import kr.co.dmdm.repository.jpa.product.ProductRepository;
 import kr.co.dmdm.repository.jpa.product.detail.EmoticonRepository;
 import kr.co.dmdm.service.common.FileService;
 import kr.co.dmdm.service.common.GubnService;
+import kr.co.dmdm.service.point.PointService;
 import kr.co.dmdm.service.point.PointServiceImpl;
 import kr.co.dmdm.type.PointHistoryType;
 import kr.co.dmdm.type.ProductType;
@@ -56,9 +57,10 @@ public class ProductServiceEmoticonImpl implements ProductService {
     private final ProductRepository productRepository;
     private final EmoticonRepository emoticonRepository;
     private final UserRepository userRepository;
-    private final PointServiceImpl pointServiceImpl;
+    private final PointService pointService;
     private final UserItemRepository userItemRepository;
 
+    @Transactional
     @SneakyThrows
     @Override
     public void saveProduct(ProductRequestDto productRequestDto) {
@@ -100,6 +102,14 @@ public class ProductServiceEmoticonImpl implements ProductService {
 
         String stringId = savedProduct.getId().toString();
 
+        PointHistoryRequestDto pointHistoryRequestDto = new PointHistoryRequestDto();
+        pointHistoryRequestDto.setUserId(userId);
+        pointHistoryRequestDto.setRemark(stringId);
+        pointHistoryRequestDto.setPoint(emoticonRegisterPoint * -1);
+        pointHistoryRequestDto.setPointHistoryType(PointHistoryType.REGISTER_EMOTICON);
+
+        pointService.savePoint(pointHistoryRequestDto);
+
         for (int i = 0; i < multipartFiles.size(); i++) {
             if (i == 0) {
                 fileService.saveFile(multipartFiles.get(i), "PRODUCT_IMAGE", stringId, userId);
@@ -120,7 +130,7 @@ public class ProductServiceEmoticonImpl implements ProductService {
     @Override
     public ProductDetailResponseDto getProductDetail(Integer productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다. productId: " + productId));
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "해당 상품이 존재하지 않습니다. productId: " + productId));
 
         List<String> imageUrls = emoticonRepository.findByIdProductId(productId).stream()
                 .map(detail -> fileService.findFileByRefNoAndFileType(productId + "/" + detail.getId().getOrderNo(), "tbl_emoticon_detail").getFilePath())
@@ -148,6 +158,16 @@ public class ProductServiceEmoticonImpl implements ProductService {
     @Transactional
     @Override
     public void buyProduct(String userId, Integer productId) {
+
+        UserItemId userItemId = new UserItemId();
+        userItemId.setItemId(productId);
+        userItemId.setItemType(productTypeName);
+
+        UserItem userItem = userItemRepository.findById(userItemId).orElse(null);
+        if (userItem != null) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, "이미 구매한 이모티콘입니다.");
+        }
+
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new CustomException(ExceptionEnum.PRODUCT_NOT_FOUND));
 
@@ -168,16 +188,7 @@ public class ProductServiceEmoticonImpl implements ProductService {
         pointHistoryRequestDto.setPoint(productPrice * -1);
         pointHistoryRequestDto.setPointHistoryType(PointHistoryType.BUY_PRODUCT);
 
-        pointServiceImpl.savePoint(pointHistoryRequestDto);
-
-        UserItemId userItemId = new UserItemId();
-        userItemId.setItemId(productId);
-        userItemId.setItemType(productTypeName);
-
-        UserItem userItem = userItemRepository.findById(userItemId).orElse(null);
-        if(userItem != null) {
-            throw new CustomException(HttpStatus.BAD_REQUEST, "이미 구매한 이모티콘입니다.");
-        }
+        pointService.savePoint(pointHistoryRequestDto);
 
         userItemRepository.save(UserItem.builder()
                 .id(userItemId)

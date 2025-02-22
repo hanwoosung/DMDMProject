@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -36,7 +37,7 @@ public class PointHistory {
     @NotNull
     @ColumnDefault("current_timestamp()")
     @Column(name = "insert_dt", nullable = false, updatable = false)
-    private Instant insertDt;
+    private LocalDateTime insertDt;
 
     @Lob
     @Column(name = "remark")
@@ -44,6 +45,6 @@ public class PointHistory {
 
     @PrePersist
     protected void onCreate() {
-        insertDt = Instant.now();
+        insertDt = LocalDateTime.now();
     }
 }

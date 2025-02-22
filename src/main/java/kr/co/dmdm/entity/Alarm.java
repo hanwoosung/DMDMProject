@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tbl_alarm")
@@ -38,10 +38,10 @@ public class Alarm {
 
     @ColumnDefault("current_timestamp()")
     @Column(name = "insert_dt", nullable = false)
-    private Instant insertDt;
+    private LocalDateTime insertDt;
 
     @Column(name = "read_dt")
-    private Instant readDt;
+    private LocalDateTime readDt;
 
     @ColumnDefault("'ACTIVE'")
     @Column(name = "status", nullable = false, length = 100)
@@ -50,7 +50,7 @@ public class Alarm {
     @PrePersist
     protected void onCreate() {
         if (insertDt == null) {
-            insertDt = Instant.now();
+            insertDt = LocalDateTime.now();
         }
         if (status == null || status.isEmpty()) {
             status = "ACTIVE";

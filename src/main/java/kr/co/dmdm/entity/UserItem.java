@@ -1,15 +1,13 @@
 package kr.co.dmdm.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -30,6 +28,11 @@ public class UserItem {
     @NotNull
     @ColumnDefault("current_timestamp()")
     @Column(name = "insert_dt", nullable = false)
-    private Instant insertDt;
+    private LocalDateTime insertDt;
+
+    @PrePersist
+    protected void onCreate() {
+        insertDt = LocalDateTime.now();
+    }
 
 }
