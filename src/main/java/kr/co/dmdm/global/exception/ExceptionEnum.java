@@ -39,6 +39,7 @@ public enum ExceptionEnum {
     NOT_FOUND(HttpStatus.NOT_FOUND, "리소스를 찾을 수 없습니다."),
     PAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "페이지를 찾을 수 없습니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "품목을 찾을 수 없습니다."),
 
     // 409 CONFLICT
     DUPLICATE_RESOURCE(HttpStatus.CONFLICT, "중복된 리소스가 존재합니다."),

@@ -4,6 +4,8 @@ import kr.co.dmdm.dto.common.GubnDto;
 import kr.co.dmdm.entity.Gubn;
 import kr.co.dmdm.entity.GubnCompositeKey;
 import kr.co.dmdm.type.AlarmType;
+import kr.co.dmdm.type.PointHistoryType;
+import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
@@ -36,17 +38,17 @@ public class ModelMapperConfig {
         };
 
         // AlarmRequestDto -> Alarm 매핑 설정
-        modelMapper.typeMap(kr.co.dmdm.dto.Alarm.request.AlarmRequestDto.class, kr.co.dmdm.entity.Alarm.class)
+        modelMapper.typeMap(kr.co.dmdm.dto.alarm.request.AlarmRequestDto.class, kr.co.dmdm.entity.Alarm.class)
                 .addMappings(mapper -> mapper.using(enumToStringConverter).map(
-                        kr.co.dmdm.dto.Alarm.request.AlarmRequestDto::getAlarmType,
+                        kr.co.dmdm.dto.alarm.request.AlarmRequestDto::getAlarmType,
                         kr.co.dmdm.entity.Alarm::setAlarmType
                 ));
 
         // Alarm -> AlarmRequestDto 매핑 설정
-        modelMapper.typeMap(kr.co.dmdm.entity.Alarm.class, kr.co.dmdm.dto.Alarm.request.AlarmRequestDto.class)
+        modelMapper.typeMap(kr.co.dmdm.entity.Alarm.class, kr.co.dmdm.dto.alarm.request.AlarmRequestDto.class)
                 .addMappings(mapper -> mapper.using(stringToEnumConverter).map(
                         kr.co.dmdm.entity.Alarm::getAlarmType,
-                        kr.co.dmdm.dto.Alarm.request.AlarmRequestDto::setAlarmType
+                        kr.co.dmdm.dto.alarm.request.AlarmRequestDto::setAlarmType
                 ));
 
         // GubnDto → Gubn 변환 시 EmbeddedId 설정
@@ -87,6 +89,22 @@ public class ModelMapperConfig {
                 );
             }
         };
+
+        // String -> PointHistoryType 변환 설정
+        modelMapper.addConverter(new AbstractConverter<String, PointHistoryType>() {
+            @Override
+            protected PointHistoryType convert(String source) {
+                return PointHistoryType.fromCode(source);
+            }
+        });
+
+        // PointHistoryType -> String 변환 설정
+        modelMapper.addConverter(new AbstractConverter<PointHistoryType, String>() {
+            @Override
+            protected String convert(PointHistoryType source) {
+                return source.name();
+            }
+        });
 
         modelMapper.addConverter(gubnDtoToGubnConverter);
         modelMapper.addConverter(gubnToGubnDtoConverter);

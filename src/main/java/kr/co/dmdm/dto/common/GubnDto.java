@@ -1,8 +1,6 @@
 package kr.co.dmdm.dto.common;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * packageName    : kr.co.dmdm.dto.common
@@ -17,7 +15,9 @@ import lombok.ToString;
  * 2025-02-10        황승현       ToString 추가
  */
 @Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class GubnDto {
     private String parentCode;
