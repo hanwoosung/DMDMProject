@@ -8,7 +8,7 @@ import Filter from "../components/common/FilterComponents";
 import Confirm from "../components/common/ConfirmComponents";
 import Alert from "../components/common/AlertComponents";
 import fetchAuthorizedPage from "../services/common/fetchAuthorizedPage";
-import SendPointModal from "../components/point/sendPointModal";
+import SendPointModal from "../components/point/SendPointModal";
 import {useLocation, useNavigate} from "react-router-dom";
 import MessageDetailModal from "../components/common/MessageDetailModal";
 
@@ -110,7 +110,7 @@ const TestPage = () => {
             <BigBtn title={"포인트 보내기"}
                     onClick={showSendPoint}/>
 
-            <SendPointModal isVisible={isSendPoint} recipient={"도지도지 도오지"} receiveUserId={"도지도지 도오지의 아이디"} onClose={() => setIsSendPoint(false)}/>
+            <SendPointModal isVisible={isSendPoint} recipient={"도지도지 도오지"} receiveUserId={"yiok79"} onClose={() => setIsSendPoint(false)}/>
 
             <a href="http://localhost:8090/oauth2/authorization/naver">로그인</a>
 

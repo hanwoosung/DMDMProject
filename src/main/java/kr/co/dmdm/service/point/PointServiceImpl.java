@@ -59,11 +59,17 @@ public class PointServiceImpl implements PointService {
     }
 
     private void sendPoint(PointHistoryRequestDto pointDto) {
+
+        User sendUser = userRepository.findById(pointDto.getUserId()).get();
+
+        if(sendUser.getUserPoint() < pointDto.getPoint() * -1) {
+            throw new CustomException(HttpStatus.BAD_REQUEST, "보내려는 포인트가 \n가지고 있는 포인트보다 많습니다.\n현재 포인트 : " + sendUser.getUserPoint());
+        }
+
         PointHistory sendPointHistory = mapperPointDtoToPointHistory(pointDto);
 
         pointHistoryRepository.save(sendPointHistory);
 
-        User sendUser = userRepository.findById(pointDto.getUserId()).get();
         sendUser.setUserPoint(sendUser.getUserPoint() + pointDto.getPoint());
         userRepository.save(sendUser);
 
