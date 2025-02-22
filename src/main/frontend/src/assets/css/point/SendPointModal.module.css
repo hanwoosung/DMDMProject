@@ -1,0 +1,92 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 280px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 2px solid transparent;
+}
+
+/* ✅ 헤더 스타일 추가 */
+.header {
+    display: flex;
+    /*justify-content: space-between;*/
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.closeBtn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+
+}
+
+.recipient {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+/* ✅ 입력 필드 */
+.input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+/* ✅ 전송 버튼 */
+.sendBtn {
+    width: 100%;
+    background-color: #FFB733;
+    color: white;
+    font-size: 1rem;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.sendBtn:active {
+    background-color: #ffa500;
+}
+
+.sendBtn:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(255, 183, 51, 0.5);
+}
+
+.inputContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.title {
+    text-align: center;
+}
+
+.closeBtnContainer {
+    display: flex;
+    justify-items: flex-end;
+}
