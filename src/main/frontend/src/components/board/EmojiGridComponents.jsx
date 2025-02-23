@@ -17,7 +17,7 @@ const EmojiGrid = ({
     useEffect(() => {
         if (emoticonsEvents && emoticonsEvents.statusCode === 200) {
             setEmoticons(emoticonsEvents.data);
-            setSelectEmotionId(emoticonsEvents.data[0].itemId);
+            setSelectEmotionId(emoticonsEvents?.data[0]?.itemId);
         } else if (emoticonsEvents) {
             setIsEmojiGridVisible(false);
             setIsAlert(true);
@@ -26,7 +26,7 @@ const EmojiGrid = ({
     }, [emoticonsEvents]);
 
     useEffect(() => {
-        setGridEmoticons(emoticons.filter((emotion) => emotion.itemId === selectEmotionId));
+        setGridEmoticons(emoticons.filter((emotion) => emotion?.itemId === selectEmotionId));
     }, [selectEmotionId]);
 
     const handleChageEmoticon = (itemId) => {
@@ -37,9 +37,9 @@ const EmojiGrid = ({
         <div className={MoreStyle.container}>
             <div className={MoreStyle.emojiRow}>
                 {emoticons.map((emoji, index) =>
-                    emoji.orderNo == 0
+                    emoji?.orderNo == 0
                         ? (<span key={index} className={MoreStyle.emoji} onClick={() => {handleChageEmoticon(emoji.itemId)}}>
-                            <img src={emoji.filePath} alt="emoji" draggable={false} />
+                            <img src={emoji?.filePath} alt="emoji" draggable={false} />
                         </span>)
                         : ""
                 )}
@@ -49,7 +49,7 @@ const EmojiGrid = ({
             <div className={MoreStyle.grid}>
                 {gridEmoticons.map((emoticon, index) => (
                     <div key={index} className={MoreStyle.cell} onClick={() => {handleSaveEmoticon(emoticon.filePath)}}>
-                        <img src={emoticon.filePath} alt="emoticon" draggable={false} />
+                        <img src={emoticon?.filePath} alt="emoticon" draggable={false} />
                     </div>
                 ))}
             </div>

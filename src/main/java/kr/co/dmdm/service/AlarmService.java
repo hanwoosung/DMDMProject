@@ -1,5 +1,9 @@
 package kr.co.dmdm.service;
 
+import kr.co.dmdm.dto.Alarm.response.AlarmHeaderResponseDto;
+
+import java.util.List;
+
 /**
  * packageName    : kr.co.dmdm.service
  * fileName       : NotificationsService
@@ -14,4 +18,8 @@ package kr.co.dmdm.service;
 public interface AlarmService {
     void sendNotification();
     void getNotifications(String receiveUserId);
+
+    List<AlarmHeaderResponseDto> getAlarmHeaders(String receiveUserId);
+
+    void readAlarms(String receiveUserId, List<Integer> alarmIds);
 }

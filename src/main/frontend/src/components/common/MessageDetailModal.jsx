@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import useApi from "../../hooks/common/useApi"; // API 훅 사용
+import useApi from "../../hooks/common/useApi";
 import styles from "../../assets/css/common/MessageModal.module.css";
 import { IoClose } from "react-icons/io5";
 

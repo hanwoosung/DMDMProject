@@ -176,6 +176,9 @@ header{
     composes: flexColumn;
     font-size: 13px;
     padding: 15px;
+    gap: 20px;
+    max-height: 400px;
+    overflow-y: auto;
 }
 
 .notifyItem{
