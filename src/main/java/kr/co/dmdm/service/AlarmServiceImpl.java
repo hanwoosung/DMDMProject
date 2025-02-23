@@ -1,8 +1,12 @@
 package kr.co.dmdm.service;
 
+import kr.co.dmdm.dto.Alarm.response.AlarmHeaderResponseDto;
+import kr.co.dmdm.repository.dao.AlarmDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * packageName    : kr.co.dmdm.service
@@ -20,6 +24,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class AlarmServiceImpl implements AlarmService {
 
+    private final AlarmDao alarmDao;
+
     @Override
     public void sendNotification() {
 
@@ -28,5 +34,15 @@ public class AlarmServiceImpl implements AlarmService {
     @Override
     public void getNotifications(String receiveUserId) {
 
+    }
+
+    @Override
+    public List<AlarmHeaderResponseDto> getAlarmHeaders(String receiveUserId) {
+        return alarmDao.getAlarmHeaders(receiveUserId);
+    }
+
+    @Override
+    public void readAlarms(String receiveUserId, List<Integer> alarmIds) {
+        alarmDao.readAlarms(receiveUserId, alarmIds);
     }
 }
