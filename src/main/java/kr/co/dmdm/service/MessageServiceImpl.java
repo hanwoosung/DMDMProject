@@ -44,6 +44,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public MessageResponseDto getMessage(Integer id) {
+        messageRepository.readMessage(id);
         return modelMapper.map(messageRepository.findMessageWithSenderName(id), MessageResponseDto.class);
     }
 

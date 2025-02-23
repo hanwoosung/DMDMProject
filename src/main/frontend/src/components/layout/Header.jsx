@@ -17,6 +17,7 @@ import {useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useLogin} from "../../contexts/AuthContext";
 import useApi from "../../hooks/common/useApi";
+import MessageDetailModal from "../common/MessageDetailModal";
 
 const Header = () => {
 
@@ -144,7 +145,13 @@ const Header = () => {
 
     }
 
+    const [isMessageOpen, setIsMessageOpen] = useState(false);
+    const [messageNum, setMessageNum] = useState(null);
 
+    const handleOpenMessageModal = (msgNum) => {
+        setIsMessageOpen(true);
+        setMessageNum(msgNum);
+    };
 
     return (
         <header>
@@ -314,7 +321,7 @@ const Header = () => {
                             </div>
                             {/*테스트 데이터 넣었습니다. 배열 빼고 넣으세요*/}
                             {messages.map((message) => (
-                                <div key={message.messageId} className={styles.flexColumn}>
+                                <div key={message.messageId} className={styles.flexColumn}  onClick={() => {handleOpenMessageModal(message.messageId);}}>
                                     <div className={styles.notifyItem} style={{gap: 10}}>
                                         <img src={message.filePath} alt="profile" style={{borderRadius: 100}} />
                                         <div className={styles.flexColumn} style={{gap: 3, flex: 1}}>
@@ -331,6 +338,14 @@ const Header = () => {
                                 </div>
                             ))}
 
+                            {(isMessageOpen && messageNum != null) && (
+                                <MessageDetailModal messageId={messageNum} onClose={() => {
+                                    setIsMessageOpen(false);
+                                    setMessageNum(null);
+                                    handleLoadMessage();
+
+                                }}></MessageDetailModal>
+                            )}
                             {/*{["구구", "멍멍", "두루미"].map((item, index) => (*/}
                             {/*    <div key={index} className={styles.flexColumn}>*/}
                             {/*        <div className={styles.notifyItem} style={{gap: 10}}>*/}

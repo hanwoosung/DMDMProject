@@ -3,8 +3,10 @@ package kr.co.dmdm.repository.jpa;
 import kr.co.dmdm.dto.Alarm.response.MessageResponseDto;
 import kr.co.dmdm.entity.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,4 +33,9 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
             "FROM Message m JOIN User u ON m.sendUserId = u.userId LEFT JOIN File f ON u.userId = f.fileRefNo AND f.fileType = 'PROFILE'" +
             "WHERE m.receiveUserId = :userId AND m.readDt IS NULL AND m.status = 'ACTIVE'")
     List<MessageResponseDto> findMessagesByReceiveUserId(String userId);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Message m SET m.readDt = NOW() WHERE m.id = :messageId")
+    void readMessage(Integer messageId);
 }

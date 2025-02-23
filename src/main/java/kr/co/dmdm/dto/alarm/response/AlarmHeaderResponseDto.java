@@ -1,4 +1,4 @@
-package kr.co.dmdm.dto.alarm.response;
+package kr.co.dmdm.dto.Alarm.response;
 
 import lombok.Data;
 
