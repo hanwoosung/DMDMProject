@@ -14,9 +14,11 @@ import {useLogin} from "./contexts/AuthContext";
 import BoardList from "./pages/board/BoardList";
 import FightZone from "./pages/FightZone";
 
-import EmoticonRegister from "./components/emoticon/EmoticonRegister";
+import EmoticonRegister from "./pages/emoticon/EmoticonRegister";
 import CommonCodeManagement from "./components/admin/CommonCodeManagement";
 import Board from "./pages/board/Board";
+import EmoticonDetail from "./pages/emoticon/EmoticonDetail";
+import EmoticonList from "./pages/emoticon/EmoticonList";
 import MainPage from "./pages/MainPage";
 import UserEditPage from "./pages/UserEditPage";
 import BlackListPage from "./pages/myPage/BlackListPage";
@@ -98,6 +100,18 @@ function App() {
                 <Route path="/emoticon-register" element={
                     <Layout>
                         <EmoticonRegister/>
+                    </Layout>
+                }/>
+
+                <Route path="/emoticon/:productId" element={
+                    <Layout>
+                        <EmoticonDetail />
+                    </Layout>
+                }/>
+
+                <Route path="/emoticon-list" element={
+                    <Layout>
+                        <EmoticonList/>
                     </Layout>
                 }/>
 
