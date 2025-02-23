@@ -4,6 +4,8 @@ import kr.co.dmdm.dto.Alarm.request.MessageDto;
 import kr.co.dmdm.dto.Alarm.response.MessageResponseDto;
 import kr.co.dmdm.entity.Message;
 
+import java.util.List;
+
 /**
  * packageName    : kr.co.dmdm.service
  * fileName       : MessageService
@@ -18,4 +20,5 @@ import kr.co.dmdm.entity.Message;
 public interface MessageService {
     String sendMessage(MessageDto message);
     MessageResponseDto getMessage(Integer id);
+    List<MessageResponseDto> getMessages(String sess);
 }

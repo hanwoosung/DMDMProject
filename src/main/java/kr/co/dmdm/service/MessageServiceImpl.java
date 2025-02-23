@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * packageName    : kr.co.dmdm.service
  * fileName       : MessageServiceImpl
@@ -43,5 +45,10 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public MessageResponseDto getMessage(Integer id) {
         return modelMapper.map(messageRepository.findMessageWithSenderName(id), MessageResponseDto.class);
+    }
+
+    @Override
+    public List<MessageResponseDto> getMessages(String sess) {
+        return modelMapper.map(messageRepository.findMessagesByReceiveUserId(sess), List.class);
     }
 }

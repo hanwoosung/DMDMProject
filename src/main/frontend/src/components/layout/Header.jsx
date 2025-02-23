@@ -37,14 +37,14 @@ const Header = () => {
     };
 
     const [alarms, setAlarms] = useState([]);
+    const [messages, setMessages] = useState([]);
 
     // todo 빈공간 클릭시 삭제 버튼 숨기기
     useEffect(() => {
         popupView === null && setActiveOption(null);
 
         if (popupView === "message") {
-
-
+            handleLoadMessage();
         }
 
         if (popupView === "notification") {
@@ -108,6 +108,24 @@ const Header = () => {
 
     }
 
+    const handleLoadMessage = () => {
+
+        get("/api/v1/message/all", {
+            headers: {"Content-Type": "application/json"},
+        }).then((res) => {
+
+            if (res.statusCode !== 200) {
+                return;
+            }
+
+            setMessages(res.data);
+
+        }).catch((res) => {
+            console.log(res);
+        });
+
+    }
+
     const handleReadAlarm = (alarmIds) => {
 
         post("/api/v1/alarm/read", {
@@ -125,6 +143,8 @@ const Header = () => {
         });
 
     }
+
+
 
     return (
         <header>
@@ -290,41 +310,59 @@ const Header = () => {
                         <div className={styles.notifyContent}>
                             <div className={styles.notifyBtn}>
                                 <div className={styles.headBtn}>모두 읽음</div>
-                                <div className={styles.headBtn}>모두 삭제</div>
+                                {/*<div className={styles.headBtn}>모두 삭제</div>*/}
                             </div>
                             {/*테스트 데이터 넣었습니다. 배열 빼고 넣으세요*/}
-                            {["구구", "멍멍", "두루미"].map((item, index) => (
-                                <div key={index} className={styles.flexColumn}>
+                            {messages.map((message) => (
+                                <div key={message.messageId} className={styles.flexColumn}>
                                     <div className={styles.notifyItem} style={{gap: 10}}>
-                                        <img src={profile} alt="profile" style={{borderRadius: 100}} />
-                                        <div className={styles.flexColumn} style={{gap: 3}}>
+                                        <img src={message.filePath} alt="profile" style={{borderRadius: 100}} />
+                                        <div className={styles.flexColumn} style={{gap: 3, flex: 1}}>
                                             <div className={styles.flexRow} style={{justifyContent: "space-between"}}>
-                                                <div>{item}</div>
-                                                <div>YYYY-MM-DD</div>
+                                                <div>{message.sendUserName}</div>
+                                                <div>
+                                                    {new Date(message.insertDt).toLocaleDateString('ko-KR')}
+                                                </div>
                                             </div>
                                             <div style={{color: "gray"}}>님이 당신에게 쪽지를 보냈습니다.</div>
-                                        </div>
-                                        <div className={styles.moreOptionBtn}>
-                                            <More className={styles.iconSize} onClick={() => {
-                                                handleToggleOption(index)
-                                            }} />
-                                            <div
-                                                className={styles.optionList}
-                                                style={{display: activeOption === index ? "flex" : "none"}}
-                                            >
-                                                <div className={styles.optionItem}>삭제</div>
-                                                <hr />
-                                                <div className={styles.optionItem}>읽음</div>
-                                            </div>
                                         </div>
                                     </div>
                                     <hr className={styles.profileItemLine} />
                                 </div>
                             ))}
 
+                            {/*{["구구", "멍멍", "두루미"].map((item, index) => (*/}
+                            {/*    <div key={index} className={styles.flexColumn}>*/}
+                            {/*        <div className={styles.notifyItem} style={{gap: 10}}>*/}
+                            {/*            <img src={profile} alt="profile" style={{borderRadius: 100}} />*/}
+                            {/*            <div className={styles.flexColumn} style={{gap: 3}}>*/}
+                            {/*                <div className={styles.flexRow} style={{justifyContent: "space-between"}}>*/}
+                            {/*                    <div>{item}</div>*/}
+                            {/*                    <div>YYYY-MM-DD</div>*/}
+                            {/*                </div>*/}
+                            {/*                <div style={{color: "gray"}}>님이 당신에게 쪽지를 보냈습니다.</div>*/}
+                            {/*            </div>*/}
+                            {/*            <div className={styles.moreOptionBtn}>*/}
+                            {/*                <More className={styles.iconSize} onClick={() => {*/}
+                            {/*                    handleToggleOption(index)*/}
+                            {/*                }} />*/}
+                            {/*                <div*/}
+                            {/*                    className={styles.optionList}*/}
+                            {/*                    style={{display: activeOption === index ? "flex" : "none"}}*/}
+                            {/*                >*/}
+                            {/*                    <div className={styles.optionItem}>삭제</div>*/}
+                            {/*                    <hr />*/}
+                            {/*                    <div className={styles.optionItem}>읽음</div>*/}
+                            {/*                </div>*/}
+                            {/*            </div>*/}
+                            {/*        </div>*/}
+                            {/*        <hr className={styles.profileItemLine} />*/}
+                            {/*    </div>*/}
+                            {/*))}*/}
+
 
                         </div>
-                        <MoreView className={styles.moreViewBtn} />
+                        {/*<MoreView className={styles.moreViewBtn} />*/}
                     </div>
 
                     <div className={styles.headPopupList}
@@ -338,7 +376,7 @@ const Header = () => {
                         <div className={styles.notifyContent}>
                             <div className={styles.notifyBtn}>
                                 <div className={styles.headBtn} onClick={() => {handleReadAlarm(alarms.map((alarm) => {return alarm.alarmId}))}}>모두 읽음</div>
-                                <div className={styles.headBtn}>모두 삭제</div>
+                                {/*<div className={styles.headBtn}>모두 삭제</div>*/}
                             </div>
 
                             {alarms.map((alarm) => (
