@@ -80,9 +80,6 @@ const LoginPage = () => {
                 const role = response.data.data.userRole;
                 const userId = response.data.data.userId;
 
-                /*setAlertMessage("로그인 성공");
-                setIsAlert(true);*/
-
                 window.localStorage.setItem("access", response.headers.get("access"));
                 window.localStorage.setItem("name", name);
                 window.localStorage.setItem("role", role);
