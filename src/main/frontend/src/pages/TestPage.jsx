@@ -105,8 +105,7 @@ const TestPage = () => {
                 onAlert={() => {
                     setIsAlert(false);
                 }}
-            />
-
+            />/
             <BigBtn title={"포인트 보내기"}
                     onClick={showSendPoint}/>
 
