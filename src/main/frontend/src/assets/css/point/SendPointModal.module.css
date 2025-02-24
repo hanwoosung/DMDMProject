@@ -1,0 +1,80 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal {
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.title {
+    margin: 0 auto; /* 가운데 정렬 */
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.closeBtn {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%); /* 중앙 정렬 */
+}
+
+.recipient {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.sendBtn {
+    width: 100%;
+    background-color: #FFB733;
+    color: black; /* 버튼 글씨 검정색 */
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid #FFB733;
+    cursor: pointer;
+}
+
+.sendBtn:active {
+    background-color: #FFA500;
+}
+
+.sendBtn:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(255, 183, 51, 0.5);
+}
+
+.inputContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}

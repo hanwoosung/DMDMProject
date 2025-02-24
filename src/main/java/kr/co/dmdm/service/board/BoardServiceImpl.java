@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import kr.co.dmdm.dto.board.*;
 import kr.co.dmdm.dto.common.FileDto;
+import kr.co.dmdm.dto.point.request.PointHistoryRequestDto;
 import kr.co.dmdm.entity.board.Board;
 import kr.co.dmdm.entity.File;
 import kr.co.dmdm.entity.board.BoardTag;
@@ -17,6 +18,10 @@ import kr.co.dmdm.repository.jpa.board.BoardTagRepository;
 import kr.co.dmdm.repository.jpa.common.FileRepository;
 import kr.co.dmdm.service.common.BadWordService;
 import kr.co.dmdm.service.common.FileService;
+import kr.co.dmdm.service.exp.ExpService;
+import kr.co.dmdm.service.point.PointService;
+import kr.co.dmdm.type.ExpHistoryType;
+import kr.co.dmdm.type.PointHistoryType;
 import kr.co.dmdm.utils.PagingUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +44,9 @@ public class BoardServiceImpl implements BoardService {
     private final BoardTagRepository boardTagRepository;
     private final BadWordService badWordService;
     private final ModelMapper modelMapper;
+
+    private final PointService pointService;
+    private final ExpService expService;
 
     @Override
     @Transactional
@@ -63,6 +71,16 @@ public class BoardServiceImpl implements BoardService {
             processHash(hashTags, boardEntity.getBoardId(), userId);
 
             log.info("게시글 저장이 성공적으로 완료되었습니다: {}", boardEntity);
+
+            PointHistoryRequestDto pointDto = new PointHistoryRequestDto();
+            pointDto.setUserId(userId);
+            pointDto.setPointHistoryType(PointHistoryType.WRITE_BOARD);
+            pointDto.setPoint(3);
+            pointDto.setRemark("글작성");
+
+            pointService.savePoint(pointDto);
+
+            expService.saveExp(ExpHistoryType.WRITE_BOARD, 30, userId);
 
         } catch (CustomException e) {
             log.error("비즈니스 로직 처리 중 오류 발생: {}", e.getMessage());
@@ -152,6 +170,17 @@ public class BoardServiceImpl implements BoardService {
         badWordService.checkBadWord(comment.getCommentContent());
 
         boardDao.saveComment(comment);
+
+        PointHistoryRequestDto pointDto = new PointHistoryRequestDto();
+        pointDto.setUserId(comment.getUserId());
+        pointDto.setPointHistoryType(PointHistoryType.WRITE_COMMENT);
+        pointDto.setPoint(1);
+        pointDto.setRemark("댓글작성");
+
+        pointService.savePoint(pointDto);
+
+        expService.saveExp(ExpHistoryType.WRITE_COMMENT, 10, comment.getUserId());
+
         return boardDao.getComments(comment.getBoardId(), comment.getUserId());
     }
 

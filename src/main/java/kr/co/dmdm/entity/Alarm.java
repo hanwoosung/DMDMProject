@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tbl_alarm")
@@ -26,10 +26,10 @@ public class Alarm {
     @Column(name = "target_id")
     private Integer targetId;
 
-    @Column(name = "send_user_id", nullable = false, length = 15)
+    @Column(name = "send_user_id", nullable = false, length = 255)
     private String sendUserId;
 
-    @Column(name = "receive_user_id", nullable = false, length = 15)
+    @Column(name = "receive_user_id", nullable = false, length = 255)
     private String receiveUserId;
 
     @Lob
@@ -38,10 +38,10 @@ public class Alarm {
 
     @ColumnDefault("current_timestamp()")
     @Column(name = "insert_dt", nullable = false)
-    private Instant insertDt;
+    private LocalDateTime insertDt;
 
     @Column(name = "read_dt")
-    private Instant readDt;
+    private LocalDateTime readDt;
 
     @ColumnDefault("'ACTIVE'")
     @Column(name = "status", nullable = false, length = 100)
@@ -50,7 +50,7 @@ public class Alarm {
     @PrePersist
     protected void onCreate() {
         if (insertDt == null) {
-            insertDt = Instant.now();
+            insertDt = LocalDateTime.now();
         }
         if (status == null || status.isEmpty()) {
             status = "ACTIVE";

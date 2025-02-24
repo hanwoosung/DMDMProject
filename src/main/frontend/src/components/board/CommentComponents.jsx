@@ -5,9 +5,11 @@ import CommentLikes from "./CommentLikesComponents";
 import {ReactComponent as More} from "../../assets/image/icon_more.svg";
 import CommentWrite from "./CommentWriteComponents";
 import Depth from "./DepthComponents";
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import CommentMore from "./CommentMoreComponents";
 import DOMPurify from "dompurify";
+import BoardStyle from "../../assets/css/board/Board.module.css";
+import UserMore from "./UserMoreComponents";
 
 const Comment = ({
                      handleLike,
@@ -30,10 +32,18 @@ const Comment = ({
 
     const [commentMore, setCommentMore] = useState(false);
     const commentMoreRef = useRef(null);
+
+    const [userMore, setUserMore] = useState(false);
+    const userMoreRef = useRef(null); // `UserMore`을 감지할 ref
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (commentMoreRef.current && !commentMoreRef.current.contains(event.target)) {
                 setCommentMore(false);
+            }
+
+            if (userMoreRef.current && !userMoreRef.current.contains(event.target)) {
+                setUserMore(false);
             }
         };
 
@@ -43,10 +53,16 @@ const Comment = ({
             document.removeEventListener("mousedown", handleClickOutside);
         }
 
+        if (setUserMore) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [commentMore]);
+    }, [commentMore, userMore]);
 
 
     const sanitizedContent = DOMPurify.sanitize(comment.commentContent, {
@@ -62,19 +78,29 @@ const Comment = ({
 
                 <div
                     className={`${CommentStyle[containerClass]} ${isHighlighted ? CommentStyle.commentHighlight : ""}`}>
-                    <img className={CommentStyle.profile}
-                         src={comment.filePath}
-                         onError={(e) => {
-                             e.target.src = profileImg;
-                         }}  // 이미지 로드 실패 시 기본 이미지로 대체
-                         alt="Profile" />
-
+                    <div style={{position: "relative"}}>
+                        <img className={CommentStyle.profile}
+                             src={comment.filePath}
+                             onError={(e) => {
+                                 e.target.src = profileImg;
+                             }}  // 이미지 로드 실패 시 기본 이미지로 대체
+                             alt="Profile" onClick={() => {
+                            setUserMore(true)
+                        }} />
+                        {userMore && (
+                            <div className={BoardStyle.relative} ref={userMoreRef}>
+                                <UserMore setIsAlert={setIsAlert} setAlertMessage={setAlertMessage}
+                                          userId={comment.userId}
+                                          userName={comment.userName} />
+                            </div>
+                        )}
+                    </div>
                     <div className={CommentStyle.commentDetail}>
                         <div className={CommentStyle.userInfo}>
-                    <span>
-                        <Level level={comment.userLevel} />
-                        <span>{comment.userName}</span>
-                    </span>
+                            <span>
+                                <Level level={comment.userLevel} />
+                                <span>{comment.userName}</span>
+                            </span>
                             <span>{comment.insert}</span>
                         </div>
 

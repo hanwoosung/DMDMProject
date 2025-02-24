@@ -19,7 +19,7 @@ public class Message {
     @Column(name = "message_id", nullable = false)
     private Integer id;
 
-    @Size(max = 15)
+    @Size(max = 255)
     @NotNull
     @Column(name = "send_user_id", nullable = false, length = 15)
     private String sendUserId;
@@ -29,7 +29,7 @@ public class Message {
     @Column(name = "message_content", nullable = false)
     private String messageContent;
 
-    @Size(max = 15)
+    @Size(max = 255)
     @NotNull
     @Column(name = "receive_user_id", nullable = false, length = 15)
     private String receiveUserId;

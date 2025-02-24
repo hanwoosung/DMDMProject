@@ -8,6 +8,7 @@ import {ReactComponent as Comment} from "../assets/image/icon_main_comment.svg";
 import see from "../assets/image/icon_main_see.png";
 import {ReactComponent as Like} from "../assets/image/icon_main_like.svg";
 import newImg from "../assets/image/img_new.png";
+import loadingImg from "../assets/image/loading.gif";
 import Banner from "../components/common/Banner";
 import {useNavigate} from "react-router-dom";
 
@@ -15,7 +16,12 @@ const MainPage = () => {
     const {data, loading, error} = useFetch('/api/v1/main');
     const navigate = useNavigate();
 
-    if (loading) return <div>Loading...</div>;
+    if (loading)
+        return (
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+                <img src={loadingImg} alt="Loading..." />
+            </div>
+        );
     if (error) return <div>Error: {error}</div>;
     if (!data) return <div>No Data</div>;
 

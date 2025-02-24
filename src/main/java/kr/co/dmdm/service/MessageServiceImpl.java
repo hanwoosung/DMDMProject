@@ -1,12 +1,15 @@
 package kr.co.dmdm.service;
 
 import kr.co.dmdm.dto.Alarm.request.MessageDto;
+import kr.co.dmdm.dto.Alarm.response.MessageResponseDto;
 import kr.co.dmdm.entity.Message;
 import kr.co.dmdm.repository.jpa.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * packageName    : kr.co.dmdm.service
@@ -40,8 +43,13 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public MessageDto getMessage(Integer id) {
-        MessageDto messageDto = modelMapper.map(messageRepository.findById(id), MessageDto.class);
-        return messageDto;
+    public MessageResponseDto getMessage(Integer id) {
+        messageRepository.readMessage(id);
+        return modelMapper.map(messageRepository.findMessageWithSenderName(id), MessageResponseDto.class);
+    }
+
+    @Override
+    public List<MessageResponseDto> getMessages(String sess) {
+        return modelMapper.map(messageRepository.findMessagesByReceiveUserId(sess), List.class);
     }
 }
