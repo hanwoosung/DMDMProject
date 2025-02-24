@@ -103,6 +103,7 @@ public class ChatRoomManager {
      */
     private void stopTimer(Long chatRoomId) {
         System.out.println("토론 마감");
+        messagingTemplate.convertAndSend("/subscribe/timer." + chatRoomId, 0);
         deleteInfo(chatRoomId, null);
     }
 
@@ -229,6 +230,8 @@ public class ChatRoomManager {
      * 채팅방 정보 삭제
      */
     public void deleteInfo(Long chatRoomId, String winner) {
+        System.out.println("딜리트 작동");
+
         VoteResponseDto voteResponse = voteResult(getVoteData(chatRoomId));
 
         if(winner.equals("SEND")){
