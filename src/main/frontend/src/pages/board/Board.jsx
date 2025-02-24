@@ -17,8 +17,11 @@ import React, {useEffect, useRef, useState} from "react";
 import BoardMore from "../../components/board/BoardMoreComponents";
 import UserMoreComponents from "../../components/board/UserMoreComponents";
 import UserMore from "../../components/board/UserMoreComponents";
+import {useNavigate} from "react-router-dom";
 
 const Board = () => {
+
+    const navigator = useNavigate();
 
     const {
         board,
@@ -125,12 +128,18 @@ const Board = () => {
                     </div>
                     <div className={BoardStyle.boardInfo}>
                         <span><Share width={24} height={24} onClick={() => {
-                            navigator.clipboard.writeText(window.location.href)
-                                .then(() => {
-                                    setIsAlert(true);
-                                    setAlertMessage("주소가 복사되었습니다.");
-                                })
-                                .catch(err => console.error("🚨 URL 복사 실패:", err));
+                            const textArea = document.createElement("textarea");
+                            textArea.value = window.location.href;
+                            document.body.appendChild(textArea);
+                            textArea.select();
+                            try {
+                                document.execCommand("copy");
+                                setIsAlert(true);
+                                setAlertMessage("주소가 복사되었습니다.");
+                            } catch (err) {
+                                console.error("🚨 URL 복사 실패:", err);
+                            }
+                            document.body.removeChild(textArea);
                         }} /></span>
                         <span className={BoardStyle.relative} ref={boardMoreRef}>
                             <More onClick={() => {
