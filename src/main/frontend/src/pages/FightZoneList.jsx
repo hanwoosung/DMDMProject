@@ -91,10 +91,7 @@ const FightZoneList = () => {
                 <div className={styles.fightRoomTitle}>
                     <div className={styles.title}>투기장 목록</div>
                     <div>
-                        {/*여기서는 상대를 지목하는 confirm 하나 생성(하나는 자기 id)*/}
-                        <SmallBtn title={"방 생성(상대 선언)"} onClick={exRoomMaker}/>
-                        {/*상대 없이 바로 방 생성하는 버튼*/}
-                        <SmallBtn title={"방 생성"}/>
+                        <SmallBtn title={"방 생성"} onClick={exRoomMaker}/>
                     </div>
                 </div>
                 <div className={styles.fightRooms}>

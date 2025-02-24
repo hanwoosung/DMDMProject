@@ -94,10 +94,6 @@ const FighterInfoComponent = forwardRef((props, ref) => {
                     </div>}
                 </div>
                 <div>
-                    <div className={styles.fighterImgBlock} style={sendUserExist ? {display: "none"} : {}}>
-                        <span style={{fontWeight: "bold", color: "white"}}>부재중</span>
-                    </div>
-
                     <img src={leftFighterImg} alt="프로필사진"
                          className={styles.fighterImage}
                          style={{border: "3px solid #300CFF"}}/>
@@ -133,9 +129,6 @@ const FighterInfoComponent = forwardRef((props, ref) => {
                     </div>}
                 </div>
                 <div>
-                    <div className={styles.fighterImgBlock} style={receiveUserExist ? {display: "none"} : {}}>
-                        <span style={{fontWeight: "bold", color: "white"}}>부재중</span>
-                    </div>
                     <img src={rightFighterImg} alt="프로필 사진"
                          className={styles.fighterImage}
                          style={{border: "3px solid #FF0000"}}/>

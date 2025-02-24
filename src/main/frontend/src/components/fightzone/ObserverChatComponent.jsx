@@ -24,9 +24,6 @@ const ObserverChatComponent = forwardRef((props, ref) => {
 
             {!(chatUserId.current === sendUser || chatUserId.current === receiveUser) && (
                 <div className={styles.chatInputContainer}>
-                    <div>
-                        {chatUserId.current}
-                    </div>
                     <input
                         type="text"
                         placeholder="메시지를 입력하세요"
