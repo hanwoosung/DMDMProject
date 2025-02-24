@@ -28,7 +28,7 @@ public class Product {
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "user_id", nullable = false, length = 15)
+    @Column(name = "user_id", nullable = false, length = 255)
     private String userId;
 
     @Size(max = 100)

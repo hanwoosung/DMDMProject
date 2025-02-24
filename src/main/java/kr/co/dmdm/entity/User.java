@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Table(name = "tbl_user")
 public class User extends AuditableAddUpdate {
     @Id
-    @Column(name = "user_id", nullable = false, length = 15)
+    @Column(name = "user_id", nullable = false, length = 255)
     private String userId;
 
     @Column(name = "user_pw", nullable = false)

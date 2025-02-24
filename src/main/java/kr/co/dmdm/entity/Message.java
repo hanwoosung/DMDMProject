@@ -21,7 +21,7 @@ public class Message {
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "send_user_id", nullable = false, length = 15)
+    @Column(name = "send_user_id", nullable = false, length = 255)
     private String sendUserId;
 
     @NotNull
@@ -31,7 +31,7 @@ public class Message {
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "receive_user_id", nullable = false, length = 15)
+    @Column(name = "receive_user_id", nullable = false, length = 255)
     private String receiveUserId;
 
     @NotNull

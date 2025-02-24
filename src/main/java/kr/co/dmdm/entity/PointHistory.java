@@ -27,7 +27,7 @@ public class PointHistory {
 
     @NotNull
     @Size(max = 255)
-    @Column(name = "user_id", nullable = false, length = 15)
+    @Column(name = "user_id", nullable = false, length = 255)
     private String userId;
 
     @NotNull

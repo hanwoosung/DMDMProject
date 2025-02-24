@@ -26,7 +26,7 @@ public class ExpHistory {
 
     @Size(max = 15)
     @NotNull
-    @Column(name = "user_id", nullable = false, length = 15)
+    @Column(name = "user_id", nullable = false, length = 255)
     private String userId;
 
     @NotNull
